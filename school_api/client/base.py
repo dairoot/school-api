@@ -1,18 +1,18 @@
 import requests
 import inspect
 import logging
-from school_api.client.api.base import BaseSchoolAPI
+from school_api.client.api.base import BaseSchoolApi
 from bs4 import BeautifulSoup, SoupStrainer
 
 logger = logging.getLogger(__name__)
 
 
 def _is_api_endpoint(obj):
-    return isinstance(obj, BaseSchoolAPI)
+    return isinstance(obj, BaseSchoolApi)
 
 
 class BaseSchoolClient(object):
-    BASE_URL = None
+    BASE_URL = ''
     _http = requests.Session()
 
     def __new__(cls, *args, **kwargs):
