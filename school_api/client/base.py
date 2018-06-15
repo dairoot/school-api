@@ -12,7 +12,8 @@ def _is_api_endpoint(obj):
 
 
 class BaseSchoolClient(object):
-    SCHOOL_URL = [
+
+    school_url = [
         {
             'SCORE_URL': '/xscj_gc.aspx?xh=',
             'PERSON_SCHEDULE_URL': "/xskbcx.aspx?gnmkdm=N121603&xh=",
@@ -23,10 +24,6 @@ class BaseSchoolClient(object):
             'SCHEDULE_URL': ''
         }
     ]
-
-    @property
-    def school_url(self):
-        return self.SCHOOL_URL
 
 
 class BaseUserClient(object):
@@ -81,8 +78,8 @@ class BaseUserClient(object):
             **kwargs
         )
 
-    def _get_view_state(self, url_suffix):
-        res = self.get(url_suffix, allow_redirects=False)
+    def _get_view_state(self, url_suffix, **kwargs):
+        res = self.get(url_suffix, allow_redirects=False, **kwargs)
         if res.status_code != 200:
             return None
         pre_soup = BeautifulSoup(res.text, "html.parser")
@@ -92,3 +89,23 @@ class BaseUserClient(object):
 
     def _update_headers(self, headers_dict):
         self._http.headers.update(headers_dict)
+
+    def login(self):
+        view_state = self._get_view_state(self.school.login_url_suffix, timeout=self.timeout)
+        payload = {
+            '__VIEWSTATE': view_state,
+            'TextBox1': self.account.encode('gb2312'),
+            'TextBox2': self.passwd,
+            'RadioButtonList1': self.school._login_types[self.user_type].encode('gb2312'),
+            'Button1': u' 登 录 '.encode('gb2312')
+        }
+        self._update_headers({'Referer': self.school.url+self.school.login_url_suffix})
+        res = self.post(self.school.login_url_suffix, data=payload,
+                        allow_redirects=False, timeout=self.timeout)
+
+        # 登录成功之后，教务系统会返回 302 跳转
+        if not res.status_code == 302:
+            page_soup = BeautifulSoup(res.text, "html.parser", parse_only=SoupStrainer("script"))
+            tip = re.findall(r'[^()\']+', page_soup.getText())[1]
+            self.schedule = NullClass(tip)
+        return self
