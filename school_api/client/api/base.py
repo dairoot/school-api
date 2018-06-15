@@ -30,16 +30,5 @@ class BaseSchoolApi(object):
         return self._client.schedule_type
 
     @property
-    def conf_url(self):
-        urls = [
-            {
-                'SCORE_URL': '/xscj_gc.aspx?xh=',
-                'PERSON_SCHEDULE_URL': "/xskbcx.aspx?gnmkdm=N121603&xh=",
-                'CLASS_SCHEDULE_URL': ''
-            }, {
-                'CLASS_SCHEDULE_URL': '/jstjkbcx.aspx?gnmkdm=N122303&zgh='
-            }, {
-                'SCHEDULE_URL': ''
-            }
-        ]
-        return urls[self.user_type]
+    def school_url(self):
+        return self._client.school.school_url[self.user_type]

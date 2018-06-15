@@ -2,13 +2,31 @@ import requests
 import inspect
 import logging
 from school_api.client.api.base import BaseSchoolApi
-from bs4 import BeautifulSoup, SoupStrainer
+from bs4 import BeautifulSoup
 
 logger = logging.getLogger(__name__)
 
 
 def _is_api_endpoint(obj):
     return isinstance(obj, BaseSchoolApi)
+
+
+class BaseSchoolClient(object):
+    SCHOOL_URL = [
+        {
+            'SCORE_URL': '/xscj_gc.aspx?xh=',
+            'PERSON_SCHEDULE_URL': "/xskbcx.aspx?gnmkdm=N121603&xh=",
+            'CLASS_SCHEDULE_URL': ''
+        }, {
+            'CLASS_SCHEDULE_URL': '/jstjkbcx.aspx?gnmkdm=N122303&zgh='
+        }, {
+            'SCHEDULE_URL': ''
+        }
+    ]
+
+    @property
+    def school_url(self):
+        return self.SCHOOL_URL
 
 
 class BaseUserClient(object):

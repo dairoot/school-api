@@ -1,12 +1,12 @@
 import re
 from bs4 import BeautifulSoup, SoupStrainer
 
-from school_api.client.base import BaseUserClient
+from school_api.client.base import BaseUserClient, BaseSchoolClient
 from school_api.client.api.schedule import Schedule
 from school_api.client.utils import UserType, ScheduleType, NullClass
 
 
-class SchoolClient():
+class SchoolClient(BaseSchoolClient):
 
     def __init__(self, url, **kwargs):
         self.url = url

@@ -17,7 +17,7 @@ class Schedule(BaseSchoolApi):
         获取学生个人课表
         :return: 返回学生个人课表信息字典
         """
-        url = self.conf_url["PERSON_SCHEDULE_URL"] + self.account
+        url = self.school_url["PERSON_SCHEDULE_URL"] + self.account
         res = self._get(url, allow_redirects=False)
         if res.status_code != 200:
             return None
@@ -36,7 +36,7 @@ class Schedule(BaseSchoolApi):
         获取教师课表
         :return: 返回教师课表信息字典
         """
-        url = self.conf_url["CLASS_SCHEDULE_URL"] + self.account
+        url = self.school_url["CLASS_SCHEDULE_URL"] + self.account
         res = self._get(url, allow_redirects=False)
         if res.status_code != 200:
             return None
