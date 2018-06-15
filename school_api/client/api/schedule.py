@@ -19,6 +19,8 @@ class Schedule(BaseSchoolApi):
         """
         schedule_type = schedule_type or self.schedule_type
         url = self.school_url["PERSON_SCHEDULE_URL"] + self.account
+        # url = 'http://61.142.33.2' + self.school_url["PERSON_SCHEDULE_URL"] + self.account
+        
         res = self._get(url, allow_redirects=False)
         if res.status_code != 200:
             return None

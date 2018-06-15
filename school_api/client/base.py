@@ -1,8 +1,11 @@
+import re
 import requests
 import inspect
 import logging
+from bs4 import BeautifulSoup, SoupStrainer
+
 from school_api.client.api.base import BaseSchoolApi
-from bs4 import BeautifulSoup
+from school_api.client.utils import NullClass
 
 logger = logging.getLogger(__name__)
 
@@ -90,8 +93,8 @@ class BaseUserClient(object):
     def _update_headers(self, headers_dict):
         self._http.headers.update(headers_dict)
 
-    def login(self):
-        view_state = self._get_view_state(self.school.login_url_suffix, timeout=self.timeout)
+    def login(self, **kwargs):
+        view_state = self._get_view_state(self.school.login_url_suffix, **kwargs)
         payload = {
             '__VIEWSTATE': view_state,
             'TextBox1': self.account.encode('gb2312'),
@@ -101,7 +104,7 @@ class BaseUserClient(object):
         }
         self._update_headers({'Referer': self.school.url+self.school.login_url_suffix})
         res = self.post(self.school.login_url_suffix, data=payload,
-                        allow_redirects=False, timeout=self.timeout)
+                        allow_redirects=False, **kwargs)
 
         # 登录成功之后，教务系统会返回 302 跳转
         if not res.status_code == 302:

@@ -30,11 +30,3 @@ class NullClass():
         return func
 
 
-def error_handle(func):
-    def wrapper(self):
-        try:
-            self = func(self)
-        except Exception as e:
-            self.schedule = NullClass(str(e))
-        return self
-    return wrapper

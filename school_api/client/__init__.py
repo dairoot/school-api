@@ -1,9 +1,18 @@
-import re
-from bs4 import BeautifulSoup, SoupStrainer
+
 
 from school_api.client.base import BaseUserClient, BaseSchoolClient
 from school_api.client.api.schedule import Schedule
-from school_api.client.utils import UserType, ScheduleType, NullClass, error_handle
+from school_api.client.utils import UserType, ScheduleType, NullClass
+
+# def error_handle(func):
+#     def wrapper(self):
+#         try:
+#             self.schedule = func(self)
+#         except Exception as e:
+#             print (str(e))
+#             self.schedule = NullClass(str(e))
+#         return self.schedule
+#     return wrapper
 
 
 class SchoolClient(BaseSchoolClient):
@@ -31,6 +40,18 @@ class UserClient(BaseUserClient):
         self.user_type = kwargs.get('user_type', UserType.STUDENT)
         self.schedule_type = kwargs.get('schedule_type', ScheduleType.PERSON)
 
-    @error_handle
+    # @error_handle
     def get_login(self):
-        return self.login()
+        try:
+            self.login(timeout=self.timeout)
+        except Exception as e:
+            self.schedule = NullClass(str(e))
+        return self
+
+    # @error_handle
+    # def get_schedule(self):
+    #     self.schedule.get_schedule(**kwargs)
+    #     return self.schedule
+
+    # def get_schedule(self, **kwargs):
+    #     return self.schedule.get_schedule(**kwargs)
