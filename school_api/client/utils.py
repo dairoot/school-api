@@ -14,3 +14,17 @@ class ScheduleType():
 
     def __get__(self, instance, owner):
         return self.value
+
+
+class NullClass():
+
+    def __init__(self, tip=''):
+        self.tip = tip
+
+    def __str__(self):
+        return self.tip
+
+    def __getattr__(self, name):
+        def func():
+            return self
+        return func

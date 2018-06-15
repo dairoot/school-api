@@ -1,6 +1,6 @@
 from school_api.client.base import BaseSchoolClient
 from school_api.client.api.schedule import Schedule
-from school_api.utils import UserType, ScheduleType
+from school_api.client.utils import UserType, ScheduleType, NullClass
 import re
 from bs4 import BeautifulSoup, SoupStrainer
 
@@ -36,4 +36,5 @@ class SchoolClient(BaseSchoolClient):
                                       parse_only=SoupStrainer("script"))
             alert = page_soup.getText()
             tip = re.findall(r'[^()\']+', page_soup.getText())[1]
+            self.schedule = NullClass(tip)
         return self
