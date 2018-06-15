@@ -25,7 +25,7 @@ class NullClass():
         return self.tip
 
     def __getattr__(self, name):
-        def func():
+        def func(**kwargs):
             return self
         return func
 

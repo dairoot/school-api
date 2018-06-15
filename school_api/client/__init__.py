@@ -53,5 +53,11 @@ class UserClient(BaseUserClient):
     #     self.schedule.get_schedule(**kwargs)
     #     return self.schedule
 
-    # def get_schedule(self, **kwargs):
-    #     return self.schedule.get_schedule(**kwargs)
+    def get_schedule(self, **kwargs):
+        try:
+            return self.schedule.get_schedule(**kwargs)
+        except Exception as e:
+            self.schedule = NullClass(str(e))
+            return self.schedule
+        return self
+        
