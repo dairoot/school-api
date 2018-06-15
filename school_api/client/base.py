@@ -40,6 +40,7 @@ class BaseSchoolClient(object):
             )
         else:
             url = url_or_endpoint
+        
         res = self._http.request(
             method=method,
             url=url,

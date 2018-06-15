@@ -4,6 +4,7 @@ from __future__ import absolute_import, unicode_literals
 
 class BaseSchoolApi(object):
     """ WeChat API base class """
+
     def __init__(self, client=None):
         self._client = client
 
@@ -24,3 +25,22 @@ class BaseSchoolApi(object):
     @property
     def user_type(self):
         return self._client.user_type
+
+    def schedule_type(self):
+        return self._client.schedule_type
+
+    @property
+    def conf_url(self):
+        urls = [
+            {
+                'SCORE_URL': '/xscj_gc.aspx?xh=',
+                'PERSON_SCHEDULE_URL': "/xskbcx.aspx?gnmkdm=N121603&xh=",
+                'CLASS_SCHEDULE_URL': ''
+
+            }, {
+                'CLASS_SCHEDULE_URL': '/jstjkbcx.aspx?gnmkdm=N122303&zgh='
+            }, {
+                'SCHEDULE_URL': ''
+            }
+        ]
+        return urls[self.user_type]
