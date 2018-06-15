@@ -11,12 +11,13 @@ def _is_api_endpoint(obj):
     return isinstance(obj, BaseSchoolApi)
 
 
-class BaseSchoolClient(object):
-    BASE_URL = ''
+class BaseUserClient(object):
+    """docstring for BaseUserClient"""
+
     _http = requests.Session()
 
     def __new__(cls, *args, **kwargs):
-        self = super(BaseSchoolClient, cls).__new__(cls)
+        self = super(BaseUserClient, cls).__new__(cls)
         api_endpoints = inspect.getmembers(self, _is_api_endpoint)
         for name, api in api_endpoints:
             api_cls = type(api)
@@ -35,12 +36,12 @@ class BaseSchoolClient(object):
     def _request(self, method, url_or_endpoint, **kwargs):
         if not url_or_endpoint.startswith(('http://', 'https://')):
             url = '{base}{endpoint}'.format(
-                base=self.BASE_URL,
+                base=self.school.url,
                 endpoint=url_or_endpoint
             )
         else:
             url = url_or_endpoint
-        
+
         res = self._http.request(
             method=method,
             url=url,

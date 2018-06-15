@@ -42,4 +42,3 @@ class Schedule(BaseSchoolApi):
             return None
         schedule = ScheduleParse(res.content.decode('gbk'), 'class').get_schedule_dict()
         return schedule
-

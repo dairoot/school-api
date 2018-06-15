@@ -36,7 +36,6 @@ class BaseSchoolApi(object):
                 'SCORE_URL': '/xscj_gc.aspx?xh=',
                 'PERSON_SCHEDULE_URL': "/xskbcx.aspx?gnmkdm=N121603&xh=",
                 'CLASS_SCHEDULE_URL': ''
-
             }, {
                 'CLASS_SCHEDULE_URL': '/jstjkbcx.aspx?gnmkdm=N122303&zgh='
             }, {
