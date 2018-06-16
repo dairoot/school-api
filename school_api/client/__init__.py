@@ -44,6 +44,6 @@ class UserClient(BaseUserClient):
     def get_login(self, **kwargs):
         return self.login(**kwargs)
 
-    @error_handle
+    # @error_handle
     def get_schedule(self, **kwargs):
         return self.schedule.get_schedule(**kwargs)

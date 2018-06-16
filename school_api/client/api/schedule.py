@@ -1,5 +1,6 @@
 from school_api.client.api.base import BaseSchoolApi
 from school_api.client.api.schedule_parse import ScheduleParse
+from school_api.client.utils import ScheduleType
 from bs4 import BeautifulSoup
 from urllib import parse
 
@@ -10,6 +11,8 @@ class Schedule(BaseSchoolApi):
         schedule_func = [self.__get_student_schedule,
                          self.__get_teacher_schedule,
                          self.__get_dept_class_schedule]
+        self.schedule_type = kwargs.get('schedule_type', self.schedule_type)
+        kwargs.pop('schedule_type', None)
         return schedule_func[self.user_type](**kwargs)
 
     def __get_student_schedule(self, **kwargs):
@@ -17,13 +20,12 @@ class Schedule(BaseSchoolApi):
         获取学生个人课表
         :return: 返回学生个人课表信息字典
         """
-        schedule_type = kwargs.get('schedule_type', self.schedule_type)
-        url = self.school_url["PERSON_SCHEDULE_URL"] + self.account
-        # url = 'http://61.142.33.2' + self.school_url["PERSON_SCHEDULE_URL"] + self.account
-        res = self._get(url, **kwargs)
+        url = self.school_url["PERSON_SCHEDULE_URL"] if self.schedule_type == ScheduleType.PERSON else self.school_url["CLASS_SCHEDULE_URL"]
+        # url = 'http://61.142.33.2' + self.school_url["PERSON_SCHEDULE_URL"]
+        res = self._get(url+self.account, **kwargs)
         if res.status_code != 200:
             return None
-        schedule = ScheduleParse(res.content.decode('GB18030')).get_schedule_dict()
+        schedule = ScheduleParse(res.content.decode('GB18030'), self.schedule_type).get_schedule_dict()
         return schedule
 
     def __get_dept_class_schedule(self, class_name, school_year, school_term):
@@ -42,5 +44,5 @@ class Schedule(BaseSchoolApi):
         res = self._get(url, **kwargs)
         if res.status_code != 200:
             return None
-        schedule = ScheduleParse(res.content.decode('gbk'), 'class').get_schedule_dict()
+        schedule = ScheduleParse(res.content.decode('gbk'), ScheduleType.CLASS).get_schedule_dict()
         return schedule

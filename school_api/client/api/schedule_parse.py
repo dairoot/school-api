@@ -23,7 +23,7 @@ class ScheduleParse(object):
         4: ['8:30 ~ 12:00', '10:25 ~ 16:15', '14:40 ~ 18:05', '16:30 ~ 21:05']
     }
 
-    def __init__(self, html,  schedule_type="user"):
+    def __init__(self, html,  schedule_type=0):
         self.color = ['green', 'blue', 'purple', 'red', 'yellow']
         self.schedule_list = [[], [], [], [], [], [], []]
         self.schedule_dict = [[], [], [], [], [], [], []]
@@ -31,7 +31,7 @@ class ScheduleParse(object):
 
         soup = BeautifulSoup(html, "html.parser")
         table = soup.find("table", {"id": "Table6"}) if \
-            schedule_type == 'class' else soup.find("table", {"id": "Table1"})
+            schedule_type == 1 else soup.find("table", {"id": "Table1"})
         trs = table.find_all('tr')
         self.__html_parse(trs)
 
@@ -105,7 +105,7 @@ class ScheduleParse(object):
         :return:
         """
         weeks_arr = []
-        if self.schedule_type == 'user':
+        if self.schedule_type == 0:
             weeks_text = re.findall("{(.*)}", class_time)[0]
         else:
             # 2节/周
