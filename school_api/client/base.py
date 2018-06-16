@@ -81,20 +81,23 @@ class BaseUserClient(object):
             **kwargs
         )
 
-    def _get_view_state(self, url_suffix, **kwargs):
+    def get_view_state(self, url_suffix, **kwargs):
         res = self.get(url_suffix, allow_redirects=False, **kwargs)
         if res.status_code != 200:
             return None
-        pre_soup = BeautifulSoup(res.text, "html.parser")
-        _view_state = pre_soup.find(
-            attrs={"name": "__VIEWSTATE"})['value']
-        return _view_state
+        return self.get_view_state_from_html(res.text)
 
-    def _update_headers(self, headers_dict):
+    def get_view_state_from_html(self, html):
+        pre_soup = BeautifulSoup(html, "html.parser")
+        view_state = pre_soup.find(
+            attrs={"name": "__VIEWSTATE"})['value']
+        return view_state
+
+    def update_headers(self, headers_dict):
         self._http.headers.update(headers_dict)
 
     def login(self, **kwargs):
-        view_state = self._get_view_state(self.school.login_url_suffix, **kwargs)
+        view_state = self.get_view_state(self.school.login_url_suffix, **kwargs)
         payload = {
             '__VIEWSTATE': view_state,
             'TextBox1': self.account.encode('gb2312'),
@@ -102,7 +105,7 @@ class BaseUserClient(object):
             'RadioButtonList1': self.school._login_types[self.user_type].encode('gb2312'),
             'Button1': u' 登 录 '.encode('gb2312')
         }
-        self._update_headers({'Referer': self.school.url+self.school.login_url_suffix})
+        self.update_headers({'Referer': self.school.url+self.school.login_url_suffix})
         res = self.post(self.school.login_url_suffix, data=payload,
                         allow_redirects=False, **kwargs)
 

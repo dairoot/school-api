@@ -7,7 +7,7 @@ from school_api.client.utils import UserType, ScheduleType, NullClass
 
 def error_handle(func):
     def wrapper(self, **kwargs):
-        if self.school.debug:
+        if not self.school.debug:
             try:
                 return func(self, **kwargs)
             except Exception as e:
@@ -20,12 +20,12 @@ def error_handle(func):
 
 class SchoolClient(BaseSchoolClient):
 
-    def __init__(self, url, school_url=None, debug=False):
+    def __init__(self, url, debug=False, conf_url=None):
         self.debug = debug
         self.url = url
         self._login_types = [u'学生', u'教师', u'部门']
         self.login_url_suffix = '/default4.aspx'
-        self.school_url = school_url or self.school_url
+        self.school_url = conf_url or self.school_url
 
     def user_login(self, account, passwd, **kwargs):
         user = UserClient(self, account, passwd, **kwargs)

@@ -26,6 +26,8 @@ class Schedule(BaseSchoolApi):
         if res.status_code != 200:
             return None
         schedule = ScheduleParse(res.content.decode('GB18030'), self.schedule_type).get_schedule_dict()
+        view_state = self._get_view_state_from_html(res.text)
+        # print (view_state)
         return schedule
 
     def __get_dept_class_schedule(self, class_name, school_year, school_term):

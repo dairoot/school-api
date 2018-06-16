@@ -28,8 +28,10 @@ class ScheduleParse(object):
         self.schedule_list = [[], [], [], [], [], [], []]
         self.schedule_dict = [[], [], [], [], [], [], []]
         self.schedule_type = schedule_type
-
         soup = BeautifulSoup(html, "html.parser")
+        option_args = soup.find_all("option", {"selected": "selected"})
+        self.school_year = option_args[0].text
+        self.school_term = option_args[1].text
         table = soup.find("table", {"id": "Table6"}) if \
             schedule_type == 1 else soup.find("table", {"id": "Table1"})
         trs = table.find_all('tr')
@@ -94,7 +96,8 @@ class ScheduleParse(object):
                             "time": self.__TIME_LIST[schedule[4]][section]
                         })
                 self.schedule_dict[day].append(section_schedule_dict)
-        return self.schedule_dict
+        schedule_data = {'school_term': self.school_term, 'school_year': self.school_year, 'schedule': self.schedule_dict}
+        return schedule_data
 
     def __get_weeks_arr(self, class_time):
         """
@@ -121,4 +124,3 @@ class ScheduleParse(object):
             weeks = re.findall('(\d{1,2})-(\d{1,2})', split_text)
             weeks_arr += range(int(weeks[0][0]), int(weeks[0][1]) + 1, step) if weeks else [int(split_text)]
         return weeks_arr
-
