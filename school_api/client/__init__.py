@@ -43,21 +43,13 @@ class UserClient(BaseUserClient):
     # @error_handle
     def get_login(self):
         try:
-            self.login(timeout=self.timeout)
+            return self.login(timeout=self.timeout)
         except Exception as e:
-            self.schedule = NullClass(str(e))
-        return self
-
-    # @error_handle
-    # def get_schedule(self):
-    #     self.schedule.get_schedule(**kwargs)
-    #     return self.schedule
+            # 请求失败 销毁类方法
+            return NullClass('%s: %s ' % (self.get_login.__name__, str(e)))
 
     def get_schedule(self, **kwargs):
         try:
             return self.schedule.get_schedule(**kwargs)
         except Exception as e:
-            self.schedule = NullClass(str(e))
-            return self.schedule
-        return self
-        
+            return NullClass('%s: %s ' % (self.get_schedule.__name__, str(e)))
