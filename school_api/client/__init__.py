@@ -7,17 +7,21 @@ from school_api.client.utils import UserType, ScheduleType, NullClass
 
 def error_handle(func):
     def wrapper(self, **kwargs):
-        try:
+        if self.school.debug:
+            try:
+                return func(self, **kwargs)
+            except Exception as e:
+                # 请求失败 销毁类方法
+                return NullClass('{}: {}'.format(func.__name__, e))
+        else:
             return func(self, **kwargs)
-        except Exception as e:
-            # 请求失败 销毁类方法
-            return NullClass('{}: {}'.format(func.__name__, e))
     return wrapper
 
 
 class SchoolClient(BaseSchoolClient):
 
-    def __init__(self, url, school_url=None):
+    def __init__(self, url, school_url=None, debug=False):
+        self.debug = debug
         self.url = url
         self._login_types = [u'学生', u'教师', u'部门']
         self.login_url_suffix = '/default4.aspx'
@@ -44,6 +48,6 @@ class UserClient(BaseUserClient):
     def get_login(self, **kwargs):
         return self.login(**kwargs)
 
-    # @error_handle
+    @error_handle
     def get_schedule(self, **kwargs):
         return self.schedule.get_schedule(**kwargs)
