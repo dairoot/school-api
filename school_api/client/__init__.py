@@ -4,15 +4,15 @@ from school_api.client.base import BaseUserClient, BaseSchoolClient
 from school_api.client.api.schedule import Schedule
 from school_api.client.utils import UserType, ScheduleType, NullClass
 
-# def error_handle(func):
-#     def wrapper(self):
-#         try:
-#             self.schedule = func(self)
-#         except Exception as e:
-#             print (str(e))
-#             self.schedule = NullClass(str(e))
-#         return self.schedule
-#     return wrapper
+
+def error_handle(func):
+    def wrapper(self, **kwargs):
+        try:
+            return func(self, **kwargs)
+        except Exception as e:
+            # 请求失败 销毁类方法
+            return NullClass('{}: {}'.format(func.__name__, e))
+    return wrapper
 
 
 class SchoolClient(BaseSchoolClient):
@@ -40,16 +40,10 @@ class UserClient(BaseUserClient):
         self.user_type = kwargs.get('user_type', UserType.STUDENT)
         self.schedule_type = kwargs.get('schedule_type', ScheduleType.PERSON)
 
-    # @error_handle
+    @error_handle
     def get_login(self):
-        try:
-            return self.login(timeout=self.timeout)
-        except Exception as e:
-            # 请求失败 销毁类方法
-            return NullClass('%s: %s ' % (self.get_login.__name__, str(e)))
+        return self.login(timeout=self.timeout)
 
+    @error_handle
     def get_schedule(self, **kwargs):
-        try:
-            return self.schedule.get_schedule(**kwargs)
-        except Exception as e:
-            return NullClass('%s: %s ' % (self.get_schedule.__name__, str(e)))
+        return self.schedule.get_schedule(**kwargs)
