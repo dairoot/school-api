@@ -41,8 +41,8 @@ class UserClient(BaseUserClient):
         self.schedule_type = kwargs.get('schedule_type', ScheduleType.PERSON)
 
     @error_handle
-    def get_login(self):
-        return self.login(timeout=self.timeout)
+    def get_login(self, **kwargs):
+        return self.login(**kwargs)
 
     @error_handle
     def get_schedule(self, **kwargs):
