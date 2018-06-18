@@ -22,16 +22,16 @@ class SchoolInfoParse():
 
     def _html_parse_of_student(self):
         table = self.soup.find("table", {"class": "formlist"})
-        real_name = table.find(id="xm").get_text()
-        sex = table.find(id="lbl_xb").get_text()
-        grade = table.find(id="lbl_dqszj").get_text()
-        birth_date = table.find(id="lbl_csrq").get_text()
-        class_name = table.find(id="lbl_xzb").get_text()
-        faculty = table.find(id="lbl_xy").get_text()
-        specialty = table.find(id="lbl_zymc").get_text()
-        hometown = table.find(id="lbl_lydq").get_text()
-        enrol_time = table.find(id="lbl_rxrq").get_text()
-        id_card = table.find(id="lbl_sfzh").get_text()
+        real_name = table.find(id="xm").text
+        sex = table.find(id="lbl_xb").text
+        grade = table.find(id="lbl_dqszj").text
+        birth_date = table.find(id="lbl_csrq").text
+        class_name = table.find(id="lbl_xzb").text
+        faculty = table.find(id="lbl_xy").text
+        specialty = table.find(id="lbl_zymc").text
+        hometown = table.find(id="lbl_lydq").text
+        enrol_time = table.find(id="lbl_rxrq").text
+        id_card = table.find(id="lbl_sfzh").text
         self.data = {
             "real_name": real_name,
             "sex": sex,
@@ -47,12 +47,12 @@ class SchoolInfoParse():
 
     def _html_parse_of_teacher(self):
         table = self.soup.find(id="Table3")
-        real_name = table.find(id='xm').getText()
-        sex = table.find(id='xb').getText()
-        dept = table.find(id='bm').getText()
-        position = table.find(id='zw').getText()
-        associate_degree = table.find(id='xl').getText()
-        positional_title = table.find(id='zc').getText()
+        real_name = table.find(id='xm').text
+        sex = table.find(id='xb').text
+        dept = table.find(id='bm').text
+        position = table.find(id='zw').text
+        associate_degree = table.find(id='xl').text
+        positional_title = table.find(id='zc').text
         self.data = {
             "real_name": real_name,
             "sex": sex,
