@@ -1,7 +1,6 @@
-
-
 from school_api.client.base import BaseUserClient, BaseSchoolClient
 from school_api.client.api.schedule import Schedule
+from school_api.client.api.user_info import SchoolInfo
 from school_api.client.utils import UserType, ScheduleType, NullClass
 
 
@@ -35,6 +34,7 @@ class SchoolClient(BaseSchoolClient):
 class UserClient(BaseUserClient):
 
     schedule = Schedule()
+    info = SchoolInfo()
 
     def __init__(self, school, account, passwd, **kwargs):
         self.account = account
@@ -50,3 +50,7 @@ class UserClient(BaseUserClient):
     @error_handle
     def get_schedule(self, **kwargs):
         return self.schedule.get_schedule(**kwargs)
+
+    @error_handle
+    def get_info(self, **kwargs):
+        return self.info.get_info(**kwargs)

@@ -18,11 +18,16 @@ class BaseSchoolClient(object):
 
     school_url = [
         {
+            # 学生
             'SCORE_URL': '/xscj_gc.aspx?xh=',
+            'INFO_URL': '/xsgrxx.aspx?gnmkdm=N121501&xh=',
             'SCHEDULE_URL': ['/xskbcx.aspx?gnmkdm=N121603&xh=', '/tjkbcx.aspx?gnmkdm=N121601&xh=']
         }, {
+            # 教师
+            'INFO_URL': '/lw_jsxx.aspx?gnmkdm=N122502&zgh=',
             'SCHEDULE_URL': ['', '/jstjkbcx.aspx?gnmkdm=N122303&zgh=']
         }, {
+            # 部门
             'SCHEDULE_URL': ['']
         }
     ]
