@@ -19,12 +19,11 @@ class BaseSchoolClient(object):
     school_url = [
         {
             'SCORE_URL': '/xscj_gc.aspx?xh=',
-            'PERSON_SCHEDULE_URL': '/xskbcx.aspx?gnmkdm=N121603&xh=',
-            'CLASS_SCHEDULE_URL': '/tjkbcx.aspx?gnmkdm=N121601&xh='
+            'SCHEDULE_URL': ['/xskbcx.aspx?gnmkdm=N121603&xh=', '/tjkbcx.aspx?gnmkdm=N121601&xh=']
         }, {
-            'CLASS_SCHEDULE_URL': '/jstjkbcx.aspx?gnmkdm=N122303&zgh='
+            'SCHEDULE_URL': ['', '/jstjkbcx.aspx?gnmkdm=N122303&zgh=']
         }, {
-            'SCHEDULE_URL': ''
+            'SCHEDULE_URL': ['']
         }
     ]
 

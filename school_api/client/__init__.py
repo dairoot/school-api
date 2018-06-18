@@ -42,7 +42,6 @@ class UserClient(BaseUserClient):
         self.school = school
         self.timeout = kwargs.get('timeout', 15)
         self.user_type = kwargs.get('user_type', UserType.STUDENT)
-        self.schedule_type = kwargs.get('schedule_type', ScheduleType.PERSON)
 
     @error_handle
     def get_login(self, **kwargs):

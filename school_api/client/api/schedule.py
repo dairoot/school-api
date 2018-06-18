@@ -7,44 +7,38 @@ from urllib import parse
 
 class Schedule(BaseSchoolApi):
 
+    def _get_schedule(self, **kwargs):
+        coding = ['GB18030', 'gbk'][self.user_type]
+
+        res = self._get(self.schedule_url, **kwargs)
+        if res.status_code != 200:
+            return None
+        schedule = ScheduleParse(res.content.decode(coding), self.schedule_type).get_schedule_dict()
+        '''
+        第一次请求的时候，教务系统默认返回最新课表
+        如果设置了学年跟学期，匹配学年跟学期，不匹配则获取指定学年学期的课表
+        '''
+        if self.schedule_year and self.schedule_term:
+            if self.schedule_year != schedule['schedule_year'] or self.schedule_term != schedule['schedule_term']:
+                view_state = self._get_view_state_from_html(res.text)
+                payload = {
+                    '__VIEWSTATE': view_state,
+                    ['xnd', 'xn'][self.schedule_type]: self.schedule_year,
+                    ['xqd', 'xq'][self.schedule_type]: self.schedule_term
+                }
+                res = self._post(self.schedule_url, data=payload, **kwargs)
+                if res.status_code != 200:
+                    return None
+                schedule = ScheduleParse(res.content.decode(coding), self.schedule_type).get_schedule_dict()
+        return schedule
+
     def get_schedule(self, **kwargs):
-        schedule_func = [self.__get_student_schedule,
-                         self.__get_teacher_schedule,
-                         self.__get_dept_class_schedule]
-        self.schedule_type = kwargs.get('schedule_type', self.schedule_type)
+        self.schedule_type = ScheduleType.CLASS if self.user_type else kwargs.get('schedule_type', ScheduleType.PERSON)
+        self.schedule_year = kwargs.get('schedule_year')
+        self.schedule_term = kwargs.get('schedule_term')
+        self.schedule_url = self.school_url["SCHEDULE_URL"][self.schedule_type] + self.account
+        print(self.schedule_year, self.schedule_term)
         kwargs.pop('schedule_type', None)
-        return schedule_func[self.user_type](**kwargs)
-
-    def __get_student_schedule(self, **kwargs):
-        """
-        获取学生个人课表
-        :return: 返回学生个人课表信息字典
-        """
-        url = self.school_url["PERSON_SCHEDULE_URL"] if self.schedule_type == ScheduleType.PERSON else self.school_url["CLASS_SCHEDULE_URL"]
-        # url = 'http://61.142.33.2' + self.school_url["PERSON_SCHEDULE_URL"]
-        res = self._get(url+self.account, **kwargs)
-        if res.status_code != 200:
-            return None
-        schedule = ScheduleParse(res.content.decode('GB18030'), self.schedule_type).get_schedule_dict()
-        view_state = self._get_view_state_from_html(res.text)
-        # print (view_state)
-        return schedule
-
-    def __get_dept_class_schedule(self, class_name, school_year, school_term):
-        """
-        通过部门账号获取 学生班级课表
-        :return: 返回学生班级课表信息字典
-        """
-        pass
-
-    def __get_teacher_schedule(self, **kwargs):
-        """
-        获取教师课表
-        :return: 返回教师课表信息字典
-        """
-        url = self.school_url["CLASS_SCHEDULE_URL"] + self.account
-        res = self._get(url, **kwargs)
-        if res.status_code != 200:
-            return None
-        schedule = ScheduleParse(res.content.decode('gbk'), ScheduleType.CLASS).get_schedule_dict()
-        return schedule
+        kwargs.pop('schedule_year', None)
+        kwargs.pop('schedule_term', None)
+        return self._get_schedule(**kwargs)

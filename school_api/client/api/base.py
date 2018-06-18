@@ -29,9 +29,6 @@ class BaseSchoolApi(object):
     def user_type(self):
         return self._client.user_type
 
-    def schedule_type(self):
-        return self._client.schedule_type
-
     @property
     def school_url(self):
         return self._client.school.school_url[self.user_type]
