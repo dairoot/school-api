@@ -36,11 +36,11 @@ class BaseSchoolClient(object):
 class BaseUserClient(object):
     """docstring for BaseUserClient"""
 
-    _http = requests.Session()
     _proxy = None
 
     def __new__(cls, *args, **kwargs):
         self = super(BaseUserClient, cls).__new__(cls)
+        self._http = requests.Session()
         api_endpoints = inspect.getmembers(self, _is_api_endpoint)
         for name, api in api_endpoints:
             api_cls = type(api)
