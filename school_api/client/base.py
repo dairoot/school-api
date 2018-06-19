@@ -28,7 +28,7 @@ class BaseSchoolClient(object):
             'SCHEDULE_URL': ['', '/jstjkbcx.aspx?gnmkdm=N122303&zgh=']
         }, {
             # 部门
-            'SCHEDULE_URL': ['']
+            'SCHEDULE_URL': ['', '/tjkbcx.aspx?gnmkdm=N120313&xh=']
         }
     ]
 

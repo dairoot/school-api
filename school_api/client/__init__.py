@@ -17,10 +17,9 @@ class SchoolClient(BaseSchoolClient):
         self.use_proxy = kwargs.get('use_proxy')
         self.school_url = kwargs.get('conf_url') or self.school_url
 
-    def user_login(self, account, passwd, **kwargs):
-        user_type = kwargs.get('user_type', UserType.STUDENT)
+    def user_login(self, account, passwd, user_type=None, **kwargs):
+        user_type = UserType.STUDENT if user_type is None else user_type
         user = UserClient(self, account, passwd, user_type)
-        kwargs.pop('user_type', None)
         return user.user_login(**kwargs)
 
 
