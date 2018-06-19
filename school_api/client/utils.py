@@ -1,4 +1,4 @@
-import requests
+from requests import exceptions
 
 
 class UserType():
@@ -32,9 +32,7 @@ def error_handle(func):
             # 请求失败 销毁类方法
             try:
                 return func(self, **kwargs)
-            except requests.exceptions.ConnectTimeout:
-                return NullClass('{}: {} {}'.format(func.__name__, self.school.url, '请求超时'))
-            except requests.exceptions.ReadTimeout:
+            except exceptions.Timeout:
                 return NullClass('{}: {} {}'.format(func.__name__, self.school.url, '请求超时'))
             except Exception as e:
                 return NullClass('{}: {}'.format(func.__name__, e))
