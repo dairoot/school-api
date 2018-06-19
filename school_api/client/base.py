@@ -126,7 +126,7 @@ class BaseUserClient(object):
             res = self._login(**kwargs)
         except requests.exceptions.Timeout as e:
             if self.school.proxies and self.school.lan_url and not self.school.use_proxy:
-                logger.warning("[%s]: 教务系统外网异常，切换内网代理，错误信息: %s" % (self.BASE_URL, e))
+                logger.warning("[%s]: 教务系统外网异常，切换内网代理，错误信息: %s" % (self.school.name or self.BASE_URL, e))
                 # 使用内网代理
                 self.school.use_proxy = True
                 self.set_proxy()

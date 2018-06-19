@@ -30,12 +30,13 @@ def error_handle(func):
     def wrapper(self, **kwargs):
         if not self.school.debug:
             # 请求失败 销毁类方法
+            tip = '[{}]: 教务系统[{}]]函数'.format(self.school.name or self.BASE_URL, func.__name__)
             try:
                 return func(self, **kwargs)
-            except exceptions.Timeout:
-                return NullClass('[{}]: 教务系统[{}]函数请求超时'.format(self.BASE_URL, func.__name__))
+            except exceptions.Timeout as e:
+                return NullClass(tip + '请求超时，错误信息: {}'.format(e))
             except Exception as e:
-                return NullClass('[{}]: 教务系统[{}]报错，错误信息: {}'.format(self.BASE_URL, func.__name__, e))
+                return NullClass(tip + '报错，错误信息: {}'.format(e))
         else:
             return func(self, **kwargs)
     return wrapper

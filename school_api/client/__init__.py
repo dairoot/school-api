@@ -10,6 +10,7 @@ class SchoolClient(BaseSchoolClient):
     def __init__(self, url, **kwargs):
         self.url = url
         self.login_url_suffix = '/default4.aspx'
+        self.name = kwargs.get('name')
         self.debug = kwargs.get('debug')
         self.lan_url = kwargs.get('lan_url')
         self.proxies = kwargs.get('proxies')

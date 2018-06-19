@@ -2,6 +2,7 @@ from school_api import SchoolClient
 
 
 conf = {
+    'name': '广东科技学院',
     'debug': True,                 # 模块调试
     'lan_url': 'http://172.16.1.8',  # 内网地址
     'use_proxy': False,             # 是否优先使用代理
@@ -15,7 +16,7 @@ GdouApi = SchoolClient(url='http://210.38.137.126:8016')    # 注册一个学校
 
 
 client_a = GdstApi.user_login('XXXX', 'XXXXXXXX', timeout=2)  # 学校A实例化一个学生
-client_b = GdstApi.user_login('XXXX', 'XXXXXXXX', user_type=1)  # 学校A实例化一个教师
+client_b = GdstApi.user_login('XXXX', 'XXXXXXXX', user_type=1, timeout=2)  # 学校A实例化一个教师
 # client_c = GdstApi.user_login('XXXX', 'XXXXXXXX', user_type=1)  # 学校A实例化一个部门教师
 
 # 获取 2017-2018学年1学期的 课表
