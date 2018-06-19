@@ -33,9 +33,9 @@ def error_handle(func):
             try:
                 return func(self, **kwargs)
             except exceptions.Timeout:
-                return NullClass('{}: {} {}'.format(func.__name__, self.BASE_URL, '请求超时'))
+                return NullClass('[{}]: 教务系统[{}]函数请求超时'.format(self.BASE_URL, func.__name__))
             except Exception as e:
-                return NullClass('{}: {}'.format(func.__name__, e))
+                return NullClass('[{}]: 教务系统[{}]报错，错误信息: {}'.format(self.BASE_URL, func.__name__, e))
         else:
             return func(self, **kwargs)
     return wrapper

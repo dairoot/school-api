@@ -107,12 +107,13 @@ class BaseUserClient(object):
         self._http.headers.update(headers_dict)
 
     def _login(self, **kwargs):
+        login_types = [u'学生', u'教师', u'部门']
         view_state = self.get_view_state(self.school.login_url_suffix, **kwargs)
         payload = {
             '__VIEWSTATE': view_state,
             'TextBox1': self.account.encode('gb2312'),
             'TextBox2': self.passwd,
-            'RadioButtonList1': self.school._login_types[self.user_type].encode('gb2312'),
+            'RadioButtonList1': login_types[self.user_type].encode('gb2312'),
             'Button1': u' 登 录 '.encode('gb2312')
         }
         self.update_headers({'Referer': self.school.url+self.school.login_url_suffix})
@@ -125,6 +126,7 @@ class BaseUserClient(object):
             res = self._login(**kwargs)
         except requests.exceptions.Timeout as e:
             if self.school.proxies and self.school.lan_url and not self.school.use_proxy:
+                logger.warning("[%s]: 教务系统外网异常，切换内网代理，错误信息: %s" % (self.BASE_URL, e))
                 # 使用内网代理
                 self.school.use_proxy = True
                 self.set_proxy()

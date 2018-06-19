@@ -9,7 +9,6 @@ class SchoolClient(BaseSchoolClient):
 
     def __init__(self, url, **kwargs):
         self.url = url
-        self._login_types = [u'学生', u'教师', u'部门']
         self.login_url_suffix = '/default4.aspx'
         self.debug = kwargs.get('debug')
         self.lan_url = kwargs.get('lan_url')
@@ -18,7 +17,9 @@ class SchoolClient(BaseSchoolClient):
         self.school_url = kwargs.get('conf_url') or self.school_url
 
     def user_login(self, account, passwd, **kwargs):
-        user = UserClient(self, account, passwd)
+        user_type = kwargs.get('user_type', UserType.STUDENT)
+        user = UserClient(self, account, passwd, user_type)
+        kwargs.pop('user_type', None)
         return user.user_login(**kwargs)
 
 
@@ -28,11 +29,11 @@ class UserClient(BaseUserClient):
     info = SchoolInfo()
     schedule = Schedule()
 
-    def __init__(self, school, account, passwd, **kwargs):
+    def __init__(self, school, account, passwd, user_type, **kwargs):
         self.account = account
         self.passwd = passwd
         self.school = school
-        self.user_type = kwargs.get('user_type', UserType.STUDENT)
+        self.user_type = user_type
         self.BASE_URL = self.school.url
         if self.school.use_proxy:
             self.set_proxy()

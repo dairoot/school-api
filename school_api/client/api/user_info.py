@@ -6,7 +6,6 @@ class SchoolInfo(BaseSchoolApi):
 
     def get_info(self, **kwargs):
         info_url = self.school_url['INFO_URL'] + self.account
-        print(info_url)
         res = self._get(info_url, **kwargs)
         if res.status_code != 200:
             return None
