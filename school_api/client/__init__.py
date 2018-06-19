@@ -14,6 +14,8 @@ def error_handle(func):
                 return func(self, **kwargs)
             except requests.exceptions.ConnectTimeout:
                 return NullClass('{}: {} {}'.format(func.__name__, self.school.url, '请求超时'))
+            except requests.exceptions.ReadTimeout:
+                return NullClass('{}: {} {}'.format(func.__name__, self.school.url, '请求超时'))
             except Exception as e:
                 # 请求失败 销毁类方法
                 return NullClass('{}: {}'.format(func.__name__, e))
