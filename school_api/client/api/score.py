@@ -4,11 +4,7 @@ from bs4 import BeautifulSoup
 
 class Score(BaseSchoolApi):
 
-    def get_score(self, **kwargs):
-        year = kwargs.get('score_year')
-        term = kwargs.get('score_term')
-        kwargs.pop('score_year', None)
-        kwargs.pop('score_term', None)
+    def get_score(self, score_year=None, score_term=None, **kwargs):
         score_url = self.school_url['SCORE_URL'] + self.account
         view_state = self._get_view_state(score_url)
         payload = {
@@ -20,7 +16,7 @@ class Score(BaseSchoolApi):
         res = self._post(score_url, data=payload, **kwargs)
         if res.status_code != 200:
             return None
-        return ScoreParse(res.content).get_score(year, term)
+        return ScoreParse(res.content).get_score(score_year, score_term)
 
 
 class ScoreParse():
