@@ -1,3 +1,5 @@
+import requests
+
 from school_api.client.base import BaseUserClient, BaseSchoolClient
 from school_api.client.api.score import Score
 from school_api.client.api.schedule import Schedule
@@ -10,6 +12,8 @@ def error_handle(func):
         if not self.school.debug:
             try:
                 return func(self, **kwargs)
+            except requests.exceptions.ConnectTimeout:
+                return NullClass('{}: {} {}'.format(func.__name__, self.school.url, '请求超时'))
             except Exception as e:
                 # 请求失败 销毁类方法
                 return NullClass('{}: {}'.format(func.__name__, e))
@@ -28,8 +32,8 @@ class SchoolClient(BaseSchoolClient):
         self.school_url = conf_url or self.school_url
 
     def user_login(self, account, passwd, **kwargs):
-        user = UserClient(self, account, passwd, **kwargs)
-        return user.get_login()
+        user = UserClient(self, account, passwd)
+        return user.get_login(**kwargs)
 
 
 class UserClient(BaseUserClient):
@@ -42,7 +46,6 @@ class UserClient(BaseUserClient):
         self.account = account
         self.passwd = passwd
         self.school = school
-        self.timeout = kwargs.get('timeout', 15)
         self.user_type = kwargs.get('user_type', UserType.STUDENT)
 
     @error_handle
