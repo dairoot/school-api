@@ -7,16 +7,18 @@ from school_api.client.utils import UserType, ScheduleType, NullClass, error_han
 
 class SchoolClient(BaseSchoolClient):
 
-    def __init__(self, url, debug=False, conf_url=None):
-        self.debug = debug
+    def __init__(self, url, **kwargs):
         self.url = url
         self._login_types = [u'学生', u'教师', u'部门']
         self.login_url_suffix = '/default4.aspx'
-        self.school_url = conf_url or self.school_url
+        self.debug = kwargs.get('debug')
+        self.lan_url = kwargs.get('lan_url')
+        self.proxies = kwargs.get('proxies')
+        self.school_url = kwargs.get('conf_url') or self.school_url
 
     def user_login(self, account, passwd, **kwargs):
         user = UserClient(self, account, passwd)
-        return user.get_login(**kwargs)
+        return user.user_login(**kwargs)
 
 
 class UserClient(BaseUserClient):
@@ -32,8 +34,8 @@ class UserClient(BaseUserClient):
         self.user_type = kwargs.get('user_type', UserType.STUDENT)
 
     @error_handle
-    def get_login(self, **kwargs):
-        return self.login(**kwargs)
+    def user_login(self, **kwargs):
+        return self.get_login(**kwargs)
 
     @error_handle
     def get_schedule(self, **kwargs):

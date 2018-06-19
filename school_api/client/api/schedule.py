@@ -37,7 +37,6 @@ class Schedule(BaseSchoolApi):
         self.schedule_year = kwargs.get('schedule_year')
         self.schedule_term = kwargs.get('schedule_term')
         self.schedule_url = self.school_url["SCHEDULE_URL"][self.schedule_type] + self.account
-        print(self.schedule_year, self.schedule_term)
         kwargs.pop('schedule_type', None)
         kwargs.pop('schedule_year', None)
         kwargs.pop('schedule_term', None)

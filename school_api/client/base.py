@@ -16,6 +16,7 @@ def _is_api_endpoint(obj):
 
 class BaseSchoolClient(object):
 
+    use_proxy = False
     school_url = [
         {
             # 学生
@@ -56,9 +57,14 @@ class BaseUserClient(object):
         })
 
     def _request(self, method, url_or_endpoint, **kwargs):
+        if self.school.use_proxy:
+            base_url = self.school.lan_url
+            kwargs['proxies'] = self.proxies
+        else:
+            base_url = self.school.url
         if not url_or_endpoint.startswith(('http://', 'https://')):
             url = '{base}{endpoint}'.format(
-                base=self.school.url,
+                base=base_url,
                 endpoint=url_or_endpoint
             )
         else:
@@ -100,7 +106,7 @@ class BaseUserClient(object):
     def update_headers(self, headers_dict):
         self._http.headers.update(headers_dict)
 
-    def login(self, **kwargs):
+    def _login(self, **kwargs):
         view_state = self.get_view_state(self.school.login_url_suffix, **kwargs)
         payload = {
             '__VIEWSTATE': view_state,
@@ -112,10 +118,21 @@ class BaseUserClient(object):
         self.update_headers({'Referer': self.school.url+self.school.login_url_suffix})
         res = self.post(self.school.login_url_suffix, data=payload,
                         allow_redirects=False, **kwargs)
+        return res
+
+    def get_login(self, **kwargs):
+        try:
+            res = self._login(**kwargs)
+        except requests.exceptions.Timeout:
+            # 使用内网代理
+            if self.school.proxies and self.school.lan_url:
+                self.use_proxy = True
+                return self._login(**kwargs)
+            return NullClass('user_login: {} {}'.format(self.school.url, '请求超时'))
 
         # 登录成功之后，教务系统会返回 302 跳转
         if not res.status_code == 302:
             page_soup = BeautifulSoup(res.text, "html.parser", parse_only=SoupStrainer("script"))
             tip = re.findall(r'[^()\']+', page_soup.getText())[1]
-            self.schedule = NullClass(tip)
+            self = NullClass(tip)
         return self
