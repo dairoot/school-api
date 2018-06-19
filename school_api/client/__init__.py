@@ -1,27 +1,8 @@
-import requests
-
 from school_api.client.base import BaseUserClient, BaseSchoolClient
 from school_api.client.api.score import Score
 from school_api.client.api.schedule import Schedule
 from school_api.client.api.user_info import SchoolInfo
-from school_api.client.utils import UserType, ScheduleType, NullClass
-
-
-def error_handle(func):
-    def wrapper(self, **kwargs):
-        if not self.school.debug:
-            try:
-                return func(self, **kwargs)
-            except requests.exceptions.ConnectTimeout:
-                return NullClass('{}: {} {}'.format(func.__name__, self.school.url, '请求超时'))
-            except requests.exceptions.ReadTimeout:
-                return NullClass('{}: {} {}'.format(func.__name__, self.school.url, '请求超时'))
-            except Exception as e:
-                # 请求失败 销毁类方法
-                return NullClass('{}: {}'.format(func.__name__, e))
-        else:
-            return func(self, **kwargs)
-    return wrapper
+from school_api.client.utils import UserType, ScheduleType, NullClass, error_handle
 
 
 class SchoolClient(BaseSchoolClient):
