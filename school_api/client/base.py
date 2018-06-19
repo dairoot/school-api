@@ -125,10 +125,11 @@ class BaseUserClient(object):
             res = self._login(**kwargs)
         except requests.exceptions.Timeout:
             # 使用内网代理
-            if self.school.proxies and self.school.lan_url:
+            if self.school.proxies and self.school.lan_url and not self.use_proxy:
                 self.use_proxy = True
                 return self._login(**kwargs)
-            return NullClass('user_login: {} {}'.format(self.school.url, '请求超时'))
+            tip = 'user_login: {} {}'.format(self.school.url, '请求超时')
+            return NullClass(tip)
 
         # 登录成功之后，教务系统会返回 302 跳转
         if not res.status_code == 302:
