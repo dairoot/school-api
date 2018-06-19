@@ -5,6 +5,10 @@ from bs4 import BeautifulSoup
 class Score(BaseSchoolApi):
 
     def get_score(self, **kwargs):
+        year = kwargs.get('score_year')
+        term = kwargs.get('score_term')
+        kwargs.pop('score_year', None)
+        kwargs.pop('score_term', None)
         score_url = self.school_url['SCORE_URL'] + self.account
         view_state = self._get_view_state(score_url)
         payload = {
@@ -16,7 +20,7 @@ class Score(BaseSchoolApi):
         res = self._post(score_url, data=payload, **kwargs)
         if res.status_code != 200:
             return None
-        return ScoreParse(res.content).get_score()
+        return ScoreParse(res.content).get_score(year, term)
 
 
 class ScoreParse():
@@ -33,7 +37,7 @@ class ScoreParse():
             cells = row.find_all("td")
             # 学年学期
             year = cells[0].text
-            term = int(cells[1].text)
+            term = cells[1].text
             # 课程名
             lesson_name = cells[3].text.strip()
             credit = cells[6].text.strip() or 0
@@ -55,14 +59,13 @@ class ScoreParse():
                 # 重修成绩
                 score_dict['cxcj'] = retake_score
             # 组装数组格式的数据备用
-            self.score_info[year] = self.score_info.get(year, [[], []])
-            self.score_info[year][term-1].append(score_dict)
+            self.score_info[year] = self.score_info.get(year, {})
+            self.score_info[year][term] = self.score_info[year].get(term, [])
+            self.score_info[year][term].append(score_dict)
 
-    def get_score(self, year=None, term=None):
-        if not year:
-            return self.score_info
-        else:
-            if not term:
-                return self.score_info[year]
-            else:
+    def get_score(self, year, term):
+        if year:
+            if term:
                 return self.score_info[year][term]
+            return self.score_info[year]
+        return self.score_info
