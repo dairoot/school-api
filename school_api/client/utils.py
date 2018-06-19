@@ -33,7 +33,7 @@ def error_handle(func):
             try:
                 return func(self, **kwargs)
             except exceptions.Timeout:
-                return NullClass('{}: {} {}'.format(func.__name__, self.school.url, '请求超时'))
+                return NullClass('{}: {} {}'.format(func.__name__, self.BASE_URL, '请求超时'))
             except Exception as e:
                 return NullClass('{}: {}'.format(func.__name__, e))
         else:

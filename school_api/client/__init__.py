@@ -14,6 +14,7 @@ class SchoolClient(BaseSchoolClient):
         self.debug = kwargs.get('debug')
         self.lan_url = kwargs.get('lan_url')
         self.proxies = kwargs.get('proxies')
+        self.use_proxy = kwargs.get('use_proxy')
         self.school_url = kwargs.get('conf_url') or self.school_url
 
     def user_login(self, account, passwd, **kwargs):
@@ -32,6 +33,9 @@ class UserClient(BaseUserClient):
         self.passwd = passwd
         self.school = school
         self.user_type = kwargs.get('user_type', UserType.STUDENT)
+        self.BASE_URL = self.school.url
+        if self.school.use_proxy:
+            self.set_proxy()
 
     @error_handle
     def user_login(self, **kwargs):

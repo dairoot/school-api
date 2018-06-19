@@ -16,7 +16,6 @@ def _is_api_endpoint(obj):
 
 class BaseSchoolClient(object):
 
-    use_proxy = False
     school_url = [
         {
             # 学生
@@ -38,6 +37,7 @@ class BaseUserClient(object):
     """docstring for BaseUserClient"""
 
     _http = requests.Session()
+    _proxy = None
 
     def __new__(cls, *args, **kwargs):
         self = super(BaseUserClient, cls).__new__(cls)
@@ -57,13 +57,9 @@ class BaseUserClient(object):
         })
 
     def _request(self, method, url_or_endpoint, **kwargs):
-        if self.school.use_proxy:
-            self.school.url = self.school.lan_url
-            kwargs['proxies'] = self.school.proxies
-
         if not url_or_endpoint.startswith(('http://', 'https://')):
             url = '{base}{endpoint}'.format(
-                base=self.school.url,
+                base=self.BASE_URL,
                 endpoint=url_or_endpoint
             )
         else:
@@ -72,6 +68,7 @@ class BaseUserClient(object):
         res = self._http.request(
             method=method,
             url=url,
+            proxies=self._proxy,
             **kwargs
         )
         return res
@@ -89,6 +86,10 @@ class BaseUserClient(object):
             url_or_endpoint=url,
             **kwargs
         )
+
+    def set_proxy(self):
+        self.BASE_URL = self.school.lan_url or self.school.url
+        self._proxy = self.school.proxies
 
     def get_view_state(self, url_suffix, **kwargs):
         res = self.get(url_suffix, allow_redirects=False, **kwargs)
@@ -126,7 +127,8 @@ class BaseUserClient(object):
             if self.school.proxies and self.school.lan_url and not self.school.use_proxy:
                 # 使用内网代理
                 self.school.use_proxy = True
-                return self._login(**kwargs)
+                self.set_proxy()
+                res = self._login(**kwargs)
 
         # 登录成功之后，教务系统会返回 302 跳转
         if not res.status_code == 302:
