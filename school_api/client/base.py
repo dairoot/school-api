@@ -58,13 +58,12 @@ class BaseUserClient(object):
 
     def _request(self, method, url_or_endpoint, **kwargs):
         if self.school.use_proxy:
-            base_url = self.school.lan_url
-            kwargs['proxies'] = self.proxies
-        else:
-            base_url = self.school.url
+            self.school.url = self.school.lan_url
+            kwargs['proxies'] = self.school.proxies
+
         if not url_or_endpoint.startswith(('http://', 'https://')):
             url = '{base}{endpoint}'.format(
-                base=base_url,
+                base=self.school.url,
                 endpoint=url_or_endpoint
             )
         else:
@@ -123,13 +122,11 @@ class BaseUserClient(object):
     def get_login(self, **kwargs):
         try:
             res = self._login(**kwargs)
-        except requests.exceptions.Timeout:
-            # 使用内网代理
-            if self.school.proxies and self.school.lan_url and not self.use_proxy:
-                self.use_proxy = True
+        except requests.exceptions.Timeout as e:
+            if self.school.proxies and self.school.lan_url and not self.school.use_proxy:
+                # 使用内网代理
+                self.school.use_proxy = True
                 return self._login(**kwargs)
-            tip = 'user_login: {} {}'.format(self.school.url, '请求超时')
-            return NullClass(tip)
 
         # 登录成功之后，教务系统会返回 302 跳转
         if not res.status_code == 302:
