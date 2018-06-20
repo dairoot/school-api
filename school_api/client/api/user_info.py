@@ -1,5 +1,5 @@
-from school_api.client.api.base import BaseSchoolApi
 from bs4 import BeautifulSoup
+from school_api.client.api.base import BaseSchoolApi
 
 
 class SchoolInfo(BaseSchoolApi):
@@ -16,7 +16,7 @@ class SchoolInfoParse():
 
     def __init__(self, user_type, html):
         self.data = {}
-        coding = ['GB18030', 'gbk'][user_type]
+        coding = 'gbk' if user_type else 'GB18030'
         self.soup = BeautifulSoup(html.decode(coding), "html.parser")
         [self._html_parse_of_student, self._html_parse_of_teacher][user_type]()
 

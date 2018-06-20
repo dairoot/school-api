@@ -60,10 +60,10 @@ class ScheduleParse(object):
                 if tds[day].text != u' ':
                     td_str = str(tds[day])
                     rowspan = 2 if 'rowspan="2"' in td_str else 1
-                    td_main = re.sub('<td align="Center".*?>', '', td_str)[:-5]
+                    td_main = re.sub(r'<td align="Center".*?>', '', td_str)[:-5]
                     for text in td_main.split('<br/><br/>'):
-                        text = re.sub('<[/]{0,1}font[^>]*?>', '', text)
-                        text = re.sub('^<br/>', '', text)
+                        text = re.sub(r'<[/]{0,1}font[^>]*?>', '', text)
+                        text = re.sub(r'^<br/>', '', text)
                         arr = [k for k in text.split('<br/>')][:4:]
                         if len(arr) == 3:
                             # 没有上课地点的情况
@@ -80,10 +80,11 @@ class ScheduleParse(object):
         for day, day_schedule in enumerate(self.schedule_list):
             for section, section_schedule in enumerate(day_schedule):
                 section_schedule_dict = []
+                color_index = (day * 3 + section + 1) % 5
                 for schedule in section_schedule:
                     if schedule:
                         section_schedule_dict.append({
-                            "color": self.COlOR[(day * 3 + section + 1) % 5],
+                            "color": self.COlOR[color_index],
                             "name": schedule[0],
                             "weeks_txt": schedule[1],
                             "teacher": schedule[2],
@@ -93,6 +94,7 @@ class ScheduleParse(object):
                             "time": self.TIME_LIST[schedule[4]][section]
                         })
                 self.schedule_dict[day].append(section_schedule_dict)
+                
         schedule_data = {
             'schedule_term': self.schedule_term,
             'schedule_year': self.schedule_year,

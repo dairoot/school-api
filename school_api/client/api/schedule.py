@@ -1,8 +1,9 @@
+from urllib import parse
+from bs4 import BeautifulSoup
+
 from school_api.client.api.base import BaseSchoolApi
 from school_api.client.api.utils.schedule_parse import ScheduleParse
 from school_api.client.utils import ScheduleType
-from urllib import parse
-from bs4 import BeautifulSoup
 
 
 class Schedule(BaseSchoolApi):
@@ -36,6 +37,21 @@ class Schedule(BaseSchoolApi):
 
         return schedule
 
+    def _get_schedule_payload(self, html, class_name):
+        '''
+        提取页面参数用于请求课表
+        '''
+        pre_soup = BeautifulSoup(html, "html.parser")
+        schedule_view_state = pre_soup.find(attrs={"name": "__VIEWSTATE"})['value']
+        schedule_id_list = pre_soup.find(id='kb').find_all('option')
+        schedule_id = [name['value'] for name in schedule_id_list if name.text == class_name]
+        # 获取班级课表
+        payload = {
+            '__VIEWSTATE': schedule_view_state,
+            'kb': schedule_id
+        }
+        return payload
+
     def _get_schedule_by_bm(self, class_name, **kwargs):
         # 部门教师 查询学生班级课表  暂不做 学期学年 选择
         res = self._get(self.schedule_url, **kwargs)
@@ -43,17 +59,7 @@ class Schedule(BaseSchoolApi):
         if res.status_code != 200:
             return None
 
-        pre_soup = BeautifulSoup(res.content.decode('gbk'), "html.parser")
-        schedule_view_state = pre_soup.find(attrs={"name": "__VIEWSTATE"})['value']
-        schedule_id_list = pre_soup.find(id='kb').find_all('option')
-        schedule_id = [name['value'] for name in schedule_id_list if name.get_text() == class_name]
-        # 获取班级课表
-        payload = {
-            '__VIEWSTATE': schedule_view_state,
-            # 'xn': school_year,
-            # 'xq': school_term,
-            'kb': schedule_id
-        }
+        payload = self._get_schedule_payload(res.content.decode('gbk'), class_name)
         res = self._post(self.schedule_url, data=payload, **kwargs)
 
         if res.status_code != 200:
@@ -73,8 +79,9 @@ class Schedule(BaseSchoolApi):
 
         if self.user_type != 2:
             self.schedule_url += self.account
-            return self._get_schedule(**kwargs)
-
+            data = self._get_schedule(**kwargs)
         else:
             self.schedule_url += parse.quote(self.account.encode('gb2312'))
-            return self._get_schedule_by_bm(**kwargs)
+            data = self._get_schedule_by_bm(**kwargs)
+
+        return data
