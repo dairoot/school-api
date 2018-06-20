@@ -1,4 +1,8 @@
+import logging
 from requests import exceptions
+
+
+logger = logging.getLogger(__name__)
 
 
 class UserType():
@@ -34,9 +38,13 @@ def error_handle(func):
             try:
                 return func(self, **kwargs)
             except exceptions.Timeout as e:
-                return NullClass(tip + '请求超时，错误信息: {}'.format(e))
+                err_info = tip + '请求超时，错误信息: {}'.format(e)
+                logger.warning(err_info)
+                return NullClass(err_info)
             except Exception as e:
-                return NullClass(tip + '报错，错误信息: {}'.format(e))
+                err_info = tip + '报错，错误信息: {}'.format(e)
+                logger.warning(err_info)
+                return NullClass(err_info)
         else:
             return func(self, **kwargs)
     return wrapper

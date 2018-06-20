@@ -19,9 +19,8 @@ class SchoolClient(BaseSchoolClient):
 
     def user_login(self, account, passwd, user_type=UserType.STUDENT, **kwargs):
         user = UserClient(self, account, passwd, user_type)
-        user.user_login(**kwargs)
-        return user
-
+        return user.user_login(**kwargs)
+  
 class UserClient(BaseUserClient):
 
     score = Score()

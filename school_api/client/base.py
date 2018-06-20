@@ -126,15 +126,20 @@ class BaseUserClient(object):
             res = self._login(**kwargs)
         except requests.exceptions.Timeout as e:
             if self.school.proxies and self.school.lan_url and not self.school.use_proxy:
-                logger.warning("[%s]: 教务系统外网异常，切换内网代理，错误信息: %s" % (self.school.name or self.BASE_URL, e))
+                logger.warning("[%s]: 教务系统外网异常，切换内网代理，错误信息: %s" %
+                               (self.school.name or self.BASE_URL, e))
                 # 使用内网代理
                 self.school.use_proxy = True
                 self.set_proxy()
                 res = self._login(**kwargs)
+            else:
+                res = None
+                logger.warning("[%s]: 教务系统登陆失败，错误信息: %s" % (self.school.name or self.BASE_URL, e))
+                return NullClass('登陆失败')
 
         # 登录成功之后，教务系统会返回 302 跳转
-        if not res.status_code == 302:
+        if res and res.status_code != 302:
             page_soup = BeautifulSoup(res.text, "html.parser", parse_only=SoupStrainer("script"))
             tip = re.findall(r'[^()\']+', page_soup.getText())[1]
-            self = NullClass(tip)
+            return NullClass(tip)
         return self
