@@ -15,6 +15,7 @@ class SchoolInfo(BaseSchoolApi):
 class SchoolInfoParse():
 
     def __init__(self, user_type, html):
+        self.data = {}
         coding = ['GB18030', 'gbk'][user_type]
         self.soup = BeautifulSoup(html.decode(coding), "html.parser")
         [self._html_parse_of_student, self._html_parse_of_teacher][user_type]()

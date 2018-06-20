@@ -6,7 +6,8 @@ from bs4 import BeautifulSoup
 
 
 class ScheduleParse(object):
-    __TIME_LIST = {
+    COlOR = ['green', 'blue', 'purple', 'red', 'yellow']
+    TIME_LIST = {
         # 连续上一节课
         1: [
             '8:30 ~ 9:15', '10:25 ~ 11:10', '14:40 ~ 15:25',
@@ -23,8 +24,7 @@ class ScheduleParse(object):
         4: ['8:30 ~ 12:00', '10:25 ~ 16:15', '14:40 ~ 18:05', '16:30 ~ 21:05']
     }
 
-    def __init__(self, html,  schedule_type=0):
-        self.color = ['green', 'blue', 'purple', 'red', 'yellow']
+    def __init__(self, html, schedule_type=0):
         self.schedule_list = [[], [], [], [], [], [], []]
         self.schedule_dict = [[], [], [], [], [], [], []]
         self.schedule_type = schedule_type
@@ -46,7 +46,7 @@ class ScheduleParse(object):
         :param rowspan: 表示该课程有几节课
         :return:
         """
-        pattern = '^\([\u2E80-\u9FFF]{1,3}\d+\)'
+        pattern = r'^\([\u2E80-\u9FFF]{1,3}\d+\)'
         # 每天最多有10节课, 数据从2到12, (i-1) 代表是第几节课 (偶数节 不获取)
         for i in range(2, 12, 2):
             tds = trs[i].find_all("td")
@@ -55,15 +55,13 @@ class ScheduleParse(object):
                 tds.pop(0)
             tds.pop(0)
             # 默认获取7天内的课表(周一到周日)
-            for n in range(7):
+            for day in range(7):
                 row_arr = []
-                if tds[n].text != u' ':
-
-                    td_str = str(tds[n])
+                if tds[day].text != u' ':
+                    td_str = str(tds[day])
                     rowspan = 2 if 'rowspan="2"' in td_str else 1
-                    td = re.sub('<td align="Center".*?>', '', td_str)[:-5]
-
-                    for text in td.split('<br/><br/>'):
+                    td_main = re.sub('<td align="Center".*?>', '', td_str)[:-5]
+                    for text in td_main.split('<br/><br/>'):
                         text = re.sub('<[/]{0,1}font[^>]*?>', '', text)
                         text = re.sub('^<br/>', '', text)
                         arr = [k for k in text.split('<br/>')][:4:]
@@ -73,8 +71,7 @@ class ScheduleParse(object):
                         if arr[0] and not re.match(pattern, arr[0]):
                             weeks_arr = self.__get_weeks_arr(arr[1])
                             row_arr.append(arr + [rowspan, weeks_arr])
-
-                self.schedule_list[n].append(row_arr)
+                self.schedule_list[day].append(row_arr)
 
     def get_schedule_list(self):
         return self.schedule_list
@@ -86,14 +83,14 @@ class ScheduleParse(object):
                 for schedule in section_schedule:
                     if schedule:
                         section_schedule_dict.append({
-                            "color": self.color[(day * 3 + section + 1) % 5],
+                            "color": self.COlOR[(day * 3 + section + 1) % 5],
                             "name": schedule[0],
                             "weeks_txt": schedule[1],
                             "teacher": schedule[2],
                             "place": schedule[3],
                             "section": schedule[4],
                             "weeks_arr": schedule[5],
-                            "time": self.__TIME_LIST[schedule[4]][section]
+                            "time": self.TIME_LIST[schedule[4]][section]
                         })
                 self.schedule_dict[day].append(section_schedule_dict)
         schedule_data = {
@@ -112,7 +109,7 @@ class ScheduleParse(object):
         :return:
         """
         weeks_arr = []
-        if self.schedule_type == 0:
+        if not self.schedule_type:
             weeks_text = re.findall("{(.*)}", class_time)[0]
         else:
             # 2节/周
@@ -125,6 +122,7 @@ class ScheduleParse(object):
 
         step = 2 if u'单' in weeks_text or u'双' in weeks_text else 1
         for split_text in weeks_text.split(','):
-            weeks = re.findall('(\d{1,2})-(\d{1,2})', split_text)
-            weeks_arr += range(int(weeks[0][0]), int(weeks[0][1]) + 1, step) if weeks else [int(split_text)]
+            weeks = re.findall(r'(\d{1,2})-(\d{1,2})', split_text)
+            weeks_arr += range(int(weeks[0][0]), int(weeks[0][1]) + 1,
+                               step) if weeks else [int(split_text)]
         return weeks_arr

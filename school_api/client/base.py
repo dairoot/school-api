@@ -1,7 +1,7 @@
 import re
-import requests
 import inspect
 import logging
+import requests
 from bs4 import BeautifulSoup, SoupStrainer
 
 from school_api.client.api.base import BaseSchoolApi
@@ -69,7 +69,7 @@ class BaseUserClient(object):
         self.passwd = passwd
         self.school = school
         self.user_type = user_type
-        self.BASE_URL = self.school.url
+        self.base_url = self.school.url
 
         if self.school.use_proxy:
             self.set_proxy()
@@ -77,7 +77,7 @@ class BaseUserClient(object):
     def _request(self, method, url_or_endpoint, **kwargs):
         if not url_or_endpoint.startswith(('http://', 'https://')):
             url = '{base}{endpoint}'.format(
-                base=self.BASE_URL,
+                base=self.base_url,
                 endpoint=url_or_endpoint
             )
         else:
@@ -106,7 +106,7 @@ class BaseUserClient(object):
         )
 
     def set_proxy(self):
-        self.BASE_URL = self.school.lan_url or self.school.url
+        self.base_url = self.school.lan_url or self.school.url
         self._proxy = self.school.proxies
 
     def get_view_state(self, url_suffix, **kwargs):
@@ -143,16 +143,16 @@ class BaseUserClient(object):
         try:
             res = self._login(**kwargs)
         except requests.exceptions.Timeout as e:
-            if self.school.proxies and self.school.lan_url and not self.school.use_proxy:
+            if self.school.proxies and not self.school.use_proxy:
                 logger.warning("[%s]: 教务系统外网异常，切换内网代理，错误信息: %s" %
-                               (self.school.name or self.BASE_URL, e))
+                               (self.school.name or self.base_url, e))
                 # 使用内网代理
                 self.school.use_proxy = True
                 self.set_proxy()
                 res = self._login(**kwargs)
             else:
                 res = None
-                logger.warning("[%s]: 教务系统登陆失败，错误信息: %s" % (self.school.name or self.BASE_URL, e))
+                logger.warning("[%s]: 教务系统登陆失败，错误信息: %s" % (self.school.name or self.base_url, e))
                 return NullClass('登陆失败')
 
         # 登录成功之后，教务系统会返回 302 跳转

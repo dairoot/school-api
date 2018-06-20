@@ -1,14 +1,14 @@
 from school_api.client.api.base import BaseSchoolApi
-from school_api.client.api.schedule_parse import ScheduleParse
+from school_api.client.api.utils.schedule_parse import ScheduleParse
 from school_api.client.utils import ScheduleType
-from bs4 import BeautifulSoup
 from urllib import parse
+from bs4 import BeautifulSoup
 
 
 class Schedule(BaseSchoolApi):
 
-    def _get_schedule(self, schedule_type=None, schedule_year=None, schedule_term=None, **kwargs):
-        coding = ['GB18030', 'gbk'][self.user_type]
+    def _get_schedule(self, **kwargs):
+        coding = 'gbk' if self.user_type else 'GB18030'
         res = self._get(self.schedule_url, **kwargs)
         if res.status_code != 200:
             return None
@@ -18,7 +18,8 @@ class Schedule(BaseSchoolApi):
         如果设置了学年跟学期，匹配学年跟学期，不匹配则获取指定学年学期的课表
         '''
         if self.schedule_year and self.schedule_term:
-            if self.schedule_year != schedule['schedule_year'] or self.schedule_term != schedule['schedule_term']:
+            if self.schedule_year != schedule['schedule_year'] or\
+                    self.schedule_term != schedule['schedule_term']:
                 view_state = self._get_view_state_from_html(res.text)
                 payload = {
                     '__VIEWSTATE': view_state,
@@ -28,7 +29,8 @@ class Schedule(BaseSchoolApi):
                 res = self._post(self.schedule_url, data=payload, **kwargs)
                 if res.status_code != 200:
                     return None
-                schedule = ScheduleParse(res.content.decode(coding), self.schedule_type).get_schedule_dict()
+                html = res.content.decode(coding)
+                schedule = ScheduleParse(html, self.schedule_type).get_schedule_dict()
         return schedule
 
     def _get_schedule_by_bm(self, class_name, **kwargs):
@@ -50,12 +52,14 @@ class Schedule(BaseSchoolApi):
         res = self._post(self.schedule_url, data=payload, **kwargs)
         if res.status_code != 200:
             return None
-        schedule = ScheduleParse(res.content.decode('gbk'), self.schedule_type).get_schedule_dict()
+        html = res.content.decode('gbk')
+        schedule = ScheduleParse(html, self.schedule_type).get_schedule_dict()
         return schedule
 
-    def get_schedule(self, **kwargs):
-        self.schedule_type = ScheduleType.CLASS if self.user_type else kwargs.get('schedule_type', ScheduleType.PERSON)
-        self.schedule_year = kwargs.get('schedule_year')
+    def get_schedule(self, schedule_type=None, schedule_year=None, schedule_term=None, **kwargs):
+        self.schedule_type = ScheduleType.CLASS if self.user_type \
+            else schedule_type or ScheduleType.PERSON
+        self.schedule_year = schedule_year
         self.schedule_term = kwargs.get('schedule_term')
         self.schedule_url = self.school_url["SCHEDULE_URL"][self.schedule_type]
 

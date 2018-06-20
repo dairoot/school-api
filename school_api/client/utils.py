@@ -34,7 +34,7 @@ def error_handle(func):
     def wrapper(self, **kwargs):
         if not self.school.debug:
             # 请求失败 销毁类方法
-            tip = '[{}]: 教务系统[{}]]函数'.format(self.school.name or self.BASE_URL, func.__name__)
+            tip = '[{}]: 教务系统[{}]]函数'.format(self.school.name or self.base_url, func.__name__)
             try:
                 return func(self, **kwargs)
             except exceptions.Timeout as e:

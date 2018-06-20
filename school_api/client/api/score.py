@@ -1,5 +1,5 @@
-from school_api.client.api.base import BaseSchoolApi
 from bs4 import BeautifulSoup
+from school_api.client.api.base import BaseSchoolApi
 
 
 class Score(BaseSchoolApi):
