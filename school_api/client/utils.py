@@ -32,22 +32,28 @@ class NullClass():
 
 def error_handle(func):
     def wrapper(self, **kwargs):
+
+        def echo_log(tip, msg):
+            name = self.school.name or self.base_url
+            error_info = '[{}]: {}，错误信息: {}'.format(name, tip, msg)
+            logger.warning(error_info)
+
         if not self.school.debug:
             # 请求失败 销毁类方法
-            tip = '[{}]: 教务系统[{}]]函数'.format(self.school.name or self.base_url, func.__name__)
             try:
                 return func(self, **kwargs)
+
             except exceptions.Timeout as e:
-                tip += '请求超时'
-                err_info = '，错误信息: {}'.format(e)
-                logger.warning(err_info)
+                tip = '教务系统[{}]函数请求超时'.format(func.__name__)
+                echo_log(tip, e)
                 return NullClass(tip)
+
             except Exception as e:
-                tip += '报错'
-                err_info = tip + '，错误信息: {}'.format(e)
-                logger.warning(err_info)
-                return NullClass(tip)
+                tip = '教务系统[{}]函数报错'.format(func.__name__)
+                echo_log(tip, e)
+                raise e 
         else:
             return func(self, **kwargs)
 
     return wrapper
+

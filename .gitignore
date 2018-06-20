@@ -1,5 +1,5 @@
 test.py
 *.pyc
 .idea
-
-
+conf.py
+.pytest_cache/

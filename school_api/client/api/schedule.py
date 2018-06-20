@@ -27,17 +27,22 @@ class Schedule(BaseSchoolApi):
                     ['xqd', 'xq'][self.schedule_type]: self.schedule_term
                 }
                 res = self._post(self.schedule_url, data=payload, **kwargs)
+
                 if res.status_code != 200:
                     return None
+
                 html = res.content.decode(coding)
                 schedule = ScheduleParse(html, self.schedule_type).get_schedule_dict()
+
         return schedule
 
     def _get_schedule_by_bm(self, class_name, **kwargs):
         # 部门教师 查询学生班级课表  暂不做 学期学年 选择
         res = self._get(self.schedule_url, **kwargs)
+
         if res.status_code != 200:
             return None
+
         pre_soup = BeautifulSoup(res.content.decode('gbk'), "html.parser")
         schedule_view_state = pre_soup.find(attrs={"name": "__VIEWSTATE"})['value']
         schedule_id_list = pre_soup.find(id='kb').find_all('option')
@@ -50,22 +55,26 @@ class Schedule(BaseSchoolApi):
             'kb': schedule_id
         }
         res = self._post(self.schedule_url, data=payload, **kwargs)
+
         if res.status_code != 200:
             return None
+
         html = res.content.decode('gbk')
         schedule = ScheduleParse(html, self.schedule_type).get_schedule_dict()
+
         return schedule
 
     def get_schedule(self, schedule_type=None, schedule_year=None, schedule_term=None, **kwargs):
         self.schedule_type = ScheduleType.CLASS if self.user_type \
             else schedule_type or ScheduleType.PERSON
         self.schedule_year = schedule_year
-        self.schedule_term = kwargs.get('schedule_term')
+        self.schedule_term = schedule_term
         self.schedule_url = self.school_url["SCHEDULE_URL"][self.schedule_type]
 
         if self.user_type != 2:
             self.schedule_url += self.account
             return self._get_schedule(**kwargs)
+
         else:
             self.schedule_url += parse.quote(self.account.encode('gb2312'))
             return self._get_schedule_by_bm(**kwargs)

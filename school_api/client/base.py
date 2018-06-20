@@ -82,6 +82,7 @@ class BaseUserClient(object):
         else:
             url = url_or_endpoint
 
+        kwargs['timeout'] = kwargs.get('timeout', self.school.timeout)
         res = self._http.request(
             method=method,
             url=url,
@@ -143,15 +144,15 @@ class BaseUserClient(object):
             res = self._login(**kwargs)
         except requests.exceptions.Timeout as e:
             if self.school.proxies and not self.school.use_proxy:
-                logger.warning("[%s]: 教务系统外网异常，切换内网代理，错误信息: %s" %
-                               (self.school.name or self.base_url, e))
+                logger.warning("[{}]: 教务系统外网异常，切换内网代理，错误信息: {}".format(
+                    self.school.name or self.base_url, e))
                 # 使用内网代理
                 self.school.use_proxy = True
                 self.set_proxy()
                 res = self._login(**kwargs)
             else:
-                res = None
-                logger.warning("[%s]: 教务系统登陆失败，错误信息: %s" % (self.school.name or self.base_url, e))
+                logger.warning("[{}]: 教务系统登陆失败，错误信息: {}".format(
+                    self.school.name or self.base_url, e))
                 return NullClass('登陆失败')
 
         # 登录成功之后，教务系统会返回 302 跳转
