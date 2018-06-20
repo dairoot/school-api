@@ -15,7 +15,7 @@ GdstApi = SchoolClient('http://61.142.33.204', **conf)  # 注册一个学校A
 GdouApi = SchoolClient(url='http://210.38.137.126:8016')    # 注册一个学校B
 
 
-client_a = GdstApi.user_login('user', 'password', timeout=2, timeout=2)  # 学校A实例化一个学生a
+client_a = GdstApi.user_login('user', 'password', timeout=2)  # 学校A实例化一个学生a
 client_b = GdstApi.user_login('user', 'password', user_type=1, timeout=2)  # 学校A实例化一个教师b
 client_c = GdstApi.user_login('user', 'password', user_type=2)  # 学校A实例化一个部门教师c
 

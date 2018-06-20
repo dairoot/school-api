@@ -8,7 +8,7 @@ conf = {
     'lan_url': 'http://172.16.1.8',  # 内网地址
     'use_proxy': False,             # 是否优先使用代理
     'school_url': None,             # 教务系统链接
-    'proxies': {"http": "http://gxgk:gxgkteam@tunnel.gxgk.cc:3120/", }  # 代理
+    'proxies': {"http": "http://XXXX:XXXX@XXXX:3120/", }  # 代理
 }
 
 # 先实例化一个学校，再实例化用户
