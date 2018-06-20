@@ -38,13 +38,15 @@ def error_handle(func):
             try:
                 return func(self, **kwargs)
             except exceptions.Timeout as e:
-                err_info = tip + '请求超时，错误信息: {}'.format(e)
+                tip += '请求超时'
+                err_info = '，错误信息: {}'.format(e)
                 logger.warning(err_info)
-                return NullClass(err_info)
+                return NullClass(tip)
             except Exception as e:
-                err_info = tip + '报错，错误信息: {}'.format(e)
+                tip += '报错'
+                err_info = tip + '，错误信息: {}'.format(e)
                 logger.warning(err_info)
-                return NullClass(err_info)
+                return NullClass(tip)
         else:
             return func(self, **kwargs)
     return wrapper

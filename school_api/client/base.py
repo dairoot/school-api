@@ -32,6 +32,16 @@ class BaseSchoolClient(object):
         }
     ]
 
+    def __init__(self, **kwargs):
+        self.login_url_suffix = '/default4.aspx'
+        self.name = kwargs.get('name')
+        self.debug = kwargs.get('debug')
+        self.lan_url = kwargs.get('lan_url')
+        self.proxies = kwargs.get('proxies')
+        self.use_proxy = kwargs.get('use_proxy')
+        self.timeout = kwargs.get('timeout')
+        self.school_url = kwargs.get('conf_url') or self.school_url
+
 
 class BaseUserClient(object):
     """docstring for BaseUserClient"""
@@ -48,13 +58,21 @@ class BaseUserClient(object):
             setattr(self, name, api)
         return self
 
-    def __init__(self):
+    def __init__(self, school, account, passwd, user_type):
         self._http.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) '
                           'AppleWebKit/537.36 (KHTML, like Gecko) '
                           'Chrome/62.0.3202.89 Safari/537.36',
             'Content-Type': 'application/x-www-form-urlencoded',
         })
+        self.account = account
+        self.passwd = passwd
+        self.school = school
+        self.user_type = user_type
+        self.BASE_URL = self.school.url
+
+        if self.school.use_proxy:
+            self.set_proxy()
 
     def _request(self, method, url_or_endpoint, **kwargs):
         if not url_or_endpoint.startswith(('http://', 'https://')):
