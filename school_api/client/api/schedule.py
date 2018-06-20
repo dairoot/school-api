@@ -18,7 +18,7 @@ class Schedule(BaseSchoolApi):
         如果设置了学年跟学期，匹配学年跟学期，不匹配则获取指定学年学期的课表
         '''
         if self.schedule_year and self.schedule_term:
-            if self.schedule_year != schedule['schedule_year'] or\
+            if self.schedule_year != schedule['schedule_year'] or \
                     self.schedule_term != schedule['schedule_term']:
                 view_state = self._get_view_state_from_html(res.text)
                 payload = {

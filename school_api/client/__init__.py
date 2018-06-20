@@ -17,7 +17,6 @@ class SchoolClient(BaseSchoolClient):
 
 
 class UserClient(BaseUserClient):
-
     score = Score()
     info = SchoolInfo()
     schedule = Schedule()

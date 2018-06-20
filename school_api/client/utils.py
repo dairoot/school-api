@@ -1,7 +1,6 @@
 import logging
 from requests import exceptions
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -27,6 +26,7 @@ class NullClass():
     def __getattr__(self, name):
         def func(**kwargs):
             return self
+
         return func
 
 
@@ -49,4 +49,5 @@ def error_handle(func):
                 return NullClass(tip)
         else:
             return func(self, **kwargs)
+
     return wrapper

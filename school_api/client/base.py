@@ -15,7 +15,6 @@ def _is_api_endpoint(obj):
 
 
 class BaseSchoolClient(object):
-
     school_url = [
         {
             # 学生
@@ -134,7 +133,7 @@ class BaseUserClient(object):
             'RadioButtonList1': login_types[self.user_type].encode('gb2312'),
             'Button1': u' 登 录 '.encode('gb2312')
         }
-        self.update_headers({'Referer': self.school.url+self.school.login_url_suffix})
+        self.update_headers({'Referer': self.school.url + self.school.login_url_suffix})
         res = self.post(self.school.login_url_suffix, data=payload,
                         allow_redirects=False, **kwargs)
         return res
