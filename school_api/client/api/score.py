@@ -6,6 +6,7 @@ from school_api.client.api.base import BaseSchoolApi
 
 
 class Score(BaseSchoolApi):
+    ''' 学生成绩获取 ''' 
 
     def get_score(self, score_year=None, score_term=None, **kwargs):
         score_url = self.school_url['SCORE_URL'] + self.account
@@ -23,6 +24,7 @@ class Score(BaseSchoolApi):
 
 
 class ScoreParse():
+    ''' 成绩页面解析模块 '''
 
     def __init__(self, html):
         self.soup = BeautifulSoup(html.decode('GB18030'), "html.parser")

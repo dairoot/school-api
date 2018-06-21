@@ -3,8 +3,9 @@ from __future__ import absolute_import, unicode_literals
 
 try:
     from urllib import parse
-except:
+except ImportError:
     from urlparse import urlparse as parse
+
 from bs4 import BeautifulSoup
 
 from school_api.client.api.base import BaseSchoolApi
@@ -13,6 +14,27 @@ from school_api.client.utils import ScheduleType
 
 
 class Schedule(BaseSchoolApi):
+    schedule_type = None
+    schedule_year = None
+    schedule_term = None
+    schedule_url = None
+
+    def get_schedule(self, schedule_type=None, schedule_year=None, schedule_term=None, **kwargs):
+        # 课表数据 获取入口
+        self.schedule_type = ScheduleType.CLASS if self.user_type \
+            else schedule_type or ScheduleType.PERSON
+        self.schedule_year = schedule_year
+        self.schedule_term = schedule_term
+        self.schedule_url = self.school_url["SCHEDULE_URL"][self.schedule_type]
+
+        if self.user_type != 2:
+            self.schedule_url += self.account
+            data = self._get_schedule(**kwargs)
+        else:
+            self.schedule_url += parse.quote(self.account.encode('gb2312'))
+            data = self._get_schedule_by_bm(**kwargs)
+
+        return data
 
     def _get_schedule(self, **kwargs):
         coding = 'gbk' if self.user_type else 'GB18030'
@@ -43,21 +65,6 @@ class Schedule(BaseSchoolApi):
 
         return schedule
 
-    def _get_schedule_payload(self, html, class_name):
-        '''
-        提取页面参数用于请求课表
-        '''
-        pre_soup = BeautifulSoup(html, "html.parser")
-        schedule_view_state = pre_soup.find(attrs={"name": "__VIEWSTATE"})['value']
-        schedule_id_list = pre_soup.find(id='kb').find_all('option')
-        schedule_id = [name['value'] for name in schedule_id_list if name.text == class_name]
-        # 获取班级课表
-        payload = {
-            '__VIEWSTATE': schedule_view_state,
-            'kb': schedule_id
-        }
-        return payload
-
     def _get_schedule_by_bm(self, class_name, **kwargs):
         # 部门教师 查询学生班级课表  暂不做 学期学年 选择
         res = self._get(self.schedule_url, **kwargs)
@@ -76,18 +83,18 @@ class Schedule(BaseSchoolApi):
 
         return schedule
 
-    def get_schedule(self, schedule_type=None, schedule_year=None, schedule_term=None, **kwargs):
-        self.schedule_type = ScheduleType.CLASS if self.user_type \
-            else schedule_type or ScheduleType.PERSON
-        self.schedule_year = schedule_year
-        self.schedule_term = schedule_term
-        self.schedule_url = self.school_url["SCHEDULE_URL"][self.schedule_type]
-
-        if self.user_type != 2:
-            self.schedule_url += self.account
-            data = self._get_schedule(**kwargs)
-        else:
-            self.schedule_url += parse.quote(self.account.encode('gb2312'))
-            data = self._get_schedule_by_bm(**kwargs)
-
-        return data
+    @classmethod
+    def _get_schedule_payload(cls, html, class_name):
+        '''
+        提取页面参数用于请求课表
+        '''
+        pre_soup = BeautifulSoup(html, "html.parser")
+        schedule_view_state = pre_soup.find(attrs={"name": "__VIEWSTATE"})['value']
+        schedule_id_list = pre_soup.find(id='kb').find_all('option')
+        schedule_id = [name['value'] for name in schedule_id_list if name.text == class_name]
+        # 获取班级课表
+        payload = {
+            '__VIEWSTATE': schedule_view_state,
+            'kb': schedule_id
+        }
+        return payload

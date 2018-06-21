@@ -51,6 +51,11 @@ def error_handle(func):
                 echo_log(tip, e)
                 return NullClass(tip)
 
+            except exceptions.ProxyError as e:
+                tip = '教务系统[{}]代理连接超时'.format(func.__name__)
+                echo_log(tip, e)
+                return NullClass(tip)
+
             except Exception as e:
                 tip = '教务系统[{}]函数报错'.format(func.__name__)
                 echo_log(tip, e)
@@ -59,4 +64,3 @@ def error_handle(func):
             return func(self, **kwargs)
 
     return wrapper
-

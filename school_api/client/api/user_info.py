@@ -6,6 +6,7 @@ from school_api.client.api.base import BaseSchoolApi
 
 
 class SchoolInfo(BaseSchoolApi):
+    ''' 用户信息查询 部门教师不可用 '''
 
     def get_info(self, **kwargs):
         info_url = self.school_url['INFO_URL'] + self.account
@@ -16,6 +17,7 @@ class SchoolInfo(BaseSchoolApi):
 
 
 class SchoolInfoParse():
+    ''' 信息页面解析模块 '''
 
     def __init__(self, user_type, html):
         self.data = {}

@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 
 
 class ScheduleParse(object):
+    ''' 课表页面解析模块 '''
     COlOR = ['green', 'blue', 'purple', 'red', 'yellow']
     TIME_LIST = {
         # 连续上一节课
@@ -80,35 +81,6 @@ class ScheduleParse(object):
                             row_arr.append(arr + [rowspan, weeks_arr])
                 self.schedule_list[day].append(row_arr)
 
-    def get_schedule_list(self):
-        return self.schedule_list
-
-    def get_schedule_dict(self):
-        for day, day_schedule in enumerate(self.schedule_list):
-            for section, section_schedule in enumerate(day_schedule):
-                section_schedule_dict = []
-                color_index = (day * 3 + section + 1) % 5
-                for schedule in section_schedule:
-                    if schedule:
-                        section_schedule_dict.append({
-                            "color": self.COlOR[color_index],
-                            "name": schedule[0],
-                            "weeks_txt": schedule[1],
-                            "teacher": schedule[2],
-                            "place": schedule[3],
-                            "section": schedule[4],
-                            "weeks_arr": schedule[5],
-                            "time": self.TIME_LIST[schedule[4]][section]
-                        })
-                self.schedule_dict[day].append(section_schedule_dict)
-
-        schedule_data = {
-            'schedule_term': self.schedule_term,
-            'schedule_year': self.schedule_year,
-            'schedule': self.schedule_dict
-        }
-        return schedule_data
-
     def __get_weeks_arr(self, class_time):
         """
         将上课时间 转成 数组形式
@@ -134,4 +106,38 @@ class ScheduleParse(object):
             weeks = re.findall(r'(\d{1,2})-(\d{1,2})', split_text)
             weeks_arr += range(int(weeks[0][0]), int(weeks[0][1]) + 1,
                                step) if weeks else [int(split_text)]
+
         return weeks_arr
+
+    def get_schedule_list(self):
+        ''' 返回课表数据 数组格式 '''
+
+        return self.schedule_list
+
+    def get_schedule_dict(self):
+        ''' 返回课表数据 字典格式 '''
+
+        for day, day_schedule in enumerate(self.schedule_list):
+            for section, section_schedule in enumerate(day_schedule):
+                section_schedule_dict = []
+                color_index = (day * 3 + section + 1) % 5
+                for schedule in section_schedule:
+                    if schedule:
+                        section_schedule_dict.append({
+                            "color": self.COlOR[color_index],
+                            "name": schedule[0],
+                            "weeks_txt": schedule[1],
+                            "teacher": schedule[2],
+                            "place": schedule[3],
+                            "section": schedule[4],
+                            "weeks_arr": schedule[5],
+                            "time": self.TIME_LIST[schedule[4]][section]
+                        })
+                self.schedule_dict[day].append(section_schedule_dict)
+
+        schedule_data = {
+            'schedule_term': self.schedule_term,
+            'schedule_year': self.schedule_year,
+            'schedule': self.schedule_dict
+        }
+        return schedule_data
