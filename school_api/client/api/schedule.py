@@ -1,4 +1,10 @@
-from urllib import parse
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, unicode_literals
+
+try:
+    from urllib import parse
+except:
+    from urlparse import urlparse as parse
 from bs4 import BeautifulSoup
 
 from school_api.client.api.base import BaseSchoolApi

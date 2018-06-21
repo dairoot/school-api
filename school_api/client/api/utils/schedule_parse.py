@@ -1,5 +1,5 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import, unicode_literals
 
 import re
 from bs4 import BeautifulSoup
@@ -48,6 +48,7 @@ class ScheduleParse(object):
         """
         pattern = r'^\([\u2E80-\u9FFF]{1,3}\d+\)'
         # 每天最多有10节课, 数据从2到12, (i-1) 代表是第几节课 (偶数节 不获取)
+        print(self.schedule_type)
         for i in range(2, 12, 2):
             tds = trs[i].find_all("td")
             # 去除无用数据，比如(上午, 第一节...  等等)
@@ -58,12 +59,18 @@ class ScheduleParse(object):
             for day in range(7):
                 row_arr = []
                 if tds[day].text != u' ':
-                    td_str = str(tds[day])
+                    td_str = tds[day].__unicode__()
                     rowspan = 2 if 'rowspan="2"' in td_str else 1
                     td_main = re.sub(r'<td align="Center".*?>', '', td_str)[:-5]
+
                     for text in td_main.split('<br/><br/>'):
                         text = re.sub(r'<[/]{0,1}font[^>]*?>', '', text)
                         text = re.sub(r'^<br/>', '', text)
+
+                        # 以下兼容 python2 版本解析处理
+                        text = re.sub(r'<br><br/></br></br></br></br>$', '', text)
+                        text = text.replace('<br>', '<br/>')
+
                         arr = [k for k in text.split('<br/>')][:4:]
                         if len(arr) == 3:
                             # 没有上课地点的情况
@@ -94,7 +101,7 @@ class ScheduleParse(object):
                             "time": self.TIME_LIST[schedule[4]][section]
                         })
                 self.schedule_dict[day].append(section_schedule_dict)
-                
+
         schedule_data = {
             'schedule_term': self.schedule_term,
             'schedule_year': self.schedule_year,
@@ -112,7 +119,7 @@ class ScheduleParse(object):
         """
         weeks_arr = []
         if not self.schedule_type:
-            weeks_text = re.findall("{(.*)}", class_time)[0]
+            weeks_text = re.findall(r"{(.*)}", class_time)[0]
         else:
             # 2节/周
             # 2节/单周(7-7)
@@ -122,7 +129,7 @@ class ScheduleParse(object):
             else:
                 weeks_text = class_time.split('(')[0]
 
-        step = 2 if u'单' in weeks_text or u'双' in weeks_text else 1
+        step = 2 if '单' in weeks_text or '双' in weeks_text else 1
         for split_text in weeks_text.split(','):
             weeks = re.findall(r'(\d{1,2})-(\d{1,2})', split_text)
             weeks_arr += range(int(weeks[0][0]), int(weeks[0][1]) + 1,

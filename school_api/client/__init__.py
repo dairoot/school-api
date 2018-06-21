@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, unicode_literals
+
 from school_api.client.base import BaseUserClient, BaseSchoolClient
 from school_api.client.api.score import Score
 from school_api.client.api.schedule import Schedule

@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, unicode_literals
+
 from bs4 import BeautifulSoup
 from school_api.client.api.base import BaseSchoolApi
 
