@@ -65,6 +65,7 @@ class ScoreParse():
             self.score_info[year][term].append(score_dict)
 
     def get_score(self, year, term):
+        ''' 返回成绩信息json格式 '''
         if year:
             if term:
                 return self.score_info[year][term]

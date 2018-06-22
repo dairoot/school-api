@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 
 from school_api.client.base import BaseUserClient, BaseSchoolClient
+from school_api.client.api.login import Login
 from school_api.client.api.score import Score
 from school_api.client.api.schedule import Schedule
 from school_api.client.api.user_info import SchoolInfo
@@ -11,25 +12,25 @@ from school_api.client.utils import UserType, ScheduleType, NullClass, error_han
 class SchoolClient(BaseSchoolClient):
 
     def __init__(self, url, **kwargs):
-        self.url = url
-        super(SchoolClient, self).__init__(**kwargs)
+        super(SchoolClient, self).__init__(url, **kwargs)
 
-    def user_login(self, account, passwd, user_type=UserType.STUDENT, **kwargs):
-        user = UserClient(self, account, passwd, user_type)
-        return user.user_login(**kwargs)
+    def user_login(self, account, password, user_type=UserType.STUDENT, **kwargs):
+        user = UserClient(self.school, account, password, user_type)
+        return user.user_login(**kwargs) or user
 
 
 class UserClient(BaseUserClient):
+    login = Login()
     score = Score()
     info = SchoolInfo()
     schedule = Schedule()
 
-    def __init__(self, school, account, passwd, user_type):
-        super(UserClient, self).__init__(school, account, passwd, user_type)
+    def __init__(self, school, account, password, user_type):
+        super(UserClient, self).__init__(school, account, password, user_type)
 
     @error_handle
     def user_login(self, **kwargs):
-        return self.get_login(**kwargs)
+        return self.login.get_login(self.school, **kwargs)
 
     @error_handle
     def get_schedule(self, **kwargs):

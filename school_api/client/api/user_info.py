@@ -69,4 +69,5 @@ class SchoolInfoParse():
 
     @property
     def user_info(self):
+        ''' 返回用户信息json格式 '''
         return self.data

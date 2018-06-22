@@ -8,17 +8,20 @@ logger = logging.getLogger(__name__)
 
 
 class UserType():
+    ''' 用户类型参数 '''
     STUDENT = 0
     TEACHER = 1
     DEPT = 2
 
 
 class ScheduleType():
+    ''' 课表类型参数 '''
     PERSON = 0
     CLASS = 1
 
 
 class NullClass():
+    ''' 空类 将对象赋空 '''
 
     def __init__(self, tip=''):
         self.tip = tip
@@ -37,11 +40,11 @@ def error_handle(func):
     def wrapper(self, **kwargs):
 
         def echo_log(tip, msg):
-            name = self.school.name or self.base_url
+            name = self.school['name'] or self.base_url
             error_info = '[{}]: {}，错误信息: {}'.format(name, tip, msg)
             logger.warning(error_info)
 
-        if not self.school.debug:
+        if not self.school['debug']:
             # 请求失败 销毁类方法
             try:
                 return func(self, **kwargs)

@@ -1,16 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-import re
 import inspect
-import logging
 import requests
-from bs4 import BeautifulSoup, SoupStrainer
+from bs4 import BeautifulSoup
 
 from school_api.client.api.base import BaseSchoolApi
-from school_api.client.utils import NullClass
-
-logger = logging.getLogger(__name__)
 
 
 def _is_api_endpoint(obj):
@@ -21,28 +16,33 @@ class BaseSchoolClient(object):
     school_url = [
         {
             # 学生
+            'LOGIN_URL': '/default4.aspx',
             'SCORE_URL': '/xscj_gc.aspx?xh=',
             'INFO_URL': '/xsgrxx.aspx?gnmkdm=N121501&xh=',
             'SCHEDULE_URL': ['/xskbcx.aspx?gnmkdm=N121603&xh=', '/tjkbcx.aspx?gnmkdm=N121601&xh=']
         }, {
             # 教师
+            'LOGIN_URL': '/default4.aspx',
             'INFO_URL': '/lw_jsxx.aspx?gnmkdm=N122502&zgh=',
             'SCHEDULE_URL': ['', '/jstjkbcx.aspx?gnmkdm=N122303&zgh=']
         }, {
             # 部门
+            'LOGIN_URL': '/default4.aspx',
             'SCHEDULE_URL': ['', '/tjkbcx.aspx?gnmkdm=N120313&xh=']
         }
     ]
 
-    def __init__(self, **kwargs):
-        self.login_url_suffix = '/default4.aspx'
-        self.name = kwargs.get('name')
-        self.debug = kwargs.get('debug')
-        self.lan_url = kwargs.get('lan_url')
-        self.proxies = kwargs.get('proxies')
-        self.use_proxy = kwargs.get('use_proxy')
-        self.timeout = kwargs.get('timeout')
-        self.school_url = kwargs.get('conf_url') or self.school_url
+    def __init__(self, url, **kwargs):
+        self.school = {
+            'url': url,
+            'debug': kwargs.get('debug'),
+            'name': kwargs.get('name'),
+            'lan_url': kwargs.get('lan_url'),
+            'proxies': kwargs.get('proxies'),
+            'use_proxy': kwargs.get('use_proxy'),
+            'timeout': kwargs.get('timeout'),
+            'school_url': kwargs.get('conf_url') or self.school_url
+        }
 
 
 class BaseUserClient(object):
@@ -60,7 +60,7 @@ class BaseUserClient(object):
             setattr(self, name, api)
         return self
 
-    def __init__(self, school, account, passwd, user_type):
+    def __init__(self, school, account, password, user_type):
         self._http.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) '
                           'AppleWebKit/537.36 (KHTML, like Gecko) '
@@ -68,12 +68,12 @@ class BaseUserClient(object):
             'Content-Type': 'application/x-www-form-urlencoded',
         })
         self.account = account
-        self.passwd = passwd
+        self.password = password
         self.school = school
         self.user_type = user_type
-        self.base_url = self.school.url
+        self.base_url = self.school['url']
 
-        if self.school.use_proxy:
+        if self.school['use_proxy']:
             self.set_proxy()
 
     def _request(self, method, url_or_endpoint, **kwargs):
@@ -85,7 +85,7 @@ class BaseUserClient(object):
         else:
             url = url_or_endpoint
 
-        kwargs['timeout'] = kwargs.get('timeout', self.school.timeout)
+        kwargs['timeout'] = kwargs.get('timeout', self.school['timeout'])
         res = self._http.request(
             method=method,
             url=url,
@@ -109,8 +109,8 @@ class BaseUserClient(object):
         )
 
     def set_proxy(self):
-        self.base_url = self.school.lan_url or self.school.url
-        self._proxy = self.school.proxies
+        self.base_url = self.school['lan_url'] or self.base_url
+        self._proxy = self.school['proxies']
 
     def get_view_state(self, url_suffix, **kwargs):
         res = self.get(url_suffix, allow_redirects=False, **kwargs)
@@ -126,41 +126,3 @@ class BaseUserClient(object):
 
     def update_headers(self, headers_dict):
         self._http.headers.update(headers_dict)
-
-    def _login(self, **kwargs):
-        login_types = [u'学生', u'教师', u'部门']
-        view_state = self.get_view_state(self.school.login_url_suffix, **kwargs)
-        payload = {
-            '__VIEWSTATE': view_state,
-            'TextBox1': self.account.encode('gb2312'),
-            'TextBox2': self.passwd,
-            'RadioButtonList1': login_types[self.user_type].encode('gb2312'),
-            'Button1': u' 登 录 '.encode('gb2312')
-        }
-        self.update_headers({'Referer': self.school.url + self.school.login_url_suffix})
-        res = self.post(self.school.login_url_suffix, data=payload,
-                        allow_redirects=False, **kwargs)
-        return res
-
-    def get_login(self, **kwargs):
-        try:
-            res = self._login(**kwargs)
-        except requests.exceptions.Timeout as e:
-            if self.school.proxies and not self.school.use_proxy:
-                logger.warning("[{}]: 教务系统外网异常，切换内网代理，错误信息: {}".format(
-                    self.school.name or self.base_url, e))
-                # 使用内网代理
-                self.school.use_proxy = True
-                self.set_proxy()
-                res = self._login(**kwargs)
-            else:
-                logger.warning("[{}]: 教务系统登陆失败，错误信息: {}".format(
-                    self.school.name or self.base_url, e))
-                return NullClass('登陆失败')
-
-        # 登录成功之后，教务系统会返回 302 跳转
-        if res and res.status_code != 302:
-            page_soup = BeautifulSoup(res.text, "html.parser", parse_only=SoupStrainer("script"))
-            tip = re.findall(r'[^()\']+', page_soup.getText())[1]
-            return NullClass(tip)
-        return self
