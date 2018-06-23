@@ -7,6 +7,7 @@ import requests
 from bs4 import BeautifulSoup, SoupStrainer
 from school_api.client.api.base import BaseSchoolApi
 from school_api.client.utils import NullClass
+from school_api.check_code import check_code
 
 logger = logging.getLogger(__name__)
 
@@ -14,33 +15,41 @@ logger = logging.getLogger(__name__)
 class Login(BaseSchoolApi):
     ''' 登录模块 '''
 
-    def _login(self, **kwargs):
+    def _login(self, login_url, exist_verify, **kwargs):
         # 登录请求
+        code = ''
         login_types = [u'学生', u'教师', u'部门']
-        view_state = self._get_view_state(self.school_url['LOGIN_URL'], **kwargs)
+        view_state = self._get_view_state(login_url, **kwargs)
+
+        if exist_verify:
+            res = self._get('/CheckCode.aspx')
+            code = check_code.verify(res.content)
+            print('code', code)
+
         payload = {
             '__VIEWSTATE': view_state,
             'TextBox1': self.account.encode('gb2312'),
             'TextBox2': self.password,
+            'TextBox3': code,
             'RadioButtonList1': login_types[self.user_type].encode('gb2312'),
             'Button1': u' 登 录 '.encode('gb2312')
         }
-        self._update_headers({'Referer': self.base_url + self.school_url['LOGIN_URL']})
-        res = self._post(self.school_url['LOGIN_URL'], data=payload,
-                         allow_redirects=False, **kwargs)
+
+        self._update_headers({'Referer': self.base_url + login_url})
+        res = self._post(login_url, data=payload, allow_redirects=False, **kwargs)
         return res
 
     def get_login(self, school, **kwargs):
         ''' 登录入口 与 异常处理 '''
         try:
-            res = self._login(**kwargs)
+            res = self._login(school['login_url'], school['exist_verify'], **kwargs)
         except requests.exceptions.Timeout as e:
             if school['proxies'] and not school['use_proxy']:
                 logger.warning("[%s]: 教务系统外网异常，切换内网代理，错误信息: %s", school['name'] or self.base_url, e)
                 # 使用内网代理
                 school['use_proxy'] = True
                 self._set_proxy()
-                res = self._login(**kwargs)
+                res = self._login(school['login_url'], school['exist_verify'], **kwargs)
             else:
                 logger.warning("[%s]: 教务系统登陆失败，错误信息: %s", school['name'] or self.base_url, e)
                 return NullClass('登陆失败')

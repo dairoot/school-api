@@ -49,7 +49,6 @@ class ScheduleParse(object):
         """
         pattern = r'^\([\u2E80-\u9FFF]{1,3}\d+\)'
         # 每天最多有10节课, 数据从2到12, (i-1) 代表是第几节课 (偶数节 不获取)
-        print(self.schedule_type)
         for i in range(2, 12, 2):
             tds = trs[i].find_all("td")
             # 去除无用数据，比如(上午, 第一节...  等等)

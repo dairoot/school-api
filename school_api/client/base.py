@@ -16,18 +16,15 @@ class BaseSchoolClient(object):
     school_url = [
         {
             # 学生
-            'LOGIN_URL': '/default4.aspx',
             'SCORE_URL': '/xscj_gc.aspx?xh=',
             'INFO_URL': '/xsgrxx.aspx?gnmkdm=N121501&xh=',
             'SCHEDULE_URL': ['/xskbcx.aspx?gnmkdm=N121603&xh=', '/tjkbcx.aspx?gnmkdm=N121601&xh=']
         }, {
             # 教师
-            'LOGIN_URL': '/default4.aspx',
             'INFO_URL': '/lw_jsxx.aspx?gnmkdm=N122502&zgh=',
             'SCHEDULE_URL': ['', '/jstjkbcx.aspx?gnmkdm=N122303&zgh=']
         }, {
             # 部门
-            'LOGIN_URL': '/default4.aspx',
             'SCHEDULE_URL': ['', '/tjkbcx.aspx?gnmkdm=N120313&xh=']
         }
     ]
@@ -37,11 +34,13 @@ class BaseSchoolClient(object):
             'url': url,
             'debug': kwargs.get('debug'),
             'name': kwargs.get('name'),
+            'exist_verify': kwargs.get('exist_verify', True),
             'lan_url': kwargs.get('lan_url'),
             'proxies': kwargs.get('proxies'),
             'use_proxy': kwargs.get('use_proxy'),
             'timeout': kwargs.get('timeout'),
-            'school_url': kwargs.get('conf_url') or self.school_url
+            'login_url': kwargs.get('login_url', '/default2.aspx'),
+            'school_url': kwargs.get('conf_url', self.school_url)
         }
 
 
