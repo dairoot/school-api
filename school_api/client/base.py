@@ -47,8 +47,8 @@ class BaseSchoolClient(object):
         self.get_login_view_state(self.school_cfg['url'] + self.school_cfg['login_url'])
 
     def get_login_view_state(self, view_state_url):
-        ''' 
-        获取登录的view_state 学校变量 
+        '''
+        获取登录的view_state 学校变量
         当该值存在的时候，不请求， 首先请求在初始化学校的时候
         若学生登录时，无该值，则调用该函数。
         '''
