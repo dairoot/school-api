@@ -47,19 +47,18 @@ class Login(BaseSchoolApi):
         try:
             res = self._login(school['login_url'], school['exist_verify'], **kwargs)
         except requests.exceptions.Timeout as e:
+            name = school['name'] or self.base_url
             if school['proxies'] and not school['use_proxy']:
-                logger.warning("[%s]: 教务系统外网异常，切换内网代理，错误信息: %s", school['name'] or self.base_url, e)
+                logger.warning("[%s]: 教务系统外网异常，切换内网代理，错误信息: %s", name, e)
                 # 使用内网代理
-                school['use_proxy'] = True
                 self._set_proxy()
                 res = self._login(school['login_url'], school['exist_verify'], **kwargs)
             else:
-                logger.warning("[%s]: 教务系统登陆失败，错误信息: %s", school['name'] or self.base_url, e)
+                logger.warning("[%s]: 教务系统登陆失败，错误信息: %s", name, e)
                 return NullClass('登陆失败')
 
         # 登录成功之后，教务系统会返回 302 跳转
         if res and res.status_code != 302:
-            # print (res.text)
             page_soup = BeautifulSoup(res.text, "html.parser")
             alert_soup = page_soup.find_all('script')[-1]
             tip = re.findall(r'[^()\']+', alert_soup.text)[1]

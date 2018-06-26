@@ -131,6 +131,7 @@ class BaseUserClient(object):
         )
 
     def set_proxy(self):
+        self.school_cfg['use_proxy'] = True
         self.base_url = self.school_cfg['lan_url'] or self.base_url
         self._proxy = self.school_cfg['proxies']
 

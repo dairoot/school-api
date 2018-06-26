@@ -110,8 +110,11 @@ class ScheduleParse(object):
         step = 2 if '单' in weeks_text or '双' in weeks_text else 1
         for split_text in weeks_text.split(','):
             weeks = re.findall(r'(\d{1,2})-(\d{1,2})', split_text)
-            weeks_arr += range(int(weeks[0][0]), int(weeks[0][1]) + 1,
-                               step) if weeks else [int(split_text)]
+
+            if weeks:
+                weeks_arr += range(int(weeks[0][0]), int(weeks[0][1]) + 1, step)
+            else:
+                weeks_arr += [int(split_text)]
 
         return weeks_arr
 
