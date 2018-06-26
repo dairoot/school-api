@@ -3,11 +3,18 @@ from school_api import SchoolClient
 
 conf = {
     'name': '广东科技学院',
-    'debug': True,                 # 模块调试
+    'debug': False,                 # 模块调试
+    'exist_verify': False,          # 是否存在验证码
+    'login_url': '/default4.aspx',
+    'login_view_state': {           # login_view_state 的存在可以避免 初始化学校时的获取
+        'http://61.142.33.204/default2.aspx': 'dDw3OTkxMjIwNTU7Oz5vJ/yYUi9dD4fEnRUKesDFl8hEKA==',
+        'http://61.142.33.204/default4.aspx': 'dDwxMTE4MjQwNDc1Ozs+MzFt0h81g6NGHTq1L9P2NfWUGLA=',
+
+    },
     'lan_url': 'http://172.16.1.8',  # 内网地址
     'use_proxy': False,             # 是否优先使用代理
     'school_url': None,             # 教务系统链接
-    'proxies': {"http": "http://XXXXXXXXXXXX", }  # 代理
+    # 'proxies': {"http": "http://XXXX:XXXX@XXXX:3120/", }  # 代理存在时，请求失败则会切换成代理
 }
 
 # 先实例化一个学校，再实例化用户
@@ -27,7 +34,8 @@ print(schedule_data)
 schedule_data = client_a.get_schedule()
 
 # 获取 2017-2018学年2学期的 班级课表
-schedule_data = client_a.get_schedule(timeout=5, schedule_type=1, schedule_year='2017-2018', schedule_term='1')
+schedule_data = client_a.get_schedule(
+    timeout=5, schedule_type=1, schedule_year='2017-2018', schedule_term='1')
 
 # 获取 全部成绩
 score_data = client_a.get_score()

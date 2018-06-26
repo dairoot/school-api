@@ -5,10 +5,15 @@ from conf import *
 conf = {
     'name': '广东科技学院',
     'debug': False,                 # 模块调试
+    # 'exist_verify': False,          # 是否存在验证码
+    # 'login_url': '/default4.aspx',
+    'login_view_state': {
+        'http://61.142.33.204/default2.aspx': 'dDw3OTkxMjIwNTU7Oz5vJ/yYUi9dD4fEnRUKesDFl8hEKA=='
+    },
     'lan_url': 'http://172.16.1.8',  # 内网地址
     'use_proxy': False,             # 是否优先使用代理
     'school_url': None,             # 教务系统链接
-    'proxies': {"http": "http://XXXX:XXXX@XXXX:3120/", }  # 代理
+    # 'proxies': {"http": "http://XXXX:XXXX@XXXX:3120/", }  # 代理存在时，请求失败则会切换成代理
 }
 
 # 先实例化一个学校，再实例化用户

@@ -39,7 +39,7 @@ class BaseSchoolClient(object):
             'lan_url': kwargs.get('lan_url'),
             'proxies': kwargs.get('proxies'),
             'use_proxy': kwargs.get('use_proxy'),
-            'timeout': kwargs.get('timeout'),
+            'timeout': kwargs.get('timeout', 10),
             'login_url': kwargs.get('login_url', '/default2.aspx'),
             'school_url': kwargs.get('conf_url', self.school_url)
         }
@@ -53,7 +53,10 @@ class BaseSchoolClient(object):
         若学生登录时，无该值，则调用该函数。
         '''
         if not self.school_cfg['login_view_state'].get(view_state_url):
-            res = requests.get(view_state_url, timeout=self.school_cfg['timeout'])
+            try:
+                res = requests.get(view_state_url, timeout=self.school_cfg['timeout'])
+            except requests.exceptions.Timeout as e:
+                return None
 
             if res.status_code != 200:
                 return None
