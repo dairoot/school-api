@@ -64,21 +64,28 @@ class ScheduleParse(object):
                     td_main = re.sub(r'<td align="Center".*?>', '', td_str)[:-5]
 
                     for text in td_main.split('<br/><br/>'):
-                        text = re.sub(r'<[/]{0,1}font[^>]*?>', '', text)
-                        text = re.sub(r'^<br/>', '', text)
+                        course_arr = self.__get_td_course_info(text)
 
-                        # 以下兼容 python2 版本解析处理
-                        text = re.sub(r'<br><br/></br></br></br></br>$', '', text)
-                        text = text.replace('<br>', '<br/>')
-
-                        arr = [k for k in text.split('<br/>')][:4:]
-                        if len(arr) == 3:
-                            # 没有上课地点的情况
-                            arr.append('')
-                        if arr[0] and not re.match(pattern, arr[0]):
-                            weeks_arr = self.__get_weeks_arr(arr[1])
-                            row_arr.append(arr + [rowspan, weeks_arr])
+                        if course_arr[0] and not re.match(pattern, course_arr[0]):
+                            weeks_arr = self.__get_weeks_arr(course_arr[1])
+                            row_arr.append(course_arr + [rowspan, weeks_arr])
                 self.schedule_list[day].append(row_arr)
+
+    @staticmethod
+    def __get_td_course_info(text):
+        ''' 获取td标签的课程信息 '''
+        text = re.sub(r'<[/]{0,1}font[^>]*?>', '', text)
+        text = re.sub(r'^<br/>', '', text)
+        # 以下兼容 python2 版本解析处理
+        text = re.sub(r'<br><br/></br></br></br></br>$', '', text)
+        text = text.replace('<br>', '<br/>')
+        arr = [k for k in text.split('<br/>')][:4:]
+
+        if len(arr) == 3:
+            # 没有上课地点的情况
+            arr.append('')
+
+        return arr
 
     def __get_weeks_arr(self, class_time):
         """

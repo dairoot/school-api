@@ -83,8 +83,8 @@ class Schedule(BaseSchoolApi):
 
         return schedule
 
-    @classmethod
-    def _get_schedule_payload(cls, html, class_name):
+    @staticmethod
+    def _get_schedule_payload(html, class_name):
         '''
         提取页面参数用于请求课表
         '''

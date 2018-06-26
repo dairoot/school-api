@@ -143,8 +143,8 @@ class BaseUserClient(object):
             return None
         return self.get_view_state_from_html(res.text)
 
-    @classmethod
-    def get_view_state_from_html(cls, html):
+    @staticmethod
+    def get_view_state_from_html(html):
         pre_soup = BeautifulSoup(html, "html.parser")
         view_state = pre_soup.find(
             attrs={"name": "__VIEWSTATE"})['value']
