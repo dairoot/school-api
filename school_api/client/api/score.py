@@ -6,7 +6,7 @@ from school_api.client.api.base import BaseSchoolApi
 
 
 class Score(BaseSchoolApi):
-    ''' 学生成绩获取 ''' 
+    ''' 学生成绩获取 '''
 
     def get_score(self, score_year=None, score_term=None, **kwargs):
         score_url = self.school_url['SCORE_URL'] + self.account

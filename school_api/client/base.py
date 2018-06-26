@@ -30,8 +30,9 @@ class BaseSchoolClient(object):
     ]
 
     def __init__(self, url, **kwargs):
-        self.school = {
+        self.school_cfg = {
             'url': url,
+            'login_view_state': kwargs.get('login_view_state', {}),
             'debug': kwargs.get('debug'),
             'name': kwargs.get('name'),
             'exist_verify': kwargs.get('exist_verify', True),
@@ -42,6 +43,24 @@ class BaseSchoolClient(object):
             'login_url': kwargs.get('login_url', '/default2.aspx'),
             'school_url': kwargs.get('conf_url', self.school_url)
         }
+        # 初始化学校时 获取登录的view_state
+        self.get_login_view_state(self.school_cfg['url'] + self.school_cfg['login_url'])
+
+    def get_login_view_state(self, view_state_url):
+        ''' 
+        获取登录的view_state 学校变量 
+        当该值存在的时候，不请求， 首先请求在初始化学校的时候
+        若学生登录时，无该值，则调用该函数。
+        '''
+        if not self.school_cfg['login_view_state'].get(view_state_url):
+            res = requests.get(view_state_url, timeout=self.school_cfg['timeout'])
+
+            if res.status_code != 200:
+                return None
+
+            view_state = BaseUserClient.get_view_state_from_html(res.text)
+            self.school_cfg['login_view_state'][view_state_url] = view_state
+        return self.school_cfg['login_view_state'][view_state_url]
 
 
 class BaseUserClient(object):
@@ -68,11 +87,12 @@ class BaseUserClient(object):
         })
         self.account = account
         self.password = password
-        self.school = school
         self.user_type = user_type
-        self.base_url = self.school['url']
+        self.school_cfg = school.school_cfg
+        self.base_url = self.school_cfg['url']
+        self.get_login_view_state = school.get_login_view_state
 
-        if self.school['use_proxy']:
+        if self.school_cfg['use_proxy']:
             self.set_proxy()
 
     def _request(self, method, url_or_endpoint, **kwargs):
@@ -84,7 +104,7 @@ class BaseUserClient(object):
         else:
             url = url_or_endpoint
 
-        kwargs['timeout'] = kwargs.get('timeout', self.school['timeout'])
+        kwargs['timeout'] = kwargs.get('timeout', self.school_cfg['timeout'])
         res = self._http.request(
             method=method,
             url=url,
@@ -108,8 +128,11 @@ class BaseUserClient(object):
         )
 
     def set_proxy(self):
-        self.base_url = self.school['lan_url'] or self.base_url
-        self._proxy = self.school['proxies']
+        self.base_url = self.school_cfg['lan_url'] or self.base_url
+        self._proxy = self.school_cfg['proxies']
+
+    def update_headers(self, headers_dict):
+        self._http.headers.update(headers_dict)
 
     def get_view_state(self, url_suffix, **kwargs):
         res = self.get(url_suffix, allow_redirects=False, **kwargs)
@@ -117,11 +140,9 @@ class BaseUserClient(object):
             return None
         return self.get_view_state_from_html(res.text)
 
-    def get_view_state_from_html(self, html):
+    @classmethod
+    def get_view_state_from_html(cls, html):
         pre_soup = BeautifulSoup(html, "html.parser")
         view_state = pre_soup.find(
             attrs={"name": "__VIEWSTATE"})['value']
         return view_state
-
-    def update_headers(self, headers_dict):
-        self._http.headers.update(headers_dict)

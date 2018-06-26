@@ -6,7 +6,7 @@ from school_api.client.api.login import Login
 from school_api.client.api.score import Score
 from school_api.client.api.schedule import Schedule
 from school_api.client.api.user_info import SchoolInfo
-from school_api.client.utils import UserType, ScheduleType, NullClass, error_handle
+from school_api.client.utils import UserType, ScheduleType, error_handle
 
 
 class SchoolClient(BaseSchoolClient):
@@ -15,7 +15,7 @@ class SchoolClient(BaseSchoolClient):
         super(SchoolClient, self).__init__(url, **kwargs)
 
     def user_login(self, account, password, user_type=UserType.STUDENT, **kwargs):
-        user = UserClient(self.school, account, password, user_type)
+        user = UserClient(self, account, password, user_type)
         return user.user_login(**kwargs) or user
 
 
@@ -30,7 +30,7 @@ class UserClient(BaseUserClient):
 
     @error_handle
     def user_login(self, **kwargs):
-        return self.login.get_login(self.school, **kwargs)
+        return self.login.get_login(self.school_cfg, **kwargs)
 
     @error_handle
     def get_schedule(self, **kwargs):

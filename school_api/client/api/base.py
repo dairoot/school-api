@@ -20,6 +20,9 @@ class BaseSchoolApi(object):
     def _get_view_state(self, url, **kwargs):
         return self._client.get_view_state(url, **kwargs)
 
+    def _get_login_view_state(self, url):
+        return self._client.get_login_view_state(url)
+
     def _update_headers(self, headers_dict):
         return self._client.update_headers(headers_dict)
 
@@ -44,4 +47,4 @@ class BaseSchoolApi(object):
 
     @property
     def school_url(self):
-        return self._client.school['school_url'][self.user_type]
+        return self._client.school_cfg['school_url'][self.user_type]
