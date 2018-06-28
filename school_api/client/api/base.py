@@ -23,6 +23,9 @@ class BaseSchoolApi(object):
     def _update_headers(self, headers_dict):
         return self._client.update_headers(headers_dict)
 
+    def _get_login_view_state(self, **kwargs):
+        return self._client.get_login_view_state(**kwargs)
+
     def _set_proxy(self):
         return self._client.set_proxy()
 

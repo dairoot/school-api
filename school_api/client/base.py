@@ -47,8 +47,8 @@ class BaseSchoolClient(object):
             'login_url': kwargs.get('login_url', '/default2.aspx'),
             'school_url': kwargs.get('conf_url', self.school_url)
         }
-        session_func = kwargs.get('redis', MemoryStorage)
-        self.session = session_func(self.school_cfg['name'])
+        storage = kwargs.get('redis', MemoryStorage)
+        self.session = storage(self.school_cfg['name'])
         self.init_login_view_state(kwargs.get('login_view_state', {}))
 
     def init_login_view_state(self, login_view_state):
@@ -61,12 +61,12 @@ class BaseSchoolClient(object):
             self.session.set(url_key, view_state)
 
         # 初始化学校时 获取登录的view_state
-        base_key = self.school_cfg['url'] + self.school_cfg['login_url']
+        # url_key = self.school_cfg['url'] + self.school_cfg['login_url']
 
-        if not self.session.get(base_key):
-            res = requests.get(base_key, timeout=self.school_cfg['timeout'])
-            view_state = BaseUserClient.get_view_state_from_html(res.text)
-            self.session.set(base_key, view_state)
+        # if not self.session.get(url_key):
+        #     res = requests.get(url_key, timeout=self.school_cfg['timeout'])
+        #     view_state = BaseUserClient.get_view_state_from_html(res.text)
+        #     self.session.set(url_key, view_state)
 
 
 class BaseUserClient(object):
@@ -76,7 +76,6 @@ class BaseUserClient(object):
 
     def __new__(cls, *args, **kwargs):
         self = super(BaseUserClient, cls).__new__(cls)
-        self._http = requests.Session()
         api_endpoints = inspect.getmembers(self, _is_api_endpoint)
         for name, api in api_endpoints:
             api_cls = type(api)
@@ -85,6 +84,7 @@ class BaseUserClient(object):
         return self
 
     def __init__(self, school, account, password, user_type):
+        self._http = requests.Session()
         self._http.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) '
                           'AppleWebKit/537.36 (KHTML, like Gecko) '
@@ -171,3 +171,11 @@ class BaseUserClient(object):
 
         cookie = self._http.cookies.get_dict()
         self.session.set(key, cookie, 3600)
+
+    def get_login_view_state(self, **kwargs):
+        ''' 获取登录的view_state '''
+        base_key = self.base_url + self.school_cfg['login_url']
+        if not self.session.get(base_key):
+            view_state = self.get_view_state(self.school_cfg['login_url'], **kwargs)
+            self.session.set(base_key, view_state)
+        return self.session.get(base_key)

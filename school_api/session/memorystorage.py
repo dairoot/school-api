@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-from school_api.session import SessionStorage
-
 import time
+from school_api.session import SessionStorage
 
 
 class MemoryStorage(SessionStorage):
-    ''' 非持久化缓存 '''
+    ''' 非持久化缓存 不推荐使用'''
 
     def __init__(self, prefix=''):
         self._data = {}

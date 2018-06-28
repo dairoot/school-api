@@ -1,7 +1,7 @@
 # coding: utf-8
 
-import numpy as np
 from io import BytesIO
+import numpy as np
 from PIL import Image
 
 

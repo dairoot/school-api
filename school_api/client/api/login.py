@@ -19,7 +19,7 @@ class Login(BaseSchoolApi):
         # 登录请求
         code = ''
         login_types = [u'学生', u'教师', u'部门']
-        view_state = self.session.get(self.base_url + login_url)
+        view_state = self._get_login_view_state(**kwargs)
 
         if exist_verify:
             res = self._get('/CheckCode.aspx')
