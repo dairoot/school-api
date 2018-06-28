@@ -20,11 +20,12 @@ class BaseSchoolApi(object):
     def _get_view_state(self, url, **kwargs):
         return self._client.get_view_state(url, **kwargs)
 
-    def _get_login_view_state(self, url):
-        return self._client.get_login_view_state(url)
-
     def _update_headers(self, headers_dict):
         return self._client.update_headers(headers_dict)
+
+    @property
+    def _session(self):
+        return self._client.session
 
     def _set_proxy(self):
         return self._client.set_proxy()

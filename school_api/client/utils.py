@@ -40,12 +40,14 @@ def error_handle(func):
     def wrapper(self, **kwargs):
 
         def echo_log(tip, msg):
+            ''' 打印报错信息 '''
             name = self.school_cfg['name'] or self.base_url
             error_info = '[{}]: {}，错误信息: {}'.format(name, tip, msg)
             logger.warning(error_info)
 
-        if not self.school_cfg['debug']:
-            # 请求失败 销毁类方法
+        if self.school_cfg['debug']:
+            return func(self, **kwargs)
+        else:
             try:
                 return func(self, **kwargs)
 
@@ -63,7 +65,5 @@ def error_handle(func):
                 tip = '教务系统[{}]函数报错'.format(func.__name__)
                 echo_log(tip, e)
                 raise
-        else:
-            return func(self, **kwargs)
 
     return wrapper

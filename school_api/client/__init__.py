@@ -6,7 +6,7 @@ from school_api.client.api.login import Login
 from school_api.client.api.score import Score
 from school_api.client.api.schedule import Schedule
 from school_api.client.api.user_info import SchoolInfo
-from school_api.client.utils import UserType, ScheduleType, error_handle
+from school_api.client.utils import UserType, error_handle
 
 
 class SchoolClient(BaseSchoolClient):

@@ -6,6 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from school_api.client.api.base import BaseSchoolApi
+from school_api.session.memorystorage import MemoryStorage
 
 
 def _is_api_endpoint(obj):
@@ -18,7 +19,10 @@ class BaseSchoolClient(object):
             # 学生
             'SCORE_URL': '/xscj_gc.aspx?xh=',
             'INFO_URL': '/xsgrxx.aspx?gnmkdm=N121501&xh=',
-            'SCHEDULE_URL': ['/xskbcx.aspx?gnmkdm=N121603&xh=', '/tjkbcx.aspx?gnmkdm=N121601&xh=']
+            'SCHEDULE_URL': [
+                '/xskbcx.aspx?gnmkdm=N121603&xh=',
+                '/tjkbcx.aspx?gnmkdm=N121601&xh='
+            ]
         }, {
             # 教师
             'INFO_URL': '/lw_jsxx.aspx?gnmkdm=N122502&zgh=',
@@ -30,9 +34,9 @@ class BaseSchoolClient(object):
     ]
 
     def __init__(self, url, **kwargs):
+        self.session = kwargs.get('redis', MemoryStorage())
         self.school_cfg = {
             'url': url,
-            'login_view_state': kwargs.get('login_view_state', {}),
             'debug': kwargs.get('debug'),
             'name': kwargs.get('name'),
             'exist_verify': kwargs.get('exist_verify', True),
@@ -43,27 +47,25 @@ class BaseSchoolClient(object):
             'login_url': kwargs.get('login_url', '/default2.aspx'),
             'school_url': kwargs.get('conf_url', self.school_url)
         }
-        # 初始化学校时 获取登录的view_state
-        self.get_login_view_state(self.school_cfg['url'] + self.school_cfg['login_url'])
 
-    def get_login_view_state(self, view_state_url):
+        self.init_login_view_state(kwargs.get('login_view_state', {}))
+
+    def init_login_view_state(self, login_view_state):
         '''
-        获取登录的view_state 学校变量
+        获取登录的 view_state 学校变量
         当该值存在的时候，不请求， 首先请求在初始化学校的时候
         若学生登录时，无该值，则调用该函数。
         '''
-        if not self.school_cfg['login_view_state'].get(view_state_url):
-            try:
-                res = requests.get(view_state_url, timeout=self.school_cfg['timeout'])
-            except requests.exceptions.Timeout as e:
-                return None
+        for url_key, view_state in login_view_state.items():
+            self.session.set(url_key, view_state)
 
-            if res.status_code != 200:
-                return None
+        # 初始化学校时 获取登录的view_state
+        base_key = self.school_cfg['url'] + self.school_cfg['login_url']
 
+        if not self.session.get(base_key):
+            res = requests.get(base_key, timeout=self.school_cfg['timeout'])
             view_state = BaseUserClient.get_view_state_from_html(res.text)
-            self.school_cfg['login_view_state'][view_state_url] = view_state
-        return self.school_cfg['login_view_state'][view_state_url]
+            self.session.set(base_key, view_state)
 
 
 class BaseUserClient(object):
@@ -93,7 +95,7 @@ class BaseUserClient(object):
         self.user_type = user_type
         self.school_cfg = school.school_cfg
         self.base_url = self.school_cfg['url']
-        self.get_login_view_state = school.get_login_view_state
+        self.session = school.session
 
         if self.school_cfg['use_proxy']:
             self.set_proxy()
