@@ -17,11 +17,13 @@ class SchoolClient(BaseSchoolClient):
     def user_login(self, account, password, user_type=UserType.STUDENT, **kwargs):
         user = UserClient(self, account, password, user_type)
 
+        # 读取缓存会话
         if user.get_login_session():
             return user
 
         user = user.user_login(**kwargs) or user
         if isinstance(user, UserClient):
+            # 保存会话
             user.save_login_session()
 
         return user

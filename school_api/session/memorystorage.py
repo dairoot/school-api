@@ -35,7 +35,6 @@ class MemoryStorage(SessionStorage):
         key = self.key_name(key)
         expires_at = not ttl or time.time() + ttl
         data = {'value': value, 'expires_at': expires_at}
-        print(data)
         self._data[key] = data
 
     def delete(self, key):

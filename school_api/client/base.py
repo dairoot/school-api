@@ -133,20 +133,6 @@ class BaseUserClient(object):
             **kwargs
         )
 
-    def get_login_session(self):
-        ''' 获取登录会话 '''
-        key = '{}:{}'.format(self.base_url, self.account)
-        cookie = self.session.get(key)
-        if not cookie:
-            return
-        return self._http.cookies.update(cookie)
-
-    def save_login_session(self):
-        ''' 保存登录会话 '''
-        key = '{}:{}'.format(self.base_url, self.account)
-        cookie = self._http.cookies.get_dict()
-        self.session.set(key, cookie, 3600)
-
     def set_proxy(self):
         self.school_cfg['use_proxy'] = True
         self.base_url = self.school_cfg['lan_url'] or self.base_url
@@ -167,3 +153,21 @@ class BaseUserClient(object):
         view_state = pre_soup.find(
             attrs={"name": "__VIEWSTATE"})['value']
         return view_state
+
+    def get_login_session(self):
+        ''' 获取登录会话 '''
+        key = '{}:{}:{}'.format('login', self.base_url, self.account)
+        cookie = self.session.get(key)
+        if not cookie:
+            return
+        url = self.base_url + self.school_cfg['login_url']
+        self.update_headers({'Referer': url})
+        self._http.cookies.update(cookie)
+        return True
+
+    def save_login_session(self):
+        ''' 保存登录会话 '''
+        key = '{}:{}:{}'.format('login', self.base_url, self.account)
+
+        cookie = self._http.cookies.get_dict()
+        self.session.set(key, cookie, 3600)

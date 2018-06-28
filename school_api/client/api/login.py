@@ -58,7 +58,9 @@ class Login(BaseSchoolApi):
                 return NullClass('登陆失败')
 
         # 登录成功之后，教务系统会返回 302 跳转
-        if res and res.status_code != 302:
+        if res.status_code == 500:
+            return NullClass('服务器报错')
+        elif res.status_code != 302:
             page_soup = BeautifulSoup(res.text, "html.parser")
             alert_soup = page_soup.find_all('script')[-1]
             tip = re.findall(r'[^()\']+', alert_soup.text)[1]
