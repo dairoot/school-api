@@ -23,10 +23,6 @@ class BaseSchoolApi(object):
     def _update_headers(self, headers_dict):
         return self._client.update_headers(headers_dict)
 
-    @property
-    def _session(self):
-        return self._client.session
-
     def _set_proxy(self):
         return self._client.set_proxy()
 
@@ -37,6 +33,10 @@ class BaseSchoolApi(object):
     @property
     def password(self):
         return self._client.password
+
+    @property
+    def session(self):
+        return self._client.session
 
     @property
     def user_type(self):

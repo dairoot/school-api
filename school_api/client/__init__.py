@@ -16,7 +16,15 @@ class SchoolClient(BaseSchoolClient):
 
     def user_login(self, account, password, user_type=UserType.STUDENT, **kwargs):
         user = UserClient(self, account, password, user_type)
-        return user.user_login(**kwargs) or user
+
+        if user.get_login_session():
+            return user
+
+        user = user.user_login(**kwargs) or user
+        if isinstance(user, UserClient):
+            user.save_login_session()
+
+        return user
 
 
 class UserClient(BaseUserClient):

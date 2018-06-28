@@ -34,7 +34,7 @@ class BaseSchoolClient(object):
     ]
 
     def __init__(self, url, **kwargs):
-        self.session = kwargs.get('redis', MemoryStorage())
+
         self.school_cfg = {
             'url': url,
             'debug': kwargs.get('debug'),
@@ -47,7 +47,8 @@ class BaseSchoolClient(object):
             'login_url': kwargs.get('login_url', '/default2.aspx'),
             'school_url': kwargs.get('conf_url', self.school_url)
         }
-
+        session_func = kwargs.get('redis', MemoryStorage)
+        self.session = session_func(self.school_cfg['name'])
         self.init_login_view_state(kwargs.get('login_view_state', {}))
 
     def init_login_view_state(self, login_view_state):
@@ -131,6 +132,20 @@ class BaseUserClient(object):
             url_or_endpoint=url,
             **kwargs
         )
+
+    def get_login_session(self):
+        ''' 获取登录会话 '''
+        key = '{}:{}'.format(self.base_url, self.account)
+        cookie = self.session.get(key)
+        if not cookie:
+            return
+        return self._http.cookies.update(cookie)
+
+    def save_login_session(self):
+        ''' 保存登录会话 '''
+        key = '{}:{}'.format(self.base_url, self.account)
+        cookie = self._http.cookies.get_dict()
+        self.session.set(key, cookie, 3600)
 
     def set_proxy(self):
         self.school_cfg['use_proxy'] = True

@@ -7,7 +7,9 @@ from PIL import Image
 
 class CheckCode(object):
     """ 正方系统验证码识别 """
-    real_all_theta = np.matrix(np.loadtxt('school_api/check_code/theta.dat')).transpose()
+    real_all_theta = np.matrix(
+        np.loadtxt('school_api/check_code/theta.dat')
+    ).transpose()
 
     def __init__(self):
         self.img = None

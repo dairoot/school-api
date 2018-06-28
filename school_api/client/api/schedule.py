@@ -41,7 +41,11 @@ class Schedule(BaseSchoolApi):
         res = self._get(self.schedule_url, **kwargs)
         if res.status_code != 200:
             return None
-        schedule = ScheduleParse(res.content.decode(coding), self.schedule_type).get_schedule_dict()
+        schedule = ScheduleParse(
+            res.content.decode(coding),
+            self.schedule_type
+        ).get_schedule_dict()
+
         '''
         第一次请求的时候，教务系统默认返回最新课表
         如果设置了学年跟学期，匹配学年跟学期，不匹配则获取指定学年学期的课表
@@ -68,7 +72,11 @@ class Schedule(BaseSchoolApi):
         if res.status_code != 200:
             return None
 
-        payload = self._get_schedule_payload_by_bm(res.content.decode('gbk'), class_name)
+        payload = self._get_schedule_payload_by_bm(
+            res.content.decode('gbk'),
+            class_name
+        )
+
         res = self._post(self.schedule_url, data=payload, **kwargs)
 
         if res.status_code != 200:
@@ -85,12 +93,18 @@ class Schedule(BaseSchoolApi):
         提取页面参数用于请求课表
         '''
         pre_soup = BeautifulSoup(html, "html.parser")
-        schedule_view_state = pre_soup.find(attrs={"name": "__VIEWSTATE"})['value']
+        view_state = pre_soup.find(attrs={"name": "__VIEWSTATE"})['value']
         schedule_id_list = pre_soup.find(id='kb').find_all('option')
-        schedule_id = [name['value'] for name in schedule_id_list if name.text == class_name]
+
+        schedule_id = ''
+        for name in schedule_id_list:
+            if name.text == class_name:
+                schedule_id = name['value']
+                break
+
         # 获取班级课表
         payload = {
-            '__VIEWSTATE': schedule_view_state,
+            '__VIEWSTATE': view_state,
             'kb': schedule_id
         }
         return payload

@@ -1,6 +1,5 @@
+import os
 from school_api import SchoolClient
-from conf import *
-
 
 conf = {
     'name': '广东科技学院',
@@ -15,6 +14,14 @@ conf = {
     'school_url': None,             # 教务系统链接
     # 'proxies': {"http": "http://XXXX:XXXX@XXXX:3120/", }  # 代理存在时，请求失败则会切换成代理
 }
+
+STUDENT_ACCOUNT = os.getenv('STUDENT_ACCOUNT', '123456')
+STUDENT_PASSWD = os.getenv('STUDENT_PASSWD', '')
+TEACHER_ACCOUNT = os.getenv('TEACHER_ACCOUNT', '')
+TEACHER_PASSWD = os.getenv('TEACHER_PASSWD', '')
+BM_TEACHER_ACCOUNT = os.getenv('BM_TEACHER_ACCOUNT', '')
+BM_TEACHER_PASSWD = os.getenv('BM_TEACHER_PASSWD', '')
+
 
 # 先实例化一个学校，再实例化用户
 GdstApi = SchoolClient('http://61.142.33.204', **conf)
