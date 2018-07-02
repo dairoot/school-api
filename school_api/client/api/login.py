@@ -44,19 +44,24 @@ class Login(BaseSchoolApi):
 
     def get_login(self, school, **kwargs):
         ''' 登录入口 与 异常处理 '''
+        args = (school['login_url'], school['exist_verify'])
+
         try:
-            res = self._login(school['login_url'], school['exist_verify'], **kwargs)
+            res = self._login(*args, **kwargs)
         except requests.exceptions.Timeout as e:
             name = school['name'] or self.base_url
             if school['proxies'] and not school['use_proxy']:
                 logger.warning("[%s]: 教务系统外网异常，切换内网代理，错误信息: %s", name, e)
                 # 使用内网代理
                 self._set_proxy()
-                res = self._login(school['login_url'], school['exist_verify'], **kwargs)
+                res = self._login(*args, **kwargs)
             else:
                 logger.warning("[%s]: 教务系统登陆失败，错误信息: %s", name, e)
                 return NullClass('登陆失败')
 
+        return self._get_login_result(res, *args, **kwargs)
+
+    def _get_login_result(self, res, *args, **kwargs):
         # 登录成功之后，教务系统会返回 302 跳转
         if res.status_code == 500:
             return NullClass('服务器500报错')
@@ -64,7 +69,11 @@ class Login(BaseSchoolApi):
             page_soup = BeautifulSoup(res.text, "html.parser")
             alert_soup = page_soup.find_all('script')[-1]
             tip = re.findall(r'[^()\']+', alert_soup.text)[1]
-            # if tip == '验证码不正确！！':
-            #     return self.get_login(school, **kwargs)
+
+            if tip == '验证码不正确！！':
+                # 再次登录
+                res = self._login(*args, **kwargs)
+                if res.status_code == 302:
+                    return None
+
             return NullClass(tip)
-        return None

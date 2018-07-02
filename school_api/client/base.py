@@ -58,15 +58,8 @@ class BaseSchoolClient(object):
         若学生登录时，无该值，则调用该函数。
         '''
         for url_key, view_state in login_view_state.items():
-            self.session.set(url_key, view_state)
-
-        # 初始化学校时 获取登录的view_state
-        # url_key = self.school_cfg['url'] + self.school_cfg['login_url']
-
-        # if not self.session.get(url_key):
-        #     res = requests.get(url_key, timeout=self.school_cfg['timeout'])
-        #     view_state = BaseUserClient.get_view_state_from_html(res.text)
-        #     self.session.set(url_key, view_state)
+            # self.session.set('login_view:'+url_key, view_state)
+            pass
 
 
 class BaseUserClient(object):
@@ -156,7 +149,8 @@ class BaseUserClient(object):
 
     def get_login_session(self):
         ''' 获取登录会话 '''
-        key = '{}:{}:{}'.format('login', self.base_url, self.account)
+        url = self.base_url + self.school_cfg['login_url']
+        key = '{}:{}:{}'.format('login_session', url, self.account)
         cookie = self.session.get(key)
         if not cookie:
             return
@@ -167,14 +161,14 @@ class BaseUserClient(object):
 
     def save_login_session(self):
         ''' 保存登录会话 '''
-        key = '{}:{}:{}'.format('login', self.base_url, self.account)
-
+        url = self.base_url + self.school_cfg['login_url']
+        key = '{}:{}:{}'.format('login_session', url, self.account)
         cookie = self._http.cookies.get_dict()
         self.session.set(key, cookie, 3600)
 
     def get_login_view_state(self, **kwargs):
         ''' 获取登录的view_state '''
-        base_key = self.base_url + self.school_cfg['login_url']
+        base_key = 'login_view:' + self.base_url + self.school_cfg['login_url']
         if not self.session.get(base_key):
             view_state = self.get_view_state(self.school_cfg['login_url'], **kwargs)
             self.session.set(base_key, view_state)

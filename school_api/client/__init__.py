@@ -19,6 +19,7 @@ class SchoolClient(BaseSchoolClient):
 
         # 读取缓存会话
         if user.get_login_session():
+            # print ("读取缓存会话")
             return user
 
         user = user.user_login(**kwargs) or user
