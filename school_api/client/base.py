@@ -153,7 +153,7 @@ class BaseUserClient(object):
         key = '{}:{}:{}'.format('login_session', url, self.account)
         cookie = self.session.get(key)
         if not cookie:
-            return
+            return None
         url = self.base_url + self.school_cfg['login_url']
         self.update_headers({'Referer': url})
         self._http.cookies.update(cookie)

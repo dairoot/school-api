@@ -12,7 +12,7 @@ class RedisStorage(SessionStorage):
         self.redis = redis
 
     def key_name(self, key):
-        return '{0}:{1}'.format(self.prefix, key)
+        return 'school:{0}:{1}'.format(self.prefix, key)
 
     def get(self, key, default=None):
         key = self.key_name(key)
@@ -32,6 +32,6 @@ class RedisStorage(SessionStorage):
         key = self.key_name(key)
         self.redis.delete(key)
 
-    def __call__(self, prefix='school'):
+    def __call__(self, prefix=''):
         self.prefix = prefix
         return self

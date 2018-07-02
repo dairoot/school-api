@@ -3,13 +3,14 @@
 
 import sys
 import os
+import unittest
+from redis import Redis
 
 cur_path = os.path.abspath(__file__)
 parent = os.path.dirname
 sys.path.append(parent(parent(cur_path)))
 
-import unittest
-from redis import Redis
+
 from school_api import SchoolClient
 from school_api.session.redisstorage import RedisStorage
 
@@ -20,8 +21,8 @@ class TestStudent(unittest.TestCase):
     conf = {
         'name': '广东科技学院',
         'debug': False,                 # 模块调试
-        'login_url': '/default4.aspx',  # 登录地址
-        'exist_verify': False,           # 是否存在验证码
+        'login_url': '/default2.aspx',  # 登录地址
+        # 'exist_verify': False,           # 是否存在验证码
         'session': session,
         'login_view_state': {           # 登录的view_state(可空)
             'http://61.142.33.204/default2.aspx': 'dDw3OTkxMjIwNTU7Oz5vJ/yYUi9dD4fEnRUKesDFl8hEKA==',

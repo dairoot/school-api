@@ -1,5 +1,5 @@
 # coding: utf-8
-
+import os
 from io import BytesIO
 import numpy as np
 from PIL import Image
@@ -7,9 +7,8 @@ from PIL import Image
 
 class CheckCode(object):
     """ 正方系统验证码识别 """
-    real_all_theta = np.matrix(
-        np.loadtxt('school_api/check_code/theta.dat')
-    ).transpose()
+    data_file = os.path.dirname(os.path.realpath(__file__)) + '/theta.dat'
+    real_all_theta = np.matrix(np.loadtxt(data_file)).transpose()
 
     def __init__(self):
         self.img = None

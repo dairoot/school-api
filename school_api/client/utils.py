@@ -51,19 +51,19 @@ def error_handle(func):
             try:
                 return func(self, **kwargs)
 
-            except exceptions.Timeout as e:
+            except exceptions.Timeout as reqe:
                 tip = '教务系统[{}]函数请求超时'.format(func.__name__)
-                echo_log(tip, e)
+                echo_log(tip, reqe)
                 return NullClass(tip)
 
-            except exceptions.ProxyError as e:
+            except exceptions.ProxyError as reqe:
                 tip = '教务系统[{}]代理连接超时'.format(func.__name__)
-                echo_log(tip, e)
+                echo_log(tip, reqe)
                 return NullClass(tip)
 
-            except Exception as e:
+            except Exception as reqe:
                 tip = '教务系统[{}]函数报错'.format(func.__name__)
-                echo_log(tip, e)
+                echo_log(tip, reqe)
                 raise
 
     return wrapper
