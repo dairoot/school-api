@@ -47,7 +47,7 @@ class BaseSchoolClient(object):
             'login_url': kwargs.get('login_url', '/default2.aspx'),
             'school_url': kwargs.get('conf_url', self.school_url)
         }
-        storage = kwargs.get('redis', MemoryStorage)
+        storage = kwargs.get('session', MemoryStorage)
         self.session = storage(self.school_cfg['name'])
         self.init_login_view_state(kwargs.get('login_view_state', {}))
 

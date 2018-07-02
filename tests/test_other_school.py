@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import sys
+import os
+
+cur_path = os.path.abspath(__file__)
+parent = os.path.dirname
+sys.path.append(parent(parent(cur_path)))
+
+from school_api import SchoolClient
+import unittest
+
+
+class TestStudent(unittest.TestCase):
+
+    OTHER_STUDENT_ACCOUNT = os.getenv('OTHER_STUDENT_ACCOUNT', '')
+    OTHER_STUDENT_PASSWD = os.getenv('OTHER_STUDENT_PASSWD', '')
+    GdouApi = SchoolClient('http://210.38.137.125:8016/(111111111111111111111111)/')
+    student = GdouApi.user_login(OTHER_STUDENT_ACCOUNT, OTHER_STUDENT_PASSWD, timeout=3)
+
+    def setUp(self):
+        print('\033[1;35m -- \033[0m')
+
+    def tearDown(self):
+        pass
+
+    def test_schedule(self):
+        schedule_data = self.student.get_schedule(
+            schedule_year='2017-2018', schedule_term='1', timeout=5)
+        print(schedule_data)
+
+    # def test_score(self):
+    #     score_data = self.student.get_score(score_year='2017-2018', score_term='1', timeout=5)
+    #     print(score_data)
+
+    def test_info(self):
+        info_data = self.student.get_info(timeout=5)
+        print(info_data)
+
+
+if __name__ == '__main__':
+    unittest.main()

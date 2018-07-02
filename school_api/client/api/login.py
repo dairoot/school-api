@@ -59,10 +59,12 @@ class Login(BaseSchoolApi):
 
         # 登录成功之后，教务系统会返回 302 跳转
         if res.status_code == 500:
-            return NullClass('服务器报错')
+            return NullClass('服务器500报错')
         elif res.status_code != 302:
             page_soup = BeautifulSoup(res.text, "html.parser")
             alert_soup = page_soup.find_all('script')[-1]
             tip = re.findall(r'[^()\']+', alert_soup.text)[1]
+            # if tip == '验证码不正确！！':
+            #     return self.get_login(school, **kwargs)
             return NullClass(tip)
         return None

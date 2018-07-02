@@ -1,5 +1,5 @@
 test.py
-test.sh
+*.sh
 *.pyc
 .idea
 conf.py
