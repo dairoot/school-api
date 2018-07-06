@@ -20,22 +20,6 @@ class ScheduleType():
     CLASS = 1
 
 
-class NullClass():
-    ''' 空类 将对象赋空 '''
-
-    def __init__(self, tip=''):
-        self.tip = tip
-
-    def __str__(self):
-        return self.tip
-
-    def __getattr__(self, name):
-        def func(**kwargs):
-            return self
-
-        return func
-
-
 def error_handle(func):
     def wrapper(self, **kwargs):
 
@@ -44,6 +28,7 @@ def error_handle(func):
             name = self.school_cfg['name'] or self.base_url
             error_info = '[{}]: {}，错误信息: {}'.format(name, tip, msg)
             logger.warning(error_info)
+            return {'status': False, 'err_msg': tip}
 
         if self.school_cfg['debug']:
             return func(self, **kwargs)
@@ -53,13 +38,11 @@ def error_handle(func):
 
             except exceptions.Timeout as reqe:
                 tip = '教务系统[{}]函数请求超时'.format(func.__name__)
-                echo_log(tip, reqe)
-                return NullClass(tip)
+                return echo_log(tip, reqe)
 
             except exceptions.ProxyError as reqe:
                 tip = '教务系统[{}]代理连接超时'.format(func.__name__)
-                echo_log(tip, reqe)
-                return NullClass(tip)
+                return echo_log(tip, reqe)
 
             except Exception as reqe:
                 tip = '教务系统[{}]函数报错'.format(func.__name__)

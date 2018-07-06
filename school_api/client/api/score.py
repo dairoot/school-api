@@ -10,7 +10,7 @@ class Score(BaseSchoolApi):
 
     def get_score(self, score_year=None, score_term=None, **kwargs):
         score_url = self.school_url['SCORE_URL'] + self.account
-        view_state = self._get_view_state(score_url)
+        view_state = self._get_view_state(score_url, **kwargs)
         payload = {
             '__VIEWSTATE': view_state,
             'Button2': u'在校学习成绩查询',

@@ -6,10 +6,22 @@ import logging
 import requests
 from bs4 import BeautifulSoup
 from school_api.client.api.base import BaseSchoolApi
-from school_api.client.utils import NullClass
 from school_api.check_code import check_code
 
+
 logger = logging.getLogger(__name__)
+
+
+class LoginFail():
+    ''' 登录失败返回错误信息 '''
+
+    def __init__(self, tip=''):
+        self.tip = tip
+
+    def __getattr__(self, name):
+        def func(**kwargs):
+            return {'status': False, 'err_msg': self.tip}
+        return func
 
 
 class Login(BaseSchoolApi):
@@ -57,14 +69,14 @@ class Login(BaseSchoolApi):
                 res = self._login(*args, **kwargs)
             else:
                 logger.warning("[%s]: 教务系统登陆失败，错误信息: %s", name, e)
-                return NullClass('登陆失败')
+                return LoginFail('登陆失败')
 
         return self._get_login_result(res, *args, **kwargs)
 
     def _get_login_result(self, res, *args, **kwargs):
         # 登录成功之后，教务系统会返回 302 跳转
         if res.status_code == 500:
-            return NullClass('服务器500报错')
+            return LoginFail('服务器500报错')
         elif res.status_code != 302:
             page_soup = BeautifulSoup(res.text, "html.parser")
             alert_soup = page_soup.find_all('script')[-1]
@@ -76,4 +88,4 @@ class Login(BaseSchoolApi):
                 if res.status_code == 302:
                     return None
 
-            return NullClass(tip)
+            return LoginFail(tip)
