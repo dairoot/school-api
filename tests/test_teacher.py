@@ -19,7 +19,7 @@ class TestTeacher(unittest.TestCase):
     teacher = GdstApi.user_login(TEACHER_ACCOUNT, TEACHER_PASSWD,  user_type=1, timeout=3)
 
     def setUp(self):
-        print('\033[1;35m -- \033[0m')
+        print('正在执行\033[1;35m %s \033[0m函数。' % self._testMethodName)
 
     def tearDown(self):
         pass

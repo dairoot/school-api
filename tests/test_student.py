@@ -22,7 +22,7 @@ class TestStudent(unittest.TestCase):
             'http://61.142.33.204/default4.aspx': 'dDwxMTE4MjQwNDc1Ozs+h4dTkZuJcYarQdE7xNFUBMsLO/w='
         },
         'lan_url': 'http://172.16.1.8',  # 内网地址
-        'login_url': '/default2.aspx',  # 登录地址
+        'login_url_path': '/default2.aspx',  # 登录地址
         'exist_verify': True,           # 是否存在验证码
         'use_proxy': False,             # 是否优先使用代理
         'school_url': None,             # 教务系统链接
@@ -35,7 +35,7 @@ class TestStudent(unittest.TestCase):
     student = GdstApi.user_login(STUDENT_ACCOUNT, STUDENT_PASSWD, timeout=3)
 
     def setUp(self):
-        print('\033[1;35m -- \033[0m')
+        print('正在执行\033[1;35m %s \033[0m函数。' % self._testMethodName)
 
     def tearDown(self):
         pass

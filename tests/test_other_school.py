@@ -20,7 +20,7 @@ class TestStudent(unittest.TestCase):
     student = GdouApi.user_login(OTHER_STUDENT_ACCOUNT, OTHER_STUDENT_PASSWD, timeout=3)
 
     def setUp(self):
-        print('\033[1;35m -- \033[0m')
+        print('正在执行\033[1;35m %s \033[0m函数。' % self._testMethodName)
 
     def tearDown(self):
         pass

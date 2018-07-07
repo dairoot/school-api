@@ -20,9 +20,9 @@ class TestStudent(unittest.TestCase):
     session = RedisStorage(redis)
     conf = {
         'name': '广东科技学院',
-        'debug': False,                 # 模块调试
-        'login_url': '/default2.aspx',  # 登录地址
-        # 'exist_verify': False,           # 是否存在验证码
+        'debug': False,                     # 模块调试
+        'login_url_path': '/default2.aspx', # 登录地址
+        # 'exist_verify': False,            # 是否存在验证码
         'session': session,
         'login_view_state': {           # 登录的view_state(可空)
             'http://61.142.33.204/default2.aspx': 'dDw3OTkxMjIwNTU7Oz5vJ/yYUi9dD4fEnRUKesDFl8hEKA==',
@@ -37,7 +37,7 @@ class TestStudent(unittest.TestCase):
     student = GdstApi.user_login(STUDENT_ACCOUNT, STUDENT_PASSWD, timeout=3)
 
     def setUp(self):
-        print('\033[1;35m -- \033[0m')
+        print('正在执行\033[1;35m %s \033[0m函数。' % self._testMethodName)
 
     def tearDown(self):
         pass

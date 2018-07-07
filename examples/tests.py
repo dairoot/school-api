@@ -9,7 +9,6 @@ conf = {
     'login_view_state': {           # login_view_state 的存在可以避免 初始化学校时的获取
         'http://61.142.33.204/default2.aspx': 'dDw3OTkxMjIwNTU7Oz5vJ/yYUi9dD4fEnRUKesDFl8hEKA==',
         'http://61.142.33.204/default4.aspx': 'dDwxMTE4MjQwNDc1Ozs+MzFt0h81g6NGHTq1L9P2NfWUGLA=',
-
     },
     'lan_url': 'http://172.16.1.8',  # 内网地址
     'use_proxy': False,             # 是否优先使用代理

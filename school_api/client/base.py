@@ -44,7 +44,7 @@ class BaseSchoolClient(object):
             'proxies': kwargs.get('proxies'),
             'use_proxy': kwargs.get('use_proxy'),
             'timeout': kwargs.get('timeout', 10),
-            'login_url': kwargs.get('login_url', '/default2.aspx'),
+            'login_url': kwargs.get('login_url_path', '/default2.aspx'),
             'school_url': kwargs.get('conf_url', self.school_url)
         }
         storage = kwargs.get('session', MemoryStorage)
