@@ -7,6 +7,15 @@ python:
   - "3.5"
   - "3.6"
 
+services:
+  - redis-server
+  
 install:
-  - pip install tox
-  - pip install coverage
+  - pip install .
+
+script:
+  - nosetests --with-coverage --cover-package=school_api
+
+after_success:
+  - pip install coveralls
+  - coveralls

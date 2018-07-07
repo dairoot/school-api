@@ -18,6 +18,8 @@ setup(
     install_requires=[
         'requests',
         'redis',
+        'bs4',
+        'Image'
     ],
 
     zip_safe=False
