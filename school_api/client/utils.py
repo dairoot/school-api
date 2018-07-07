@@ -35,6 +35,9 @@ def error_handle(func):
         else:
             try:
                 return func(self, **kwargs)
+            except exceptions.ConnectTimeout as reqe:
+                tip = '教务系统[{}]函数请求超时'.format(func.__name__)
+                return echo_log(tip, reqe)
 
             except exceptions.Timeout as reqe:
                 tip = '教务系统[{}]函数请求超时'.format(func.__name__)

@@ -39,7 +39,7 @@ class BaseSchoolClient(object):
         self.school_cfg = {
             'url': url,
             'debug': kwargs.get('debug'),
-            'name': kwargs.get('name'),
+            'name': to_text(kwargs.get('name')),
             'exist_verify': kwargs.get('exist_verify', True),
             'lan_url': kwargs.get('lan_url'),
             'proxies': kwargs.get('proxies'),

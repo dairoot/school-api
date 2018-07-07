@@ -28,15 +28,18 @@ class ScheduleParse(object):
     def __init__(self, html, schedule_type=0):
         self.schedule_list = [[], [], [], [], [], [], []]
         self.schedule_dict = [[], [], [], [], [], [], []]
+        self.schedule_year = ''
+        self.schedule_term = ''
         self.schedule_type = schedule_type
         soup = BeautifulSoup(html, "html.parser")
         option_args = soup.find_all("option", {"selected": "selected"})
-        self.schedule_year = option_args[0].text
-        self.schedule_term = option_args[1].text
-        table = soup.find("table", {"id": "Table6"}) if \
-            schedule_type == 1 else soup.find("table", {"id": "Table1"})
-        trs = table.find_all('tr')
-        self.__html_parse(trs)
+        if option_args:
+            self.schedule_year = option_args[0].text
+            self.schedule_term = option_args[1].text
+            table = soup.find("table", {"id": "Table6"}) if \
+                schedule_type == 1 else soup.find("table", {"id": "Table1"})
+            trs = table.find_all('tr')
+            self.__html_parse(trs)
 
     def __html_parse(self, trs):
         """
