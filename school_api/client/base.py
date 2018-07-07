@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 
 from school_api.client.api.base import BaseSchoolApi
 from school_api.session.memorystorage import MemoryStorage
+from school_api.utils import to_text
 
 
 def _is_api_endpoint(obj):
@@ -84,7 +85,7 @@ class BaseUserClient(object):
                           'Chrome/62.0.3202.89 Safari/537.36',
             'Content-Type': 'application/x-www-form-urlencoded',
         })
-        self.account = account
+        self.account = to_text(account)
         self.password = password
         self.user_type = user_type
         self.school_cfg = school.school_cfg

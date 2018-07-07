@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import time
 from school_api.session import SessionStorage
+from school_api.utils import to_text
 
 
 class MemoryStorage(SessionStorage):
@@ -9,7 +10,7 @@ class MemoryStorage(SessionStorage):
 
     def __init__(self, prefix=''):
         self._data = {}
-        self.prefix = prefix
+        self.prefix = to_text(prefix)
 
     def key_name(self, key):
         return '{0}:{1}'.format(self.prefix, key)

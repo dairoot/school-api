@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-try:
-    from urllib import parse
-except ImportError:
-    from urlparse import urlparse as parse
+import six.moves.urllib.parse as urlparse
 
 from bs4 import BeautifulSoup
 
 from school_api.client.api.base import BaseSchoolApi
 from school_api.client.api.utils.schedule_parse import ScheduleParse
 from school_api.client.utils import ScheduleType
+from school_api.utils import to_text
 
 
 class Schedule(BaseSchoolApi):
@@ -31,7 +29,7 @@ class Schedule(BaseSchoolApi):
             self.schedule_url += self.account
             data = self._get_schedule(**kwargs)
         else:
-            self.schedule_url += parse.quote(self.account.encode('gb2312'))
+            self.schedule_url += urlparse.quote(self.account.encode('gb2312'))
             data = self._get_schedule_by_bm(**kwargs)
 
         return data
@@ -95,7 +93,7 @@ class Schedule(BaseSchoolApi):
         pre_soup = BeautifulSoup(html, "html.parser")
         view_state = pre_soup.find(attrs={"name": "__VIEWSTATE"})['value']
         schedule_id_list = pre_soup.find(id='kb').find_all('option')
-
+        class_name = to_text(class_name)
         schedule_id = ''
         for name in schedule_id_list:
             if name.text == class_name:

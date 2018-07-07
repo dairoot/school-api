@@ -8,11 +8,11 @@ from bs4 import BeautifulSoup
 from school_api.client.api.base import BaseSchoolApi
 from school_api.check_code import check_code
 
-
 logger = logging.getLogger(__name__)
+logging.basicConfig()
 
 
-class LoginFail():
+class LoginFail(dict):
     ''' 登录失败返回错误信息 '''
 
     def __init__(self, tip=''):

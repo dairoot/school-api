@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import json
 from school_api.session import SessionStorage
+from school_api.utils import to_text
 
 
 class RedisStorage(SessionStorage):
@@ -19,7 +20,7 @@ class RedisStorage(SessionStorage):
         value = self.redis.get(key)
         if value is None:
             return default
-        return json.loads(value)
+        return json.loads(to_text(value))
 
     def set(self, key, value, ttl=None):
         if value is None:
@@ -33,5 +34,5 @@ class RedisStorage(SessionStorage):
         self.redis.delete(key)
 
     def __call__(self, prefix=''):
-        self.prefix = prefix
+        self.prefix = to_text(prefix)
         return self
