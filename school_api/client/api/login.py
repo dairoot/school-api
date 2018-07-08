@@ -56,13 +56,13 @@ class Login(BaseSchoolApi):
 
     def get_login(self, school, **kwargs):
         ''' 登录入口 与 异常处理 '''
-        args = (school['login_url'], school['exist_verify'])
+        args = (school.login_url, school.exist_verify)
 
         try:
             res = self._login(*args, **kwargs)
         except requests.exceptions.Timeout as e:
-            name = school['name'] or self.base_url
-            if school['proxies'] and not school['use_proxy']:
+            name = school.name or self.base_url
+            if school.proxies and not school.use_proxy:
                 logger.warning("[%s]: 教务系统外网异常，切换内网代理，错误信息: %s", name, e)
                 # 使用内网代理
                 self._set_proxy()

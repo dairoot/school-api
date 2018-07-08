@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 
 from school_api.client.api.base import BaseSchoolApi
 from school_api.session.memorystorage import MemoryStorage
-from school_api.utils import to_text
+from school_api.utils import to_text, ObjectDict
 
 
 def _is_api_endpoint(obj):
@@ -36,7 +36,7 @@ class BaseSchoolClient(object):
 
     def __init__(self, url, **kwargs):
 
-        self.school_cfg = {
+        self.school = {
             'url': url,
             'debug': kwargs.get('debug'),
             'name': to_text(kwargs.get('name')),
@@ -49,8 +49,9 @@ class BaseSchoolClient(object):
             'school_url': kwargs.get('conf_url', self.school_url)
         }
         storage = kwargs.get('session', MemoryStorage)
-        self.session = storage(self.school_cfg['name'])
+        self.session = storage(self.school['name'])
         self.init_login_view_state(kwargs.get('login_view_state', {}))
+        self.school = ObjectDict(self.school)
 
     def init_login_view_state(self, login_view_state):
         '''
@@ -88,11 +89,11 @@ class BaseUserClient(object):
         self.account = to_text(account)
         self.password = password
         self.user_type = user_type
-        self.school_cfg = school.school_cfg
-        self.base_url = self.school_cfg['url']
+        self.school = school.school
+        self.base_url = self.school.url
         self.session = school.session
 
-        if self.school_cfg['use_proxy']:
+        if self.school.use_proxy:
             self.set_proxy()
 
     def _request(self, method, url_or_endpoint, **kwargs):
@@ -104,7 +105,7 @@ class BaseUserClient(object):
         else:
             url = url_or_endpoint
 
-        kwargs['timeout'] = kwargs.get('timeout', self.school_cfg['timeout'])
+        kwargs['timeout'] = kwargs.get('timeout', self.school.timeout)
         res = self._http.request(
             method=method,
             url=url,
@@ -128,9 +129,9 @@ class BaseUserClient(object):
         )
 
     def set_proxy(self):
-        self.school_cfg['use_proxy'] = True
-        self.base_url = self.school_cfg['lan_url'] or self.base_url
-        self._proxy = self.school_cfg['proxies']
+        self.school.use_proxy = True
+        self.base_url = self.school.lan_url or self.base_url
+        self._proxy = self.school.proxies
 
     def update_headers(self, headers_dict):
         self._http.headers.update(headers_dict)
@@ -150,27 +151,27 @@ class BaseUserClient(object):
 
     def get_login_session(self):
         ''' 获取登录会话 '''
-        url = self.base_url + self.school_cfg['login_url']
+        url = self.base_url + self.school.login_url
         key = '{}:{}:{}'.format('login_session', url, self.account)
         cookie = self.session.get(key)
         if not cookie:
             return None
-        url = self.base_url + self.school_cfg['login_url']
+        url = self.base_url + self.school.login_url
         self.update_headers({'Referer': url})
         self._http.cookies.update(cookie)
         return True
 
     def save_login_session(self):
         ''' 保存登录会话 '''
-        url = self.base_url + self.school_cfg['login_url']
+        url = self.base_url + self.school.login_url
         key = '{}:{}:{}'.format('login_session', url, self.account)
         cookie = self._http.cookies.get_dict()
         self.session.set(key, cookie, 3600)
 
     def get_login_view_state(self, **kwargs):
         ''' 获取登录的view_state '''
-        base_key = 'login_view:' + self.base_url + self.school_cfg['login_url']
+        base_key = 'login_view:' + self.base_url + self.school.login_url
         if not self.session.get(base_key):
-            view_state = self.get_view_state(self.school_cfg['login_url'], **kwargs)
+            view_state = self.get_view_state(self.school.login_url, **kwargs)
             self.session.set(base_key, view_state)
         return self.session.get(base_key)

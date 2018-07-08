@@ -4,8 +4,23 @@ from __future__ import absolute_import, unicode_literals
 import six
 
 
+class ObjectDict(dict):
+    """:copyright: (c) 2014 by messense.
+    Makes a dictionary behave like an object, with attribute-style access.
+    """
+
+    def __getattr__(self, key):
+        if key in self:
+            return self[key]
+        return None
+
+    def __setattr__(self, key, value):
+        self[key] = value
+
+
 def to_text(value, encoding='utf-8'):
-    """Convert value to unicode, default encoding is utf-8
+    """:copyright: (c) 2014 by messense.
+    Convert value to unicode, default encoding is utf-8
 
     :param value: Value to be converted
     :param encoding: Desired encoding

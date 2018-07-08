@@ -5,3 +5,5 @@ test.py
 conf.py
 .pytest_cache/
 CheckCode.gif
+.coverage
+

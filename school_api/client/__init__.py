@@ -35,12 +35,12 @@ class UserClient(BaseUserClient):
     info = SchoolInfo()
     schedule = Schedule()
 
-    def __init__(self, school, account, password, user_type):
-        super(UserClient, self).__init__(school, account, password, user_type)
+    def __init__(self, school_object, account, password, user_type):
+        super(UserClient, self).__init__(school_object, account, password, user_type)
 
     @error_handle
     def user_login(self, **kwargs):
-        return self.login.get_login(self.school_cfg, **kwargs)
+        return self.login.get_login(self.school, **kwargs)
 
     @error_handle
     def get_schedule(self, **kwargs):

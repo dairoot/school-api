@@ -51,4 +51,4 @@ class BaseSchoolApi(object):
 
     @property
     def school_url(self):
-        return self._client.school_cfg['school_url'][self.user_type]
+        return self._client.school.school_url[self.user_type]

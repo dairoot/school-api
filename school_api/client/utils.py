@@ -25,12 +25,12 @@ def error_handle(func):
 
         def echo_log(tip, msg):
             ''' 打印报错信息 '''
-            name = self.school_cfg['name'] or self.base_url
+            name = self.school.name or self.base_url
             error_info = '[{}]: {}，错误信息: {}'.format(name, tip, msg)
             logger.warning(error_info)
             return {'status': False, 'err_msg': tip}
 
-        if self.school_cfg['debug']:
+        if self.school.debug:
             return func(self, **kwargs)
         else:
             try:
