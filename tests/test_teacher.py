@@ -13,8 +13,8 @@ import unittest
 
 
 class TestTeacher(unittest.TestCase):
-    TEACHER_ACCOUNT = os.getenv('TEACHER_ACCOUNT', '')
-    TEACHER_PASSWD = os.getenv('TEACHER_PASSWD', '')
+    TEACHER_ACCOUNT = os.getenv('GDST_TEACHER_ACCOUNT', '')
+    TEACHER_PASSWD = os.getenv('GDST_TEACHER_PASSWD', '')
     GdstApi = SchoolClient('http://61.142.33.204')
     teacher = GdstApi.user_login(TEACHER_ACCOUNT, TEACHER_PASSWD,  user_type=1, timeout=3)
 

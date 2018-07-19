@@ -11,8 +11,9 @@ redis = Redis()
 session = RedisStorage(redis)
 conf = {
     'name': '广东科技学院',
+    'code': 'gdst',
     'debug': False,                     # 模块调试
-    'login_url_path': '/default2.aspx', # 登录地址
+    'login_url_path': '/default2.aspx',  # 登录地址
     'session': session,
 }
 

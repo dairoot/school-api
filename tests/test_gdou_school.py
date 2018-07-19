@@ -14,10 +14,10 @@ import unittest
 
 class TestStudent(unittest.TestCase):
 
-    OTHER_STUDENT_ACCOUNT = os.getenv('OTHER_STUDENT_ACCOUNT', '')
-    OTHER_STUDENT_PASSWD = os.getenv('OTHER_STUDENT_PASSWD', '')
-    GdouApi = SchoolClient('http://210.38.137.125:8016/(111111111111111111111111)/')
-    student = GdouApi.user_login(OTHER_STUDENT_ACCOUNT, OTHER_STUDENT_PASSWD, timeout=3)
+    STUDENT_ACCOUNT = os.getenv('GDOU_STUDENT_ACCOUNT', '')
+    STUDENT_PASSWD = os.getenv('GDOU_STUDENT_PASSWD', '')
+    GdouApi = SchoolClient('http://210.38.137.126:8016')
+    student = GdouApi.user_login(STUDENT_ACCOUNT, STUDENT_PASSWD, timeout=3)
 
     def setUp(self):
         print('正在执行\033[1;35m %s \033[0m函数。' % self._testMethodName)

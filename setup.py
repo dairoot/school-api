@@ -19,7 +19,8 @@ setup(
         'requests',
         'redis',
         'bs4',
-        'Image'
+        'Image',
+        'numpy'
     ],
 
     zip_safe=False

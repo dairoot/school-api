@@ -20,7 +20,7 @@ class TestStudent(unittest.TestCase):
     session = RedisStorage(redis)
     conf = {
         'name': '广东科技学院',
-        'debug': False,                     # 模块调试
+        'code': 'gdst',
         'login_url_path': '/default2.aspx', # 登录地址
         # 'exist_verify': False,            # 是否存在验证码
         'session': session,
@@ -30,8 +30,8 @@ class TestStudent(unittest.TestCase):
         },
     }
 
-    STUDENT_ACCOUNT = os.getenv('STUDENT_ACCOUNT', '')
-    STUDENT_PASSWD = os.getenv('STUDENT_PASSWD', '')
+    STUDENT_ACCOUNT = os.getenv('GDST_STUDENT_ACCOUNT', '')
+    STUDENT_PASSWD = os.getenv('GDST_STUDENT_PASSWD', '')
 
     GdstApi = SchoolClient('http://61.142.33.204', **conf)
     student = GdstApi.user_login(STUDENT_ACCOUNT, STUDENT_PASSWD, timeout=3)
