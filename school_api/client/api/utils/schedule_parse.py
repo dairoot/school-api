@@ -1,36 +1,26 @@
 # -*- coding: utf-8 -*-
+# @Time    : 2016 - 2018
+# @Author  : dairoot
+# @Email   : 623815825@qq.com
 from __future__ import absolute_import, unicode_literals
 
 import re
+import six
 from bs4 import BeautifulSoup
 
 
-class ScheduleParse(object):
+class BaseScheduleParse(object):
     ''' 课表页面解析模块 '''
     COlOR = ['green', 'blue', 'purple', 'red', 'yellow']
-    TIME_LIST = {
-        # 连续上一节课
-        1: [
-            '8:30 ~ 9:15', '10:25 ~ 11:10', '14:40 ~ 15:25',
-            '16:30 ~ 17:15', '19:30 ~ 20:30'
-        ],
-        # 连续上两节课
-        2: [
-            '8:30 ~ 10:05', '10:25 ~ 12:00', '14:40 ~ 16:15',
-            '16:30 ~ 18:05', '19:30 ~ 21:05'
-        ],
-        # 连续上三节课
-        3: ['8:30 ~ 11:10', '', '14:40 ~ 17:15'],
-        # 连续上四节课
-        4: ['8:30 ~ 12:00', '10:25 ~ 16:15', '14:40 ~ 18:05', '16:30 ~ 21:05']
-    }
 
-    def __init__(self, html, schedule_type=0):
-        self.schedule_list = [[], [], [], [], [], [], []]
-        self.schedule_dict = [[], [], [], [], [], [], []]
+    def __init__(self, html, time_list, schedule_type):
         self.schedule_year = ''
         self.schedule_term = ''
+        self.time_list = time_list
         self.schedule_type = schedule_type
+        self.schedule_list = [[], [], [], [], [], [], []]
+        self.schedule_dict = [[], [], [], [], [], [], []]
+
         soup = BeautifulSoup(html, "html.parser")
         option_args = soup.find_all("option", {"selected": "selected"})
         if option_args:
@@ -78,9 +68,11 @@ class ScheduleParse(object):
         ''' 获取td标签的课程信息 '''
         text = re.sub(r'<[/]{0,1}font[^>]*?>', '', text)
         text = re.sub(r'^<br/>', '', text)
-        # 以下兼容 python2 版本解析处理
-        text = re.sub(r'<br><br/></br></br></br></br>$', '', text)
-        text = text.replace('<br>', '<br/>')
+
+        if six.PY2:
+            # 以下兼容 python2 版本解析处理
+            text = re.sub(r'</br></br></br>$', '', text)
+            text = text.replace('<br>', '<br/>')
 
         info_arr = []
         for k in text.split('<br/>'):
@@ -124,11 +116,6 @@ class ScheduleParse(object):
 
         return weeks_arr
 
-    def get_schedule_list(self):
-        ''' 返回课表数据 数组格式 '''
-
-        return self.schedule_list
-
     def get_schedule_dict(self):
         ''' 返回课表数据 字典格式 '''
 
@@ -146,7 +133,7 @@ class ScheduleParse(object):
                             "place": schedule[3],
                             "section": schedule[4],
                             "weeks_arr": schedule[5],
-                            "time": self.TIME_LIST[schedule[4]][section]
+                            "time": self.time_list[schedule[4]][section]
                         })
                 self.schedule_dict[day].append(section_schedule_dict)
 
@@ -156,3 +143,71 @@ class ScheduleParse(object):
             'schedule': self.schedule_dict
         }
         return schedule_data
+
+
+class ScheduleParse(BaseScheduleParse):
+
+    def __init__(self, html, time_list, schedule_type=0):
+        super(ScheduleParse, self).__init__(html, time_list, schedule_type)
+        self.merger_same_schedule()
+
+    def merger_same_schedule(self):
+        """
+        :param day_schedule: 一天的课程
+        :param section_schedule: 一节课的课程
+        :return:
+        """
+        for day_schedule in self.schedule_list:
+            self.__merger_day_schedule(day_schedule)
+
+    def __merger_day_schedule(self, day_schedule):
+        """
+        将同一天相邻的相同两节课合并
+        例如：[[["英语", "2节/双周(14-14)", "姓名", "1-301", "2", "[7,8]"],[...]],
+        [["英语", "2节/双周(14-14)", "姓名", "1-301", "2", "[7,8]"],[...]]]
+        合并为： 课程节数修改
+        [[["英语", "2节/双周(14-14)", "姓名", "1-301", "4", "[7,8]"],[...]],
+        [[...]]]
+        """
+        # 先合并 同一节课的相同课程
+        for section_schedule in day_schedule:
+            self.__merger_section_schedule(section_schedule)
+
+        # 再合并 同一天相邻的相同两节课合并
+        day_slen = len(day_schedule)
+        for i in range(day_slen - 1):
+            for last_i, last_schedule in enumerate(day_schedule[i]):
+                for next_i, next_schedule in enumerate(day_schedule[i + 1]):
+                    if last_schedule and next_schedule:
+                        # 课程名 上课地点 上课时间 教师名
+                        if last_schedule[0] == next_schedule[0] and \
+                            last_schedule[1] == next_schedule[1] and \
+                                last_schedule[2] == next_schedule[2] and\
+                                last_schedule[3] == next_schedule[3]:
+
+                            day_schedule[i][last_i][4] += day_schedule[i + 1][next_i][4]
+                            day_schedule[i + 1][next_i] = []
+
+    @staticmethod
+    def __merger_section_schedule(section_schedule):
+        """
+        将同一节课的相同课程合并
+        例如：[["英语", "2节/单周(7-7)", "姓名", "1-301", "2", "[7]"],
+         ["英语", "2节/双周(8-8)", "姓名", "1-301", "2", "[8]"]]
+         合并为：课程时间修改
+         [["英语", "2节/单周(7-7),2节/双周(8-8)", "姓名", "1-301", "2", "[7,8]"]]
+        """
+        section_slen = len(section_schedule)
+        for i in range(section_slen):
+            for j in range(i + 1, section_slen):
+                if section_schedule[i] and section_schedule[j]:
+                    # 课程名 一样时
+                    if section_schedule[i][0] == section_schedule[j][0]:
+                        # 并且上课时间不同，上课地点 一样时
+                        if section_schedule[i][1] != section_schedule[j][1] and \
+                                section_schedule[i][3] == section_schedule[j][3]:
+                            section_schedule[j][5] += section_schedule[i][5]
+                            section_schedule[j][1] += ',' + section_schedule[i][1]
+
+                        # 课程名一样时 将上一个赋为空
+                        section_schedule[i] = []

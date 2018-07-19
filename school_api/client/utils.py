@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-
-import logging
-from requests import exceptions
-
-logger = logging.getLogger(__name__)
+from school_api.exceptions import SchoolException, LoginException
 
 
 class UserType():
@@ -20,36 +16,32 @@ class ScheduleType():
     CLASS = 1
 
 
+class LoginFail():
+    ''' 登录失败返回错误信息 '''
+
+    def __init__(self, tip=''):
+        self.tip = tip
+
+    def __getattr__(self, name):
+        def func(**kwargs):
+            return {'error': self.tip}
+        return func
+
+    def __nonzero__(self):
+        return True
+
+
 def error_handle(func):
-    def wrapper(self, **kwargs):
-
-        def echo_log(tip, msg):
-            ''' 打印报错信息 '''
-            name = self.school.name or self.base_url
-            error_info = '[{}]: {}，错误信息: {}'.format(name, tip, msg)
-            logger.warning(error_info)
-            return {'status': False, 'err_msg': tip}
-
-        if self.school.debug:
-            return func(self, **kwargs)
+    def wrapper(self, *args, **kwargs):
+        if not self.school.use_ex_handle:
+            return func(self, *args, **kwargs)
         else:
             try:
-                return func(self, **kwargs)
-            except exceptions.ConnectTimeout as reqe:
-                tip = '教务系统[{}]函数请求超时'.format(func.__name__)
-                return echo_log(tip, reqe)
+                return func(self, *args, **kwargs)
 
-            except exceptions.Timeout as reqe:
-                tip = '教务系统[{}]函数请求超时'.format(func.__name__)
-                return echo_log(tip, reqe)
+            except LoginException as reqe:
+                return LoginFail(reqe)
 
-            except exceptions.ProxyError as reqe:
-                tip = '教务系统[{}]代理连接超时'.format(func.__name__)
-                return echo_log(tip, reqe)
-
-            except Exception as reqe:
-                tip = '教务系统[{}]函数报错'.format(func.__name__)
-                echo_log(tip, reqe)
-                raise
-
+            except SchoolException as reqe:
+                return {'error': reqe}
     return wrapper

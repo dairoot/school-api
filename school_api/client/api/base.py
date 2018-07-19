@@ -14,6 +14,9 @@ class BaseSchoolApi(object):
     def _post(self, url, **kwargs):
         return self._client.post(url, **kwargs)
 
+    def _head(self, url, **kwargs):
+        return self._client.post(url, **kwargs)
+
     def _get_view_state_from_html(self, html):
         return self._client.get_view_state_from_html(html)
 
@@ -28,6 +31,10 @@ class BaseSchoolApi(object):
 
     def _set_proxy(self):
         return self._client.set_proxy()
+
+    @property
+    def code(self):
+        return self._client.school.code
 
     @property
     def account(self):
@@ -51,4 +58,8 @@ class BaseSchoolApi(object):
 
     @property
     def school_url(self):
-        return self._client.school.school_url[self.user_type]
+        return self._client.school.url_endpoint[self.user_type]
+
+    @property
+    def time_list(self):
+        return self._client.school.time_list

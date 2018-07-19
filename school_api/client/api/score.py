@@ -2,13 +2,17 @@
 from __future__ import absolute_import, unicode_literals
 
 from bs4 import BeautifulSoup
+from requests import RequestException
+
 from school_api.client.api.base import BaseSchoolApi
+from school_api.exceptions import ScoreException
 
 
 class Score(BaseSchoolApi):
     ''' 学生成绩获取 '''
 
     def get_score(self, score_year=None, score_term=None, **kwargs):
+        ''' 成绩信息 获取入口 '''
         score_url = self.school_url['SCORE_URL'] + self.account
         view_state = self._get_view_state(score_url, **kwargs)
         payload = {
@@ -17,9 +21,16 @@ class Score(BaseSchoolApi):
             'ddlXN': '',
             'ddlXQ': ''
         }
-        res = self._post(score_url, data=payload, **kwargs)
-        if res.status_code != 200:
-            return None
+
+        try:
+            res = self._post(score_url, data=payload, **kwargs)
+            if res.status_code == 302:
+                raise ScoreException(self.code, '成绩信息未公布')
+            elif res.status_code != 200:
+                raise RequestException
+        except RequestException:
+            raise ScoreException(self.code, '获取成绩信息失败')
+
         return ScoreParse(res.content).get_score(score_year, score_term)
 
 

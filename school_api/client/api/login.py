@@ -2,26 +2,11 @@
 from __future__ import absolute_import, unicode_literals
 
 import re
-import logging
-import requests
 from bs4 import BeautifulSoup
+from requests import RequestException
 from school_api.client.api.base import BaseSchoolApi
 from school_api.check_code import check_code
-
-logger = logging.getLogger(__name__)
-logging.basicConfig()
-
-
-class LoginFail(dict):
-    ''' 登录失败返回错误信息 '''
-
-    def __init__(self, tip=''):
-        self.tip = tip
-
-    def __getattr__(self, name):
-        def func(**kwargs):
-            return {'status': False, 'err_msg': self.tip}
-        return func
+from school_api.exceptions import IdentityException, CheckCodeException, LoginException
 
 
 class Login(BaseSchoolApi):
@@ -57,26 +42,27 @@ class Login(BaseSchoolApi):
     def get_login(self, school, **kwargs):
         ''' 登录入口 与 异常处理 '''
         args = (school.login_url, school.exist_verify)
-
         try:
             res = self._login(*args, **kwargs)
-        except requests.exceptions.Timeout as e:
-            name = school.name or self.base_url
+        except RequestException:
             if school.proxies and not school.use_proxy:
-                logger.warning("[%s]: 教务系统外网异常，切换内网代理，错误信息: %s", name, e)
                 # 使用内网代理
                 self._set_proxy()
-                res = self._login(*args, **kwargs)
+                try:
+                    res = self._login(*args, **kwargs)
+                    if res.status_code != 302:
+                        raise LoginException(self.code, '教务系统异常，使用代理登录失败')
+                except RequestException:
+                    raise LoginException(self.code, '教务系统异常，使用代理登录失败')
             else:
-                logger.warning("[%s]: 教务系统登陆失败，错误信息: %s", name, e)
-                return LoginFail('登陆失败')
+                raise LoginException(self.code, '教务系统外网异常')
 
         return self._get_login_result(res, *args, **kwargs)
 
     def _get_login_result(self, res, *args, **kwargs):
         # 登录成功之后，教务系统会返回 302 跳转
         if res.status_code == 500:
-            return LoginFail('服务器500报错')
+            raise LoginException(self.code, '教务系统请求异常')
         elif res.status_code != 302:
             page_soup = BeautifulSoup(res.text, "html.parser")
             alert_soup = page_soup.find_all('script')[-1]
@@ -85,7 +71,18 @@ class Login(BaseSchoolApi):
             if tip == '验证码不正确！！':
                 # 再次登录
                 res = self._login(*args, **kwargs)
-                if res.status_code == 302:
-                    return None
+                if res.status_code != 302:
+                    raise CheckCodeException(self.code, tip)
 
-            return LoginFail(tip)
+            raise IdentityException(self.code, tip)
+
+    def check_session(self):
+
+        try:
+            res = self._head(self.school_url['HOME_URL'] + self.account)
+            if res.status_code != 200:
+                raise RequestException
+        except RequestException:
+            raise LoginException(self.code, '验证登录会话失败')
+
+        return True

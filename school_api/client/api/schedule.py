@@ -4,11 +4,13 @@ from __future__ import absolute_import, unicode_literals
 import six.moves.urllib.parse as urlparse
 
 from bs4 import BeautifulSoup
+from requests import RequestException
 
 from school_api.client.api.base import BaseSchoolApi
 from school_api.client.api.utils.schedule_parse import ScheduleParse
 from school_api.client.utils import ScheduleType
 from school_api.utils import to_text
+from school_api.exceptions import ScheduleException
 
 
 class Schedule(BaseSchoolApi):
@@ -18,7 +20,7 @@ class Schedule(BaseSchoolApi):
     schedule_url = None
 
     def get_schedule(self, schedule_type=None, schedule_year=None, schedule_term=None, **kwargs):
-        # 课表数据 获取入口
+        ''' 课表信息 获取入口 '''
         self.schedule_type = ScheduleType.CLASS if self.user_type \
             else schedule_type or ScheduleType.PERSON
         self.schedule_year = schedule_year
@@ -36,11 +38,19 @@ class Schedule(BaseSchoolApi):
 
     def _get_schedule(self, **kwargs):
         coding = 'gbk' if self.user_type else 'GB18030'
-        res = self._get(self.schedule_url, **kwargs)
-        if res.status_code != 200:
-            return None
+        try:
+            res = self._get(self.schedule_url, **kwargs)
+
+            if res.status_code == 302:
+                raise ScheduleException(self.code, '课表信息未公布')
+            elif res.status_code != 200:
+                raise RequestException
+        except RequestException:
+            raise ScheduleException(self.code, '获取课表请求参数失败')
+
         schedule = ScheduleParse(
             res.content.decode(coding),
+            self.time_list,
             self.schedule_type
         ).get_schedule_dict()
 
@@ -53,35 +63,51 @@ class Schedule(BaseSchoolApi):
                     self.schedule_term != schedule['schedule_term']:
 
                 payload = self._get_schedule_payload(res.text)
-                res = self._post(self.schedule_url, data=payload, **kwargs)
 
-                if res.status_code != 200:
-                    return None
+                try:
+                    res = self._post(self.schedule_url, data=payload, **kwargs)
+                    if res.status_code != 200:
+                        raise RequestException
+                except RequestException:
+                    raise ScheduleException(self.code, '获取课表信息失败')
 
                 html = res.content.decode(coding)
-                schedule = ScheduleParse(html, self.schedule_type).get_schedule_dict()
+                schedule = ScheduleParse(
+                    html,
+                    self.time_list,
+                    self.schedule_type
+                ).get_schedule_dict()
 
         return schedule
 
     def _get_schedule_by_bm(self, class_name, **kwargs):
         # 部门教师 查询学生班级课表  暂不做 学期学年 选择
-        res = self._get(self.schedule_url, **kwargs)
 
-        if res.status_code != 200:
-            return None
+        try:
+            res = self._get(self.schedule_url, **kwargs)
+            if res.status_code != 200:
+                raise RequestException
+        except RequestException:
+            raise ScheduleException(self.code, '获取课表请求参数失败')
 
         payload = self._get_schedule_payload_by_bm(
             res.content.decode('gbk'),
             class_name
         )
 
-        res = self._post(self.schedule_url, data=payload, **kwargs)
-
-        if res.status_code != 200:
-            return None
+        try:
+            res = self._post(self.schedule_url, data=payload, **kwargs)
+            if res.status_code != 200:
+                raise RequestException
+        except RequestException:
+            raise ScheduleException(self.code, '获取课表信息失败')
 
         html = res.content.decode('gbk')
-        schedule = ScheduleParse(html, self.schedule_type).get_schedule_dict()
+        schedule = ScheduleParse(
+            html,
+            self.time_list,
+            self.schedule_type
+        ).get_schedule_dict()
 
         return schedule
 

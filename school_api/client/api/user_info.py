@@ -2,21 +2,29 @@
 from __future__ import absolute_import, unicode_literals
 
 from bs4 import BeautifulSoup
+from requests import RequestException
 from school_api.client.api.base import BaseSchoolApi
+from school_api.exceptions import UserInfoException
 
 
-class SchoolInfo(BaseSchoolApi):
+class UserlInfo(BaseSchoolApi):
     ''' 用户信息查询 部门教师不可用 '''
 
     def get_info(self, **kwargs):
+        ''' 用户信息 获取入口 '''
         info_url = self.school_url['INFO_URL'] + self.account
-        res = self._get(info_url, **kwargs)
-        if res.status_code != 200:
-            return None
-        return SchoolInfoParse(self.user_type, res.content).user_info
+
+        try:
+            res = self._get(info_url, **kwargs)
+            if res.status_code != 200:
+                raise RequestException
+        except RequestException:
+            raise UserInfoException(self.code, '获取用户信息失败')
+
+        return UserlInfoParse(self.user_type, res.content).user_info
 
 
-class SchoolInfoParse():
+class UserlInfoParse():
     ''' 信息页面解析模块 '''
 
     def __init__(self, user_type, html):

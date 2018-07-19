@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 from school_api.client.api.base import BaseSchoolApi
 from school_api.session.memorystorage import MemoryStorage
 from school_api.utils import to_text, ObjectDict
+from school_api.config import URL_ENDPOINT, CLASS_TIME_LIST
 
 
 def _is_api_endpoint(obj):
@@ -15,24 +16,6 @@ def _is_api_endpoint(obj):
 
 
 class BaseSchoolClient(object):
-    school_url = [
-        {
-            # 学生
-            'SCORE_URL': '/xscj_gc.aspx?xh=',
-            'INFO_URL': '/xsgrxx.aspx?gnmkdm=N121501&xh=',
-            'SCHEDULE_URL': [
-                '/xskbcx.aspx?gnmkdm=N121603&xh=',
-                '/tjkbcx.aspx?gnmkdm=N121601&xh='
-            ]
-        }, {
-            # 教师
-            'INFO_URL': '/lw_jsxx.aspx?gnmkdm=N122502&zgh=',
-            'SCHEDULE_URL': ['', '/jstjkbcx.aspx?gnmkdm=N122303&zgh=']
-        }, {
-            # 部门
-            'SCHEDULE_URL': ['', '/tjkbcx.aspx?gnmkdm=N120313&xh=']
-        }
-    ]
 
     def __init__(self, url, **kwargs):
 
@@ -40,28 +23,25 @@ class BaseSchoolClient(object):
             'url': url,
             'debug': kwargs.get('debug'),
             'name': to_text(kwargs.get('name')),
+            'code': kwargs.get('code'),
+            'use_ex_handle': kwargs.get('use_ex_handle', True),
             'exist_verify': kwargs.get('exist_verify', True),
             'lan_url': kwargs.get('lan_url'),
             'proxies': kwargs.get('proxies'),
-            'use_proxy': kwargs.get('use_proxy'),
+            'priority_porxy': kwargs.get('priority_porxy'),
             'timeout': kwargs.get('timeout', 10),
             'login_url': kwargs.get('login_url_path', '/default2.aspx'),
-            'school_url': kwargs.get('conf_url', self.school_url)
+            'url_endpoint': kwargs.get('url_endpoint') or URL_ENDPOINT,
+            'time_list': kwargs.get('class_time_list') or CLASS_TIME_LIST
         }
         storage = kwargs.get('session', MemoryStorage)
-        self.session = storage(self.school['name'])
+        self.session = storage(self.school['code'])
         self.init_login_view_state(kwargs.get('login_view_state', {}))
         self.school = ObjectDict(self.school)
 
     def init_login_view_state(self, login_view_state):
-        '''
-        获取登录的 view_state 学校变量
-        当该值存在的时候，不请求， 首先请求在初始化学校的时候
-        若学生登录时，无该值，则调用该函数。
-        '''
         for url_key, view_state in login_view_state.items():
-            # self.session.set('login_view:'+url_key, view_state)
-            pass
+            self.session.set('login_view:' + url_key, view_state)
 
 
 class BaseUserClient(object):
@@ -93,7 +73,7 @@ class BaseUserClient(object):
         self.base_url = self.school.url
         self.session = school.session
 
-        if self.school.use_proxy:
+        if self.school.priority_porxy:
             self.set_proxy()
 
     def _request(self, method, url_or_endpoint, **kwargs):
@@ -128,8 +108,15 @@ class BaseUserClient(object):
             **kwargs
         )
 
+    def head(self, url, **kwargs):
+        return self._request(
+            method='HEAD',
+            url_or_endpoint=url,
+            **kwargs
+        )
+
     def set_proxy(self):
-        self.school.use_proxy = True
+        self.school.priority_porxy = True
         self.base_url = self.school.lan_url or self.base_url
         self._proxy = self.school.proxies
 
@@ -160,6 +147,13 @@ class BaseUserClient(object):
         self.update_headers({'Referer': url})
         self._http.cookies.update(cookie)
         return True
+
+    def del_login_session(self):
+        ''' 删除会话 '''
+        url = self.base_url + self.school.login_url
+        key = '{}:{}:{}'.format('login_session', url, self.account)
+        self.session.delete(key)
+        self._http.cookies.clear()
 
     def save_login_session(self):
         ''' 保存登录会话 '''
