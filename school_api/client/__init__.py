@@ -5,6 +5,7 @@ from school_api.client.base import BaseUserClient, BaseSchoolClient
 from school_api.client.api.login import Login
 from school_api.client.api.score import Score
 from school_api.client.api.schedule import Schedule
+from school_api.client.api.place_schedule import PlaceSchedule
 from school_api.client.api.user_info import UserlInfo
 from school_api.client.utils import UserType, error_handle
 
@@ -14,10 +15,12 @@ class SchoolClient(BaseSchoolClient):
     def __init__(self, url, **kwargs):
         super(SchoolClient, self).__init__(url, **kwargs)
 
-    def user_login(self, account, password, use_session=True, user_type=UserType.STUDENT, **kwargs):
+    def user_login(self, account, password, **kwargs):
         ''' 用户注册入口
         进行首次绑定操作时，请将use_session 设置为False，避免其他用户进行会话登录
         '''
+        use_session = kwargs.pop('use_session', True)
+        user_type = kwargs.pop('user_type', UserType.STUDENT)
         user = UserClient(self, account, password, user_type)
         user = user.user_login(use_session, **kwargs)
         return user
@@ -28,9 +31,10 @@ class UserClient(BaseUserClient):
     score = Score()
     info = UserlInfo()
     schedule = Schedule()
+    place_schedule = PlaceSchedule()
 
-    def __init__(self, school_object, account, password, user_type):
-        super(UserClient, self).__init__(school_object, account, password, user_type)
+    def __init__(self, *args, **kwargs):
+        super(UserClient, self).__init__(*args, **kwargs)
 
     @error_handle
     def user_login(self, use_session, **kwargs):
@@ -55,3 +59,7 @@ class UserClient(BaseUserClient):
     @error_handle
     def get_score(self, **kwargs):
         return self.score.get_score(**kwargs)
+
+    @error_handle
+    def get_place_schedule(self, **kwargs):
+        return self.place_schedule.get_schedule(**kwargs)

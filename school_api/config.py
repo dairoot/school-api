@@ -22,6 +22,7 @@ URL_ENDPOINT = [
         # 部门
         "HOME_URL": "/bm_main.aspx?xh=",
         "SCHEDULE_URL": ["", "/tjkbcx.aspx?gnmkdm=N120313&xh="],
+        "PLACE_SCHEDULE_URL": "/kbcx_jxcd.aspx?gnmkdm=N120314&xh=",
     },
 ]
 

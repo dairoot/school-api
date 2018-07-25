@@ -29,14 +29,14 @@ class Schedule(BaseSchoolApi):
 
         if self.user_type != 2:
             self.schedule_url += self.account
-            data = self._get_schedule(**kwargs)
+            data = self._get_api(**kwargs)
         else:
             self.schedule_url += urlparse.quote(self.account.encode('gb2312'))
-            data = self._get_schedule_by_bm(**kwargs)
+            data = self._get_api_by_bm(**kwargs)
 
         return data
 
-    def _get_schedule(self, **kwargs):
+    def _get_api(self, **kwargs):
         coding = 'gbk' if self.user_type else 'GB18030'
         try:
             res = self._get(self.schedule_url, **kwargs)
@@ -62,7 +62,7 @@ class Schedule(BaseSchoolApi):
             if self.schedule_year != schedule['schedule_year'] or \
                     self.schedule_term != schedule['schedule_term']:
 
-                payload = self._get_schedule_payload(res.text)
+                payload = self._get_payload(res.text)
 
                 try:
                     res = self._post(self.schedule_url, data=payload, **kwargs)
@@ -80,7 +80,17 @@ class Schedule(BaseSchoolApi):
 
         return schedule
 
-    def _get_schedule_by_bm(self, class_name, **kwargs):
+    def _get_payload(self, html):
+        ''' 获取课表post 的参数 '''
+        view_state = self._get_view_state_from_html(html)
+        payload = {
+            '__VIEWSTATE': view_state,
+            ['xnd', 'xn'][self.schedule_type]: self.schedule_year,
+            ['xqd', 'xq'][self.schedule_type]: self.schedule_term
+        }
+        return payload
+
+    def _get_api_by_bm(self, class_name, **kwargs):
         # 部门教师 查询学生班级课表  暂不做 学期学年 选择
 
         try:
@@ -90,7 +100,7 @@ class Schedule(BaseSchoolApi):
         except RequestException:
             raise ScheduleException(self.code, '获取课表请求参数失败')
 
-        payload = self._get_schedule_payload_by_bm(
+        payload = self._get_payload_by_bm(
             res.content.decode('gbk'),
             class_name
         )
@@ -112,7 +122,7 @@ class Schedule(BaseSchoolApi):
         return schedule
 
     @staticmethod
-    def _get_schedule_payload_by_bm(html, class_name):
+    def _get_payload_by_bm(html, class_name):
         '''
         提取页面参数用于请求课表
         '''
@@ -130,15 +140,5 @@ class Schedule(BaseSchoolApi):
         payload = {
             '__VIEWSTATE': view_state,
             'kb': schedule_id
-        }
-        return payload
-
-    def _get_schedule_payload(self, html):
-        ''' 获取课表post 的参数 '''
-        view_state = self._get_view_state_from_html(html)
-        payload = {
-            '__VIEWSTATE': view_state,
-            ['xnd', 'xn'][self.schedule_type]: self.schedule_year,
-            ['xqd', 'xq'][self.schedule_type]: self.schedule_term
         }
         return payload

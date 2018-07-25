@@ -29,9 +29,9 @@ class BaseScheduleParse(object):
             table = soup.find("table", {"id": "Table6"}) if \
                 schedule_type == 1 else soup.find("table", {"id": "Table1"})
             trs = table.find_all('tr')
-            self.__html_parse(trs)
+            self._html_parse(trs)
 
-    def __html_parse(self, trs):
+    def _html_parse(self, trs):
         """
         :param n+1: 为周几
         :param i-1: 为第几节
@@ -57,14 +57,14 @@ class BaseScheduleParse(object):
                     td_main = re.sub(r'<td align="Center".*?>', '', td_str)[:-5]
 
                     for text in td_main.split('<br/><br/>'):
-                        course_arr = self.__get_td_course_info(text)
+                        course_arr = self._get_td_course_info(text)
                         if course_arr[0] and not re.match(pattern, course_arr[0]):
-                            weeks_arr = self.__get_weeks_arr(course_arr[1])
+                            weeks_arr = self._get_weeks_arr(course_arr[1])
                             row_arr.append(course_arr + [rowspan, weeks_arr])
                 self.schedule_list[day].append(row_arr)
 
     @staticmethod
-    def __get_td_course_info(text):
+    def _get_td_course_info(text):
         ''' 获取td标签的课程信息 '''
         text = re.sub(r'<[/]{0,1}font[^>]*?>', '', text)
         text = re.sub(r'^<br/>', '', text)
@@ -85,7 +85,7 @@ class BaseScheduleParse(object):
             info_arr.append('')
         return info_arr
 
-    def __get_weeks_arr(self, class_time):
+    def _get_weeks_arr(self, class_time):
         """
         将上课时间 转成 数组形式
         :param class_time: 上课时间
@@ -158,9 +158,9 @@ class ScheduleParse(BaseScheduleParse):
         :return:
         """
         for day_schedule in self.schedule_list:
-            self.__merger_day_schedule(day_schedule)
+            self._merger_day_schedule(day_schedule)
 
-    def __merger_day_schedule(self, day_schedule):
+    def _merger_day_schedule(self, day_schedule):
         """
         将同一天相邻的相同两节课合并
         例如：[[["英语", "2节/双周(14-14)", "姓名", "1-301", "2", "[7,8]"],[...]],
@@ -171,7 +171,7 @@ class ScheduleParse(BaseScheduleParse):
         """
         # 先合并 同一节课的相同课程
         for section_schedule in day_schedule:
-            self.__merger_section_schedule(section_schedule)
+            self._merger_section_schedule(section_schedule)
 
         # 再合并 同一天相邻的相同两节课合并
         day_slen = len(day_schedule)
@@ -189,7 +189,7 @@ class ScheduleParse(BaseScheduleParse):
                             day_schedule[i + 1][next_i] = []
 
     @staticmethod
-    def __merger_section_schedule(section_schedule):
+    def _merger_section_schedule(section_schedule):
         """
         将同一节课的相同课程合并
         例如：[["英语", "2节/单周(7-7)", "姓名", "1-301", "2", "[7]"],

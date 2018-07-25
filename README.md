@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/dairoot/school-api.svg?branch=master)](https://travis-ci.org/dairoot/school-api)
 
-## 使用示例
+## Usage
 
 ```Python
 from school_api import SchoolClient
@@ -14,6 +14,13 @@ schedule_data = student.get_schedule()
 print(schedule_data)
 ```
 使用示例参见 [examples](examples/)
+
+## Function
+
+- [x] 成绩查询
+- [x] 课表查询
+- [x] 用户信息查询
+- [x] 教学场地课表查询（可用于空教室查询）
 
 ## School-Api Options
 
@@ -40,7 +47,7 @@ print(schedule_data)
     <tr>
         <td rowspan="2"><center>类型 \权限</center></td>
         <td colspan="2"><center>个人课表类型</center></td>
-        <td colspan="2"><center>班级课表类型</center></td>
+        <td colspan="3"><center>班级课表类型</center></td>
         <td rowspan="2"><center>个人信息</center></td>
     </tr>
     <tr>
@@ -48,29 +55,33 @@ print(schedule_data)
         <td><center>教师课表</center></td>
         <td><center>学生课表</center></td>
         <td><center>教师课表</center></td>
+        <td><center>教学场地课表</center></td>
     </tr>
     <tr>
         <td>学生</td>
         <td>√</td>
-        <td>X</td>
+        <td></td>
         <td>√</td>
-        <td>X</td>
+        <td></td>
+        <td></td>
         <td>√</td>
     </tr>
     <tr>
         <td>教师</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td>√</td>
+        <td></td>
         <td>√</td>
     </tr>
     <tr>
         <td>部门</td>
-        <td>X</td>
-        <td>X</td>
+        <td></td>
+        <td></td>
         <td>√</td>
-        <td>X</td>
-        <td>X</td>
+        <td></td>
+        <td>√</td>
+        <td></td>
     </tr>
 </table>

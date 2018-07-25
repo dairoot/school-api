@@ -28,6 +28,10 @@ class TestBmTeacher(unittest.TestCase):
         schedule_data = self.bm_teacher.get_schedule(class_name='15软件本科2班', timeout=5)
         print(schedule_data)
 
+    def test_place_schedule(self):
+        for schedule_data in self.bm_teacher.get_place_schedule(campus_list=[u"本部"], timeout=0.5):
+            print(schedule_data)
+
 
 if __name__ == '__main__':
     unittest.main()
