@@ -6,6 +6,7 @@ from school_api.utils import to_text, to_binary
 
 
 class SchoolException(Exception):
+    """Base exception for school-api"""
 
     def __init__(self, name, school_code, errmsg):
         self.name = name
@@ -13,24 +14,20 @@ class SchoolException(Exception):
         self.school_code = school_code
 
     def __str__(self):
-        _repr = 'school_code:{school_code}, Error message: {name}，{msg}'.format(
+        _repr = 'school_code:{school_code}, Error msage: {name}，{msg}'.format(
             school_code=self.school_code,
             name=self.name,
             msg=self.errmsg
         )
-        if six.PY2:
-            return to_binary(_repr)
-        else:
-            return to_text(_repr)
+        msg = to_binary(_repr) if six.PY2 else to_text(_repr)
+        return msg
 
     def __repr__(self):
         _repr = '{msg}'.format(
             msg=self.errmsg
         )
-        if six.PY2:
-            return to_binary(_repr)
-        else:
-            return to_text(_repr)
+        msg = to_binary(_repr) if six.PY2 else to_text(_repr)
+        return msg
 
 
 class LoginException(SchoolException):
@@ -40,15 +37,11 @@ class LoginException(SchoolException):
 
 
 class IdentityException(LoginException):
-
-    def __init__(self, school_code, errmsg):
-        super(IdentityException, self).__init__(school_code, errmsg)
+    pass
 
 
 class CheckCodeException(LoginException):
-
-    def __init__(self, school_code, errmsg):
-        super(CheckCodeException, self).__init__(school_code, errmsg)
+    pass
 
 
 class ScheduleException(SchoolException):

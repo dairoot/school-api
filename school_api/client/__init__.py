@@ -12,9 +12,6 @@ from school_api.client.utils import UserType, error_handle
 
 class SchoolClient(BaseSchoolClient):
 
-    def __init__(self, url, **kwargs):
-        super(SchoolClient, self).__init__(url, **kwargs)
-
     def user_login(self, account, password, **kwargs):
         ''' 用户注册入口
         进行首次绑定操作时，请将use_session 设置为False，避免其他用户进行会话登录
@@ -32,9 +29,6 @@ class UserClient(BaseUserClient):
     info = UserlInfo()
     schedule = Schedule()
     place_schedule = PlaceSchedule()
-
-    def __init__(self, *args, **kwargs):
-        super(UserClient, self).__init__(*args, **kwargs)
 
     @error_handle
     def user_login(self, use_session, **kwargs):
@@ -60,6 +54,5 @@ class UserClient(BaseUserClient):
     def get_score(self, **kwargs):
         return self.score.get_score(**kwargs)
 
-    @error_handle
     def get_place_schedule(self, **kwargs):
         return self.place_schedule.get_schedule(**kwargs)

@@ -49,7 +49,7 @@ class BaseUserClient(object):
 
     _proxy = None
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, *args):
         self = super(BaseUserClient, cls).__new__(cls)
         api_endpoints = inspect.getmembers(self, _is_api_endpoint)
         for name, api in api_endpoints:

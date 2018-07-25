@@ -5,7 +5,7 @@ import re
 from bs4 import BeautifulSoup
 from requests import RequestException
 from school_api.client.api.base import BaseSchoolApi
-from school_api.check_code import check_code
+from school_api.check_code import CHECK_CODE
 from school_api.exceptions import IdentityException, CheckCodeException, LoginException
 
 
@@ -20,7 +20,7 @@ class Login(BaseSchoolApi):
 
         if exist_verify:
             res = self._get('/CheckCode.aspx')
-            code = check_code.verify(res.content)
+            code = CHECK_CODE.verify(res.content)
             print('code', code)
 
         account = self.account.encode('gb2312')

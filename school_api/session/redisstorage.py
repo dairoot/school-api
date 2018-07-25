@@ -6,6 +6,7 @@ from school_api.utils import to_text
 
 
 class RedisStorage(SessionStorage):
+    prefix = ''
 
     def __init__(self, redis):
         for method_name in ('get', 'set', 'delete'):
