@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
+LOGIN_SESSION_SAVE_TIME = 3600 * 2
+
 URL_ENDPOINT = [
     {
         # 学生

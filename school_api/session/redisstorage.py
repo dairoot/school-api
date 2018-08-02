@@ -34,6 +34,9 @@ class RedisStorage(SessionStorage):
         key = self.key_name(key)
         self.redis.delete(key)
 
+    def expires_time(self, key):
+        return self.redis.ttl(self.key_name(key))
+
     def __call__(self, prefix=''):
         self.prefix = to_text(prefix)
         return self

@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 from school_api.client.api.base import BaseSchoolApi
 from school_api.session.memorystorage import MemoryStorage
 from school_api.utils import to_text, ObjectDict
-from school_api.config import URL_ENDPOINT, CLASS_TIME_LIST
+from school_api.config import URL_ENDPOINT, CLASS_TIME_LIST, LOGIN_SESSION_SAVE_TIME
 
 
 def _is_api_endpoint(obj):
@@ -136,10 +136,15 @@ class BaseUserClient(object):
             attrs={"name": "__VIEWSTATE"})['value']
         return view_state
 
-    def get_login_session(self):
-        ''' 获取登录会话 '''
+    def get_login_session_key(self):
+        ''' 获取缓存登录会话的key '''
         url = self.base_url + self.school.login_url
         key = '{}:{}:{}'.format('login_session', url, self.account)
+        return key
+
+    def get_login_session(self):
+        ''' 获取登录会话 '''
+        key = self.get_login_session_key()
         cookie = self.session.get(key)
         if not cookie:
             return None
@@ -149,18 +154,22 @@ class BaseUserClient(object):
         return True
 
     def del_login_session(self):
-        ''' 删除会话 '''
-        url = self.base_url + self.school.login_url
-        key = '{}:{}:{}'.format('login_session', url, self.account)
+        ''' 删除登录会话 '''
+        key = self.get_login_session_key()
         self.session.delete(key)
         self._http.cookies.clear()
 
     def save_login_session(self):
         ''' 保存登录会话 '''
+        key = self.get_login_session_key()
+        cookie = self._http.cookies.get_dict()
+        self.session.set(key, cookie, LOGIN_SESSION_SAVE_TIME)
+
+    def get_login_session_expires_time(self):
+        """ 获取登录会话过期时间 """
         url = self.base_url + self.school.login_url
         key = '{}:{}:{}'.format('login_session', url, self.account)
-        cookie = self._http.cookies.get_dict()
-        self.session.set(key, cookie, 3600)
+        return self.session.expires_time(key)
 
     def get_login_view_state(self, **kwargs):
         ''' 获取登录的view_state '''

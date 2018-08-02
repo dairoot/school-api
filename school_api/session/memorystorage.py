@@ -40,3 +40,7 @@ class MemoryStorage(SessionStorage):
     def delete(self, key):
         key = self.key_name(key)
         self._data.pop(key, None)
+
+    def expires_time(self, key):
+        data = self._data.get(self.key_name(key))
+        return data['expires_at'] - time.time()

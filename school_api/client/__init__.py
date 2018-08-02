@@ -8,6 +8,7 @@ from school_api.client.api.schedule import Schedule
 from school_api.client.api.place_schedule import PlaceSchedule
 from school_api.client.api.user_info import UserlInfo
 from school_api.client.utils import UserType, error_handle
+from school_api.config import LOGIN_SESSION_SAVE_TIME
 
 
 class SchoolClient(BaseSchoolClient):
@@ -34,10 +35,14 @@ class UserClient(BaseUserClient):
     def user_login(self, use_session, **kwargs):
         ''' 登录：通过SchoolClient类调用 '''
         if use_session and self.get_login_session():
-            if self.login.check_session():
+            # 十分钟内，不检测登录会话是否过期
+            ten_minutes = LOGIN_SESSION_SAVE_TIME - 60 * 10
+            in_ten_minute = self.get_login_session_expires_time() > ten_minutes
+            if in_ten_minute or self.login.check_session():
                 return self
             # 会话过期, 删除会话
             self.del_login_session()
+
         self.login.get_login(self.school, **kwargs)
         self.save_login_session()
         return self
