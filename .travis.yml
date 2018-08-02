@@ -11,10 +11,10 @@ services:
   
 install:
   - pip install .
+  - pip install coverage
 
 script:
   - nosetests --with-coverage --cover-package=school_api
 
 after_success:
-  - pip install coveralls
   - coveralls

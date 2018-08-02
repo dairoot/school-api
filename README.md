@@ -3,6 +3,9 @@
 [![Build Status](https://travis-ci.org/dairoot/school-api.svg?branch=master)](https://travis-ci.org/dairoot/school-api)
 
 ## Usage
+```Shell
+$ pip install git+git://github.com/dairoot/school-api.git
+```
 
 ```Python
 from school_api import SchoolClient
@@ -27,8 +30,8 @@ print(schedule_data)
 | Option    | Default        |  Description       |
 | :--------  | :-----        | :----      |
 | url        | 不存在默认值  | 教务系统地址(`必填`) |
-| name      | 空            | 学校名称 |
-| code      | 空            | 学校英文缩写 |
+| name      | NULL          | 学校名称 |
+| code      | NULL          | 学校英文缩写 |
 | login_url_path| /default2.aspx   | 登录地址路径 |
 | lan_url       | None      | 内网地址            |
 | exist_verify  | True      | 是否存在验证码      |
@@ -44,20 +47,20 @@ print(schedule_data)
 ## User permissions
 
 <table>
-    <tr>
-        <td rowspan="2"><center>类型 \权限</center></td>
-        <td colspan="2"><center>个人课表类型</center></td>
-        <td colspan="3"><center>班级课表类型</center></td>
-        <td rowspan="2"><center>个人信息</center></td>
+    <tr align="center">
+        <td rowspan="2">类型 \权限</td>
+        <td colspan="2">个人课表类型</td>
+        <td colspan="3">班级课表类型</td>
+        <td rowspan="2">个人信息</td>
     </tr>
-    <tr>
-        <td><center>学生课表</center></td>
-        <td><center>教师课表</center></td>
-        <td><center>学生课表</center></td>
-        <td><center>教师课表</center></td>
-        <td><center>教学场地课表</center></td>
+    <tr align="center">
+        <td>学生课表</td>
+        <td>教师课表</td>
+        <td>学生课表</td>
+        <td>教师课表</td>
+        <td>教学场地课表</td>
     </tr>
-    <tr>
+    <tr align="center">
         <td>学生</td>
         <td>√</td>
         <td></td>
@@ -66,7 +69,7 @@ print(schedule_data)
         <td></td>
         <td>√</td>
     </tr>
-    <tr>
+    <tr align="center">
         <td>教师</td>
         <td></td>
         <td></td>
@@ -75,7 +78,7 @@ print(schedule_data)
         <td></td>
         <td>√</td>
     </tr>
-    <tr>
+    <tr align="center">
         <td>部门</td>
         <td></td>
         <td></td>

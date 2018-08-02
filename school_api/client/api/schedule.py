@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-import six.moves.urllib.parse as urlparse
+from six.moves.urllib import parse
 
 from bs4 import BeautifulSoup
 from requests import RequestException
@@ -31,7 +31,7 @@ class Schedule(BaseSchoolApi):
             self.schedule_url += self.account
             data = self._get_api(**kwargs)
         else:
-            self.schedule_url += urlparse.quote(self.account.encode('gb2312'))
+            self.schedule_url += parse.quote(self.account.encode('gb2312'))
             data = self._get_api_by_bm(**kwargs)
 
         return data
