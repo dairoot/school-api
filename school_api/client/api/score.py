@@ -14,7 +14,12 @@ class Score(BaseSchoolApi):
     def get_score(self, score_year=None, score_term=None, **kwargs):
         ''' 成绩信息 获取入口 '''
         score_url = self.school_url['SCORE_URL'] + self.account
-        view_state = self._get_view_state(score_url, **kwargs)
+
+        try:
+            view_state = self._get_view_state(score_url, **kwargs)
+        except RequestException:
+            raise ScoreException(self.code, '获取成绩请求参数失败')
+
         payload = {
             '__VIEWSTATE': view_state,
             'Button2': u'在校学习成绩查询',
@@ -25,7 +30,7 @@ class Score(BaseSchoolApi):
         try:
             res = self._post(score_url, data=payload, **kwargs)
             if res.status_code == 302:
-                raise ScoreException(self.code, '成绩信息未公布')
+                raise ScoreException(self.code, '成绩接口已关闭')
             elif res.status_code != 200:
                 raise RequestException
         except RequestException:

@@ -1,4 +1,12 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
+"""
+    school_api.check_code.predict
+    ~~~~~~~~~~~~~~~~
+    This module provides functions for Identification verification code
+
+    :copyright: (c) 2018 by dairoot.
+    :license: MIT, see LICENSE for more details.
+"""
 import os
 from io import BytesIO
 import numpy as np

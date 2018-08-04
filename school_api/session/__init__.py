@@ -13,6 +13,9 @@ class SessionStorage(object):
     def delete(self, key):
         raise NotImplementedError()
 
+    def expires_time(self, key):
+        raise NotImplementedError()
+
     def __getitem__(self, key):
         self.get(key)
 

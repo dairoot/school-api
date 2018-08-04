@@ -42,7 +42,7 @@ class Schedule(BaseSchoolApi):
             res = self._get(self.schedule_url, **kwargs)
 
             if res.status_code == 302:
-                raise ScheduleException(self.code, '课表信息未公布')
+                raise ScheduleException(self.code, '课表接口已关闭')
             elif res.status_code != 200:
                 raise RequestException
         except RequestException:
@@ -58,6 +58,7 @@ class Schedule(BaseSchoolApi):
         第一次请求的时候，教务系统默认返回最新课表
         如果设置了学年跟学期，匹配学年跟学期，不匹配则获取指定学年学期的课表
         '''
+
         if self.schedule_year and self.schedule_term:
             if self.schedule_year != schedule['schedule_year'] or \
                     self.schedule_term != schedule['schedule_term']:
@@ -91,20 +92,36 @@ class Schedule(BaseSchoolApi):
         return payload
 
     def _get_api_by_bm(self, class_name, **kwargs):
-        # 部门教师 查询学生班级课表  暂不做 学期学年 选择
+        ''' 部门教师 查询学生班级课表 共3个请求'''
 
+        # steps 1: 获取课表 view_state
         try:
             res = self._get(self.schedule_url, **kwargs)
             if res.status_code != 200:
                 raise RequestException
+            view_state = self._get_view_state_from_html(res.text)
         except RequestException:
             raise ScheduleException(self.code, '获取课表请求参数失败')
 
+        # steps 2: 选择课表 学年学期
+        if self.schedule_year and self.schedule_term:
+            payload = {
+                '__VIEWSTATE': view_state,
+                'xn': self.schedule_year,
+                'xq': self.schedule_term
+            }
+            try:
+                res = self._post(self.schedule_url, data=payload, **kwargs)
+                if res.status_code != 200:
+                    raise RequestException
+            except RequestException:
+                raise ScheduleException(self.code, '获取课表请求参数失败')
+
+        # steps 3: 获取课表数据
         payload = self._get_payload_by_bm(
             res.content.decode('gbk'),
             class_name
         )
-
         try:
             res = self._post(self.schedule_url, data=payload, **kwargs)
             if res.status_code != 200:
@@ -123,9 +140,7 @@ class Schedule(BaseSchoolApi):
 
     @staticmethod
     def _get_payload_by_bm(html, class_name):
-        '''
-        提取页面参数用于请求课表
-        '''
+        ''' 提取页面参数用于请求课表 '''
         pre_soup = BeautifulSoup(html, "html.parser")
         view_state = pre_soup.find(attrs={"name": "__VIEWSTATE"})['value']
         schedule_id_list = pre_soup.find(id='kb').find_all('option')

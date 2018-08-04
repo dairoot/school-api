@@ -40,6 +40,7 @@ class BaseSchoolClient(object):
         self.school = ObjectDict(self.school)
 
     def init_login_view_state(self, login_view_state):
+        """ 初始化  login_view_state"""
         for url_key, view_state in login_view_state.items():
             self.session.set('login_view:' + url_key, view_state)
 
@@ -116,6 +117,7 @@ class BaseUserClient(object):
         )
 
     def set_proxy(self):
+        """ 设置代理 """
         self.school.priority_porxy = True
         self.base_url = self.school.lan_url or self.base_url
         self._proxy = self.school.proxies
@@ -126,7 +128,7 @@ class BaseUserClient(object):
     def get_view_state(self, url_suffix, **kwargs):
         res = self.get(url_suffix, allow_redirects=False, **kwargs)
         if res.status_code != 200:
-            return None
+            raise requests.RequestException
         return self.get_view_state_from_html(res.text)
 
     @staticmethod

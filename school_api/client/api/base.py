@@ -15,7 +15,7 @@ class BaseSchoolApi(object):
         return self._client.post(url, **kwargs)
 
     def _head(self, url, **kwargs):
-        return self._client.post(url, **kwargs)
+        return self._client.head(url, **kwargs)
 
     def _get_view_state_from_html(self, html):
         return self._client.get_view_state_from_html(html)
