@@ -23,7 +23,7 @@ class LoginFail():
         self.tip = tip
 
     def __getattr__(self, name):
-        def func(**kwargs):
+        def func(*args, **kwargs):
             return {'error': self.tip}
         return func
 

@@ -64,15 +64,15 @@ class ScoreParse():
                 "lesson_name": lesson_name,
                 "credit": float(credit),
                 "point": float(point),
-                "score": float(score)
+                "score": self.handle_data(score)
             }
             # 有其他成绩内容则输出
             makeup_score = cells[10].text
             retake_score = cells[11].text
-            if makeup_score != u'\xa0':
+            if makeup_score != '\xa0':
                 # 补考成绩
                 score_dict['bkcj'] = makeup_score
-            if retake_score != u'\xa0':
+            if retake_score != '\xa0':
                 # 重修成绩
                 score_dict['cxcj'] = retake_score
             # 组装数组格式的数据备用
@@ -87,3 +87,10 @@ class ScoreParse():
                 return self.score_info[year][term]
             return self.score_info[year]
         return self.score_info
+
+    @staticmethod
+    def handle_data(data):
+        try:
+            return float(data)
+        except ValueError:
+            return data

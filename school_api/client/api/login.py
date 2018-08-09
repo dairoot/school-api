@@ -7,6 +7,7 @@ from requests import RequestException
 from school_api.client.api.base import BaseSchoolApi
 from school_api.check_code import CHECK_CODE
 from school_api.exceptions import IdentityException, CheckCodeException, LoginException
+from school_api.utils import to_binary
 
 
 class Login(BaseSchoolApi):
@@ -37,6 +38,8 @@ class Login(BaseSchoolApi):
         view_state = self._get_login_view_state(**kwargs)
         if exist_verify:
             res = self._get('/CheckCode.aspx')
+            if res.content[:7] != to_binary('GIF89aH'):
+                raise CheckCodeException(self.code, "验证码获取失败")
             code = CHECK_CODE.verify(res.content)
             print('code', code)
 

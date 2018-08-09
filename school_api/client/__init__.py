@@ -48,7 +48,7 @@ class UserClient(BaseUserClient):
         return self
 
     @error_handle
-    def get_schedule(self, **kwargs):
+    def get_schedule(self, *args, **kwargs):
         return self.schedule.get_schedule(**kwargs)
 
     @error_handle
@@ -56,8 +56,8 @@ class UserClient(BaseUserClient):
         return self.info.get_info(**kwargs)
 
     @error_handle
-    def get_score(self, **kwargs):
-        return self.score.get_score(**kwargs)
+    def get_score(self, *args, **kwargs):
+        return self.score.get_score(*args, **kwargs)
 
-    def get_place_schedule(self, **kwargs):
-        return self.place_schedule.get_schedule(**kwargs)
+    def get_place_schedule(self, *args, **kwargs):
+        return self.place_schedule.get_schedule(*args, **kwargs)

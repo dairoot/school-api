@@ -8,7 +8,7 @@ from requests import RequestException
 
 from school_api.client.api.base import BaseSchoolApi
 from school_api.client.api.utils.schedule_parse import ScheduleParse
-from school_api.client.utils import ScheduleType
+from school_api.client.utils import ScheduleType, UserType
 from school_api.utils import to_text
 from school_api.exceptions import ScheduleException
 
@@ -19,7 +19,7 @@ class Schedule(BaseSchoolApi):
     schedule_term = None
     schedule_url = None
 
-    def get_schedule(self, schedule_type=None, schedule_year=None, schedule_term=None, **kwargs):
+    def get_schedule(self, schedule_year=None, schedule_term=None, schedule_type=None, **kwargs):
         ''' 课表信息 获取入口 '''
         self.schedule_type = ScheduleType.CLASS if self.user_type \
             else schedule_type or ScheduleType.PERSON
@@ -27,7 +27,7 @@ class Schedule(BaseSchoolApi):
         self.schedule_term = schedule_term
         self.schedule_url = self.school_url["SCHEDULE_URL"][self.schedule_type]
 
-        if self.user_type != 2:
+        if self.user_type != UserType.DEPT:
             self.schedule_url += self.account
             data = self._get_api(**kwargs)
         else:
