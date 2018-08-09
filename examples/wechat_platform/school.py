@@ -2,49 +2,28 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-import os
-import datetime
+from redis import Redis
 from school_api import SchoolClient
+from school_api.session.redisstorage import RedisStorage
+
+redis = Redis()
+session = RedisStorage(redis)
 
 
-GdstApi = SchoolClient('http://210.38.137.126:8016')
+class School():
+    conf = {
+        'session': session
+    }
+    GdstApi = SchoolClient('http://61.142.33.204', **conf)
 
-user = os.getenv('GDOU_STUDENT_ACCOUNT', '')
-password = os.getenv('GDOU_STUDENT_PASSWD', '')
+    def __init__(self, user, password):
+        self.student = self.GdstApi.user_login(user, password)
 
+    def info(self):
+        return self.student.get_info()
 
-def get_info():
-    student = GdstApi.user_login(user, password)
-    return student.get_info()
+    def schedule(self, schedule_year=None, schedule_term=None):
+        return self.student.get_schedule(schedule_year, schedule_term, schedule_type=1)
 
-
-def get_schedule():
-    student = GdstApi.user_login(user, password)
-    data = student.get_schedule()
-    week_day_text = ['日', '一', '二', '三', '四', '五', '六']
-    description = datetime.datetime.now().strftime("%Y-%m-%d")
-
-    # 获取第一周 星期一 的课表
-    weeks = 1
-    what_day = 1
-    articles = [{
-        'title': '第%d周-星期%s' % (weeks, week_day_text[what_day]),
-        'description': description,
-        'url': ''
-    }]
-    for i, section in enumerate(data['schedule'][what_day - 1]):
-        for c in section:
-            if weeks in c['weeks_arr']:
-                section_time = '第%d,%d节' % (i * 2 + 1, i * 2 + c['section'])
-                content = '%s  地点：%s\n课程：%s' % (section_time, c['place'], c['name'])
-                articles.append({
-                    'title': content,
-                    'description': "",
-                    'url': ''
-                })
-    return articles
-
-
-def get_score():
-    student = GdstApi.user_login(user, password)
-    return student.get_score()
+    def score(self, score_year=None, score_term=None):
+        return self.student.get_score(score_year, score_term)

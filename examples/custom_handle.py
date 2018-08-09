@@ -12,8 +12,8 @@ def service_resp():
     def decorator(func):
         def warpper(*args, **kwargs):
             try:
-                user = school.user_login(*args, **kwargs)
-                data = func(user)
+                client = school.user_login(*args, **kwargs)
+                data = func(client)
             except IdentityException as reqe:
                 # 账号密码错误
                 return {'error': reqe}

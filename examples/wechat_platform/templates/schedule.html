@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" type="text/css" href="/static/css/schedule.css?v=11">
+    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css"/>
+</head>
+
+<body>
+<div id="All-tmp"></div>
+</body>
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/doT.min.js"></script>
+<script src="https://res.wx.qq.com/open/libs/weuijs/1.1.3/weui.min.js"></script>
+<script id="All-template" type="text/x-dot-template">
+    <div class="main-box">
+        <div class="kb-num-ctn blur-area">
+            <div class="kb-mon kb-date">
+            </div>
+            <div class="kb-number">
+                <p class="pg-t">1</p>
+                <p class="mg-4">2</p>
+                <p>3</p>
+                <p class="mg-6">4</p>
+                <p>5</p>
+                <p class="mg-4">6</p>
+                <p>7</p>
+                <p class="mg-6">8</p>
+                <p>9</p>
+                <p class="mg-4">10</p>
+                <p>11</p>
+                <p>12</p>
+            </div>
+            <div class="kb-timeline-tri"></div>
+        </div>
+        <div class="kb-ctn">
+            <div class="kb-title blur-area">
+                <div class="kb-title-item">
+                    <p class="kb-date">周一</p>
+                </div>
+                <div class="kb-title-item">
+                    <p class="kb-date">周二</p>
+                </div>
+                <div class="kb-title-item">
+                    <p class="kb-date">周三</p>
+                </div>
+                <div class="kb-title-item">
+                    <p class="kb-date">周四</p>
+                </div>
+                <div class="kb-title-item">
+                    <p class="kb-date">周五</p>
+                </div>
+                <div class="kb-title-item">
+                    <p class="kb-date">周六</p>
+                </div>
+                <div class="kb-title-item">
+                    <p class="kb-date">周日</p>
+                </div>
+            </div>
+            {% raw %}
+            <div class="kb-cards-ctn blur-area">
+                {{ for(var daycourse in it.ajaxData) { }}
+                {{? it.ajaxData[daycourse] == '' }}
+                <div class="kb-cards-column"></div>
+                {{??}}
+                <div class="kb-cards-column">
+                    {{ for(var sectioncourse in it.ajaxData[daycourse]) { }}
+                    <!-- 无课 -->
+                    {{? it.ajaxData[daycourse][sectioncourse].length == 0}}
+                    <div class="kb-card mg-4" style="z-index: -1;"></div>
+                    <!-- 可能有课 -->
+                    {{??}}
+                    {{ for(var course in it.ajaxData[daycourse][sectioncourse]) { }}
+                    {{? it.ajaxData[daycourse][sectioncourse][course].weeks_arr.indexOf(it.choosenWeek) == -1}}
+                    {{? parseInt(course)+1 == it.ajaxData[daycourse][sectioncourse].length}}
+                    <div class="kb-card mg-4" style="z-index: -1;"></div>
+                    {{?}}
+                    {{??}}
+                    <div class="kb-card mg-4" onclick="showDetail({{= daycourse}},{{= sectioncourse}},{{= course}})">
+                        <div class="kb-card-content {{= it.ajaxData[daycourse][sectioncourse][course].color}}"
+                             style="height:{{= it.ajaxData[daycourse][sectioncourse][course].number*50}}px;">
+                            {{? it.ajaxData[daycourse][sectioncourse][course].place < '99999'}}
+                            <p class="kb-card-place-num">{{= it.ajaxData[daycourse][sectioncourse][course].place}}</p>
+                            {{??}}
+                            <p class="kb-card-place-words">{{= it.ajaxData[daycourse][sectioncourse][course].place}}</p>
+                            {{?}}
+                            <p class="kb-card-name-text"
+                               style="-webkit-line-clamp:{{= 3*(it.ajaxData[daycourse][sectioncourse][course].number-1)}};">
+                                {{= it.ajaxData[daycourse][sectioncourse][course].name}}</p>
+                        </div>
+                    </div>
+                    {{ break;}}
+                    {{?}}
+                    {{ } }}
+                    {{?}}
+                    {{ } }}
+                </div>
+                {{?}} {{ } }}
+            </div>
+            {% endraw %}
+        </div>
+    </div>
+    <div class="kb-info-ctn-close">
+        <div class="kb-info-title">
+            {% raw %}
+            <div class="kb-info-week">
+                {{? it.choosenWeek == nowweek}}
+                <p>星期{{= it.weeki }}</p>
+                {{??}}
+                <p class="kb-info-return">返回本周</p>
+                {{?}}
+            </div>
+            {% endraw %}
+            <div class="kb-swipers">
+                <div id="left-prev" class="kb-swiper-mask-left">
+                    <img src="/static/images/left_g.png">
+                </div>
+                <div class="kb-week-swiper" duration="300">
+                    <ul class="kb-week-swiper-item">
+                        {% raw %}
+                        <div>
+                            <li>第{{= it.choosenWeek - 1}}周</li>
+                            <li>第{{= it.choosenWeek}}周</li>
+                            <li>第{{= it.choosenWeek + 1}}周</li>
+                        </div>
+                        {% endraw %}
+                    </ul>
+                </div>
+                <div id="right-next" class="kb-swiper-mask-right">
+                    <img src="/static/images/right_g.png">
+                </div>
+            </div>
+            <div class="kb-choose-view-box">
+                <div class="kb-choose-view">
+                    <p class="{{ 'active' if schedule_type == 0 }}">个人</p>
+                    <p class="{{ 'active' if schedule_type == 1 }}">班级</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="kb-info-ctn kb-info-ctn-open">
+        <div class="kb-info-title">
+            <p class="kb-info-chooseweek">第{{ '{{' }}= it.choosenWeek{{ '}}' }}周</p>
+            <img class="kb-info-card-close" src="/static/images/down_w.png">
+        </div>
+        <div class="kb-info-card-tabs">
+            <div class="kb-info-card kb-info-card-active">
+                <div class="kb-info-card-content">
+                    <div class="info-name">
+                        <p></p>
+                    </div>
+                    <div class="info-bd">
+                        <div class="info-type">
+                            <p></p>
+                        </div>
+                        <div class="info-list">
+                            <div class="info-item">
+                                <p class="info-item-value tname"></p>（任课教师）
+                            </div>
+                            <div class="info-item">
+                                <p class="info-item-value time"></p>（上课时间）
+                            </div>
+                            <div class="info-item">
+                                <p class="info-item-value cplace"></p>（上课地点）
+                            </div>
+                            <div class="info-item">
+                                <p class="info-item-value kweek"></p>（课程周数）
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/javascript">
+    var nowweek = {{ weeks }};
+    var err_msg = "";
+    var kb = {{ schedule_info | safe }};
+    $(function () {
+        if (err_msg) {
+            weui.alert(err_msg);
+        }
+        makeScheduleData(kb, nowweek);
+        getScreenWidth();
+    })
+
+    function getScreenWidth() {
+        var screenwidth = (document.body.clientWidth - 47) / 5 + 'px';
+        var kb_title_item = document.getElementsByClassName('kb-title-item');
+        var kb_cards_column = document.getElementsByClassName('kb-cards-column');
+        var kb_cards = document.getElementsByClassName('kb-cards');
+        var kb_card_content = document.getElementsByClassName('kb-card-content');
+
+        for (var i = 0; i < kb_title_item.length; i++) {
+            kb_title_item[i].style.width = screenwidth;
+        }
+        for (var i = 0; i < kb_cards_column.length; i++) {
+            kb_cards_column[i].style.width = screenwidth;
+        }
+        for (var i = 0; i < kb_cards.length; i++) {
+            kb_cards[i].style.width = screenwidth;
+        }
+        for (var i = 0; i < kb_card_content.length; i++) {
+            kb_card_content[i].style.width = screenwidth;
+        }
+    }
+
+    function makeScheduleData(kb, choosenWeek) {
+        var d = new Date();
+        var weekday = d.getDay();
+        var a_week = ["日", "一", "二", "三", "四", "五", "六"];
+        var weeki = a_week[weekday];
+
+        var scheduleData = {
+            'ajaxData': kb,
+            'choosenWeek': choosenWeek,
+            'weeki': weeki
+        }
+
+        var allText = doT.template($("#All-template").text());
+        $("#All-tmp").html(allText(scheduleData));
+
+        $(".kb-card-content").click(function () {
+            $(".kb-info-ctn-close").animate({
+                bottom: '-100px'
+            });
+            $(".kb-info-ctn").css({
+                bottom: '200px'
+            }, 300);
+        })
+        $(".kb-info-ctn").click(function () {
+            $(".kb-info-ctn-close").css({
+                bottom: '0px'
+            });
+            $(".kb-info-ctn").css({
+                bottom: '-100px'
+            }, 300);
+        })
+
+        $("#left-prev").bind('click', function () {
+            animate(-1, (choosenWeek - 1));
+        })
+
+        $("#right-next").bind('click', function () {
+            animate(1, (choosenWeek + 1));
+        })
+
+        $(".kb-info-return").click(function () {
+            makeScheduleData(kb, nowweek);
+            getScreenWidth();
+        })
+    }
+
+    function animate(index, choosenWeek) {
+        if (choosenWeek < 1 || choosenWeek > 22) {
+            return false;
+        }
+        $("#left-prev").unbind('click')
+        $("#right-next").unbind('click')
+        $(".kb-week-swiper-item div").animate({
+            marginLeft: -(index + 1) * 100 + '%'
+        }, 500, function () {
+            makeScheduleData(kb, choosenWeek);
+            getScreenWidth();
+        });
+    }
+
+    function showDetail(a, b, c) {
+        $(".info-name p").html(kb[a][b][c].name);
+        $(".tname").html(kb[a][b][c].teacher);
+        $(".time").html(kb[a][b][c].time);
+        $(".cplace").html(kb[a][b][c].place);
+        $(".kweek").html(kb[a][b][c].weeks_txt);
+    }
+
+</script>
+</html>
