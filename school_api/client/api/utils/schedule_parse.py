@@ -59,6 +59,7 @@ class BaseScheduleParse(object):
                     for text in td_main.split('<br/><br/>'):
                         course_arr = self._get_td_course_info(text)
                         if course_arr[0] and not re.match(pattern, course_arr[0]):
+                            course_arr[1] = self._get_weeks_text(course_arr[1])
                             weeks_arr = self._get_weeks_arr(course_arr[1])
                             row_arr.append(course_arr + [rowspan, weeks_arr])
                 self.schedule_list[day].append(row_arr)
@@ -85,15 +86,8 @@ class BaseScheduleParse(object):
             info_arr.append('')
         return info_arr
 
-    def _get_weeks_arr(self, class_time):
-        """
-        将上课时间 转成 数组形式
-        :param class_time: 上课时间
-        :param weeks_text: 上课周数文本
-        :param weeks_arr: 上课周数数组
-        :return:
-        """
-        weeks_arr = []
+    def _get_weeks_text(self, class_time):
+        ''' 课程周数文本 '''
         if not self.schedule_type:
             weeks_text = re.findall(r"{(.*)}", class_time)[0]
         else:
@@ -104,7 +98,17 @@ class BaseScheduleParse(object):
                 weeks_text = class_time if '(' in class_time else class_time + '(1-18)'
             else:
                 weeks_text = class_time.split('(')[0]
+        return weeks_text
 
+    def _get_weeks_arr(self, weeks_text):
+        """
+        将上课时间 转成 数组形式
+        :param class_time: 上课时间
+        :param weeks_text: 课程周数文本
+        :param weeks_arr: 上课周数数组
+        :return:
+        """
+        weeks_arr = []
         step = 2 if '单' in weeks_text or '双' in weeks_text else 1
         for split_text in weeks_text.split(','):
             weeks = re.findall(r'(\d{1,2})-(\d{1,2})', split_text)
@@ -128,7 +132,7 @@ class BaseScheduleParse(object):
                         section_schedule_dict.append({
                             "color": self.COlOR[color_index],
                             "name": schedule[0],
-                            "weeks_txt": schedule[1],
+                            "weeks_text": schedule[1],
                             "teacher": schedule[2],
                             "place": schedule[3],
                             "section": schedule[4],
