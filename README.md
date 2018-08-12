@@ -4,7 +4,7 @@
 
 ## Usage
 ```Shell
-$ pip install git+git://github.com/dairoot/school-api.git
+$ pip install School-Api
 ```
 
 ```Python
@@ -52,6 +52,7 @@ print(schedule_data)
         <td colspan="2">个人课表类型</td>
         <td colspan="3">班级课表类型</td>
         <td rowspan="2">个人信息</td>
+        <td rowspan="2">成绩信息</td>
     </tr>
     <tr align="center">
         <td>学生课表</td>
@@ -68,6 +69,7 @@ print(schedule_data)
         <td></td>
         <td></td>
         <td>√</td>
+        <td>√</td>
     </tr>
     <tr align="center">
         <td>教师</td>
@@ -77,6 +79,7 @@ print(schedule_data)
         <td>√</td>
         <td></td>
         <td>√</td>
+        <td></td>
     </tr>
     <tr align="center">
         <td>部门</td>
@@ -85,6 +88,7 @@ print(schedule_data)
         <td>√</td>
         <td></td>
         <td>√</td>
+        <td></td>
         <td></td>
     </tr>
 </table>
