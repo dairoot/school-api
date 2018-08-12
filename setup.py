@@ -4,6 +4,10 @@
 from setuptools import setup, find_packages
 
 
+with open('README.md', 'rb') as f:
+    long_description = f.read().decode('utf-8')
+
+
 setup(
     name="School-Api",
     author="dairoot",
@@ -11,6 +15,7 @@ setup(
     license='MIT',
     author_email="623815825@qq.com",
     description="School SDK for Python",
+    long_description=long_description,
     url='https://github.com/dairoot/school-api',
     packages=find_packages(),
     package_data={'school_api': ['check_code/theta.dat'], },

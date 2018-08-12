@@ -7,3 +7,8 @@ conf.py
 CheckCode.gif
 .coverage
 
+# Packages
+*.egg
+*.egg-info
+build
+dist
