@@ -50,12 +50,12 @@ class UserlInfoParse():
                 "real_name": real_name,
                 "sex": sex,
                 "grade": grade,
-                "birth_date": birth_date,
+                "birth_date": birth_date.replace('/', '-'),
                 "class_name": class_name,
                 "faculty": faculty,
                 "specialty": specialty,
                 "hometown": hometown,
-                "enrol_time": enrol_time,
+                "enrol_time": enrol_time.replace('/', '-'),
                 "id_card": id_card
             }
 
