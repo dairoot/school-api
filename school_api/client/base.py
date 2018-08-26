@@ -5,10 +5,11 @@ import inspect
 import requests
 from bs4 import BeautifulSoup
 
+from school_api.client.utils import get_time_list
 from school_api.client.api.base import BaseSchoolApi
 from school_api.session.memorystorage import MemoryStorage
 from school_api.utils import to_text, ObjectDict
-from school_api.config import URL_ENDPOINT, CLASS_TIME_LIST, LOGIN_SESSION_SAVE_TIME
+from school_api.config import URL_ENDPOINT, CLASS_TIME, LOGIN_SESSION_SAVE_TIME
 
 
 def _is_api_endpoint(obj):
@@ -18,6 +19,9 @@ def _is_api_endpoint(obj):
 class BaseSchoolClient(object):
 
     def __init__(self, url, **kwargs):
+
+        class_time_list = kwargs.get('class_time_list') or CLASS_TIME
+        time_list = get_time_list(class_time_list)
 
         self.school = {
             'url': url,
@@ -32,7 +36,7 @@ class BaseSchoolClient(object):
             'timeout': kwargs.get('timeout', 10),
             'login_url': kwargs.get('login_url_path', '/default2.aspx'),
             'url_endpoint': kwargs.get('url_endpoint') or URL_ENDPOINT,
-            'time_list': kwargs.get('class_time_list') or CLASS_TIME_LIST
+            'time_list': time_list
         }
         storage = kwargs.get('session', MemoryStorage)
         self.session = storage(self.school['code'])

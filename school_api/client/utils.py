@@ -45,3 +45,17 @@ def error_handle(func):
             except SchoolException as reqe:
                 return {'error': reqe}
     return wrapper
+
+
+def get_time_list(class_time):
+    time_list = {1: [], 2: [], 3: [], 4: []}
+    time_text = "{} ~ {}"
+    for n, times in enumerate(class_time):
+        if n % 2 == 0:
+            time_list[1].append(time_text.format(times[0], times[1]))
+            time_list[2].append(time_text.format(times[0], class_time[n+1][1]))
+
+            if n < 8:
+                time_list[3].append(time_text.format(times[0], class_time[n+2][1]))
+                time_list[4].append(time_text.format(times[0], class_time[n+3][1]))
+    return time_list
