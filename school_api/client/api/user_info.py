@@ -21,61 +21,66 @@ class UserlInfo(BaseSchoolApi):
         except RequestException:
             raise UserInfoException(self.code, '获取用户信息失败')
 
-        return UserlInfoParse(self.user_type, res.content).user_info
+        return UserlInfoParse(self.code, self.user_type, res.content).user_info
 
 
 class UserlInfoParse():
     ''' 信息页面解析模块 '''
 
-    def __init__(self, user_type, html):
+    def __init__(self, code, user_type, html):
         self.data = {}
+        self.code = code
         coding = 'gbk' if user_type else 'GB18030'
         self.soup = BeautifulSoup(html.decode(coding), "html.parser")
         [self._html_parse_of_student, self._html_parse_of_teacher][user_type]()
 
     def _html_parse_of_student(self):
         table = self.soup.find("table", {"class": "formlist"})
-        if table:
-            real_name = table.find(id="xm").text
-            sex = table.find(id="lbl_xb").text
-            grade = table.find(id="lbl_dqszj").text
-            birth_date = table.find(id="lbl_csrq").text
-            class_name = table.find(id="lbl_xzb").text
-            faculty = table.find(id="lbl_xy").text
-            specialty = table.find(id="lbl_zymc").text
-            hometown = table.find(id="lbl_lydq").text
-            enrol_time = table.find(id="lbl_rxrq").text
-            id_card = table.find(id="lbl_sfzh").text
-            self.data = {
-                "real_name": real_name,
-                "sex": sex,
-                "grade": grade,
-                "birth_date": birth_date.replace('/', '-'),
-                "class_name": class_name,
-                "faculty": faculty,
-                "specialty": specialty,
-                "hometown": hometown,
-                "enrol_time": enrol_time.replace('/', '-'),
-                "id_card": id_card
-            }
+        if not table:
+            raise UserInfoException(self.code, '获取学生用户信息失败')
+
+        real_name = table.find(id="xm").text
+        sex = table.find(id="lbl_xb").text
+        grade = table.find(id="lbl_dqszj").text
+        birth_date = table.find(id="lbl_csrq").text
+        class_name = table.find(id="lbl_xzb").text
+        faculty = table.find(id="lbl_xy").text
+        specialty = table.find(id="lbl_zymc").text
+        hometown = table.find(id="lbl_lydq").text
+        enrol_time = table.find(id="lbl_rxrq").text
+        id_card = table.find(id="lbl_sfzh").text
+        self.data = {
+            "real_name": real_name,
+            "sex": sex,
+            "grade": grade,
+            "birth_date": birth_date.replace('/', '-'),
+            "class_name": class_name,
+            "faculty": faculty,
+            "specialty": specialty,
+            "hometown": hometown,
+            "enrol_time": enrol_time.replace('/', '-'),
+            "id_card": id_card
+        }
 
     def _html_parse_of_teacher(self):
         table = self.soup.find(id="Table3")
-        if table:
-            real_name = table.find(id='xm').text
-            sex = table.find(id='xb').text
-            dept = table.find(id='bm').text
-            position = table.find(id='zw').text
-            associate_degree = table.find(id='xl').text
-            positional_title = table.find(id='zc').text
-            self.data = {
-                "real_name": real_name,
-                "sex": sex,
-                "dept": dept,
-                "position": position,
-                "associate_degree": associate_degree,
-                "positional_title": positional_title
-            }
+        if not table:
+            raise UserInfoException(self.code, '获取教师用户信息失败')
+
+        real_name = table.find(id='xm').text
+        sex = table.find(id='xb').text
+        dept = table.find(id='bm').text
+        position = table.find(id='zw').text
+        associate_degree = table.find(id='xl').text
+        positional_title = table.find(id='zc').text
+        self.data = {
+            "real_name": real_name,
+            "sex": sex,
+            "dept": dept,
+            "position": position,
+            "associate_degree": associate_degree,
+            "positional_title": positional_title
+        }
 
     @property
     def user_info(self):

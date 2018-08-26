@@ -36,18 +36,23 @@ class Score(BaseSchoolApi):
         except RequestException:
             raise ScoreException(self.code, '获取成绩信息失败')
 
-        return ScoreParse(res.content).get_score(score_year, score_term)
+        return ScoreParse(self.code, res.content).get_score(score_year, score_term)
 
 
 class ScoreParse():
     ''' 成绩页面解析模块 '''
 
-    def __init__(self, html):
+    def __init__(self, code, html):
+        self.code = code
         self.soup = BeautifulSoup(html.decode('GB18030'), "html.parser")
         self._html_parse_of_score()
 
     def _html_parse_of_score(self):
-        rows = self.soup.find("table", {"id": "Datagrid1"}).find_all('tr')
+        table = self.soup.find("table", {"id": "Datagrid1"})
+        if not table:
+            raise ScoreException(self.code, '获取成绩信息失败')
+
+        rows = table.find_all('tr')
         rows.pop(0)
         self.score_info = {}
         for row in rows:
