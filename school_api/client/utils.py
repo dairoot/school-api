@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-from school_api.exceptions import SchoolException, LoginException
+from school_api.exceptions import SchoolException, LoginException, PermissionException
 
 
 class UserType():
@@ -34,28 +34,46 @@ class LoginFail():
 def error_handle(func):
     def wrapper(self, *args, **kwargs):
         if not self.school.use_ex_handle:
-            return func(self, *args, **kwargs)
+            result = func(self, *args, **kwargs)
         else:
             try:
-                return func(self, *args, **kwargs)
+                result = func(self, *args, **kwargs)
 
             except LoginException as reqe:
-                return LoginFail(reqe)
+                result = LoginFail(reqe)
 
             except SchoolException as reqe:
-                return {'error': reqe}
+                result = {'error': reqe}
+
+        return result
     return wrapper
 
 
+class ApiPermissions():
+    ''' 接口权限判断 '''
+
+    def __init__(self, permission_list):
+        self.permission_list = permission_list
+
+    def __call__(self, func):
+        def wrapper(*args, **kwargs):
+            func_object = args[0]
+            if func_object.user_type not in self.permission_list:
+                raise PermissionException(func_object.school.code, '暂无该接口权限')
+            return func(*args, **kwargs)
+        return wrapper
+
+
 def get_time_list(class_time):
+    ''' 上课时间处理 '''
     time_list = {1: [], 2: [], 3: [], 4: []}
     time_text = "{} ~ {}"
-    for n, times in enumerate(class_time):
-        if n % 2 == 0:
+    for index, times in enumerate(class_time):
+        if index % 2 == 0:
             time_list[1].append(time_text.format(times[0], times[1]))
-            time_list[2].append(time_text.format(times[0], class_time[n+1][1]))
+            time_list[2].append(time_text.format(times[0], class_time[index+1][1]))
 
-            if n < 8:
-                time_list[3].append(time_text.format(times[0], class_time[n+2][1]))
-                time_list[4].append(time_text.format(times[0], class_time[n+3][1]))
+            if index < 8:
+                time_list[3].append(time_text.format(times[0], class_time[index+2][1]))
+                time_list[4].append(time_text.format(times[0], class_time[index+3][1]))
     return time_list

@@ -60,3 +60,9 @@ class UserInfoException(SchoolException):
 
     def __init__(self, school_code, errmsg):
         super(UserInfoException, self).__init__('用户信息接口', school_code, errmsg)
+
+
+class PermissionException(SchoolException):
+
+    def __init__(self, school_code, errmsg):
+        super(PermissionException, self).__init__('接口权限', school_code, errmsg)

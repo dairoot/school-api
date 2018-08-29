@@ -6,7 +6,7 @@ from school_api.client.api.score import Score
 from school_api.client.api.schedule import Schedule
 from school_api.client.api.place_schedule import PlaceSchedule
 from school_api.client.api.user_info import UserlInfo
-from school_api.client.utils import UserType, error_handle
+from school_api.client.utils import UserType, error_handle, ApiPermissions
 
 
 class SchoolClient(BaseSchoolClient):
@@ -47,12 +47,16 @@ class UserClient(BaseUserClient):
         return self.schedule.get_schedule(**kwargs)
 
     @error_handle
+    @ApiPermissions([UserType.STUDENT, UserType.TEACHER])
     def get_info(self, **kwargs):
         return self.info.get_info(**kwargs)
 
     @error_handle
+    @ApiPermissions([UserType.STUDENT])
     def get_score(self, *args, **kwargs):
         return self.score.get_score(*args, **kwargs)
 
+    @error_handle
+    @ApiPermissions([UserType.DEPT])
     def get_place_schedule(self, *args, **kwargs):
         return self.place_schedule.get_schedule(*args, **kwargs)
