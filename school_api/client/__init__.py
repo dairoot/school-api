@@ -2,13 +2,11 @@
 from __future__ import absolute_import, unicode_literals
 
 from school_api.client.base import BaseUserClient, BaseSchoolClient
-from school_api.client.api.login import Login
 from school_api.client.api.score import Score
 from school_api.client.api.schedule import Schedule
 from school_api.client.api.place_schedule import PlaceSchedule
 from school_api.client.api.user_info import UserlInfo
 from school_api.client.utils import UserType, error_handle
-from school_api.config import LOGIN_SESSION_SAVE_TIME
 
 
 class SchoolClient(BaseSchoolClient):
@@ -25,7 +23,6 @@ class SchoolClient(BaseSchoolClient):
 
 
 class UserClient(BaseUserClient):
-    login = Login()
     score = Score()
     info = UserlInfo()
     schedule = Schedule()
@@ -35,21 +32,8 @@ class UserClient(BaseUserClient):
     def user_login(self, use_session, **kwargs):
         ''' 登录：通过SchoolClient类调用 '''
         login_session = None
-        if use_session and self.get_login_session():
-            session_expires_time = LOGIN_SESSION_SAVE_TIME \
-                - self.get_login_session_expires_time()
-
-            if session_expires_time < 60 * 5:
-                # 五分钟内，不检测登录会话是否过期
-                login_session = self
-            elif self.login.check_session():
-                # 登录会话检测
-                if 60 * 5 < session_expires_time < 60 * 10:
-                    # 登录比较频繁的，更新会话时间 (例如：部门账号操作)
-                    self.save_login_session()
-                login_session = self
-            # 会话过期, 删除会话
-            self.del_login_session()
+        if use_session:
+            login_session = self.session_management()
 
         if login_session is None:
             self.login.get_login(self.school, **kwargs)

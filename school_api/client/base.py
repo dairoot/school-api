@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 
 from school_api.client.utils import get_time_list
 from school_api.client.api.base import BaseSchoolApi
+from school_api.client.api.login import Login
 from school_api.session.memorystorage import MemoryStorage
 from school_api.utils import to_text, ObjectDict
 from school_api.config import URL_ENDPOINT, CLASS_TIME, LOGIN_SESSION_SAVE_TIME
@@ -53,6 +54,7 @@ class BaseUserClient(object):
     """docstring for BaseUserClient"""
 
     _proxy = None
+    login = Login()
 
     def __new__(cls, *args):
         self = super(BaseUserClient, cls).__new__(cls)
@@ -148,7 +150,49 @@ class BaseUserClient(object):
         key = '{}:{}:{}'.format('login_session', url, self.account)
         return key
 
-    def get_login_session(self):
+    def get_login_view_state(self, **kwargs):
+        ''' 获取登录的view_state '''
+        base_key = 'login_view:' + self.base_url + self.school.login_url
+        if not self.session.get(base_key):
+            view_state = self.get_view_state(self.school.login_url, **kwargs)
+            self.session.set(base_key, view_state)
+        return self.session.get(base_key)
+
+    def session_management(self):
+        ''' 登录会话管理 '''
+        login_session = None
+        if self._get_login_session():
+            session_expires_time = LOGIN_SESSION_SAVE_TIME \
+                - self._get_login_session_expires_time()
+
+            if session_expires_time < 60 * 5:
+                # 五分钟内，不检测登录会话是否过期
+                login_session = self
+            elif self.login.check_session():
+                # 登录会话检测
+                if 60 * 5 < session_expires_time < 60 * 10:
+                    # 登录比较频繁的，更新会话时间 (例如：部门账号操作)
+                    self.save_login_session()
+                login_session = self
+            else:
+                # 会话过期, 删除会话
+                self._del_login_session()
+
+        return login_session
+
+    def save_login_session(self):
+        ''' 保存登录会话 '''
+        key = self.get_login_session_key()
+        cookie = self._http.cookies.get_dict()
+        self.session.set(key, cookie, LOGIN_SESSION_SAVE_TIME)
+
+    def _del_login_session(self):
+        ''' 删除登录会话 '''
+        key = self.get_login_session_key()
+        self.session.delete(key)
+        self._http.cookies.clear()
+
+    def _get_login_session(self):
         ''' 获取登录会话 '''
         key = self.get_login_session_key()
         cookie = self.session.get(key)
@@ -159,28 +203,8 @@ class BaseUserClient(object):
         self._http.cookies.update(cookie)
         return True
 
-    def del_login_session(self):
-        ''' 删除登录会话 '''
-        key = self.get_login_session_key()
-        self.session.delete(key)
-        self._http.cookies.clear()
-
-    def save_login_session(self):
-        ''' 保存登录会话 '''
-        key = self.get_login_session_key()
-        cookie = self._http.cookies.get_dict()
-        self.session.set(key, cookie, LOGIN_SESSION_SAVE_TIME)
-
-    def get_login_session_expires_time(self):
+    def _get_login_session_expires_time(self):
         """ 获取登录会话过期时间 """
         url = self.base_url + self.school.login_url
         key = '{}:{}:{}'.format('login_session', url, self.account)
         return self.session.expires_time(key)
-
-    def get_login_view_state(self, **kwargs):
-        ''' 获取登录的view_state '''
-        base_key = 'login_view:' + self.base_url + self.school.login_url
-        if not self.session.get(base_key):
-            view_state = self.get_view_state(self.school.login_url, **kwargs)
-            self.session.set(base_key, view_state)
-        return self.session.get(base_key)
