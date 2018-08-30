@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
-# @Time    : 2016 - 2018
-# @Author  : dairoot
-# @Email   : 623815825@qq.com
+'''
+    @Time       : 2016 - 2018
+    @Author     : dairoot
+    @Email      : 623815825@qq.com
+    @description: 课表解析
+'''
 from __future__ import absolute_import, unicode_literals
 
 import re
@@ -9,7 +12,7 @@ import six
 from bs4 import BeautifulSoup
 
 
-class BaseScheduleParse(object):
+class BaseScheduleParse():
     ''' 课表页面解析模块 '''
     COlOR = ['green', 'blue', 'purple', 'red', 'yellow']
 
@@ -29,9 +32,9 @@ class BaseScheduleParse(object):
             table = soup.find("table", {"id": "Table6"}) if \
                 schedule_type == 1 else soup.find("table", {"id": "Table1"})
             trs = table.find_all('tr')
-            self._html_parse(trs)
+            self.html_parse(trs)
 
-    def _html_parse(self, trs):
+    def html_parse(self, trs):
         """
         :param n+1: 为周几
         :param i-1: 为第几节
@@ -45,7 +48,7 @@ class BaseScheduleParse(object):
         for i in range(2, 12, 2):
             tds = trs[i].find_all("td")
             # 去除无用数据，比如(上午, 第一节...  等等)
-            if i == 2 or i == 6 or i == 10:
+            if i in [2, 6, 10]:
                 tds.pop(0)
             tds.pop(0)
             # 默认获取7天内的课表(周一到周日)
@@ -63,62 +66,6 @@ class BaseScheduleParse(object):
                             weeks_arr = self._get_weeks_arr(course_arr[1])
                             row_arr.append(course_arr + [rowspan, weeks_arr])
                 self.schedule_list[day].append(row_arr)
-
-    @staticmethod
-    def _get_td_course_info(text):
-        ''' 获取td标签的课程信息 '''
-        text = re.sub(r'<[/]{0,1}font[^>]*?>', '', text)
-        text = re.sub(r'^<br/>', '', text)
-
-        if six.PY2:
-            # 以下兼容 python2 版本解析处理
-            text = re.sub(r'</br></br></br>$', '', text)
-            text = text.replace('<br>', '<br/>')
-
-        info_arr = []
-        for k in text.split('<br/>'):
-            if k not in ['选修', '公选', '必修']:
-                info_arr.append(k)
-
-        info_arr = info_arr[:4:]
-        if len(info_arr) == 3:
-            # 没有上课地点的情况
-            info_arr.append('')
-        return info_arr
-
-    def _get_weeks_text(self, class_time):
-        ''' 课程周数文本 '''
-        if not self.schedule_type:
-            weeks_text = re.findall(r"{(.*)}", class_time)[0]
-        else:
-            # 2节/周
-            # 2节/单周(7-7)
-            # 1-10,13-18(1,2)
-            if '2节/' in class_time:
-                weeks_text = class_time if '(' in class_time else class_time + '(1-18)'
-            else:
-                weeks_text = class_time.split('(')[0]
-        return weeks_text
-
-    def _get_weeks_arr(self, weeks_text):
-        """
-        将上课时间 转成 数组形式
-        :param class_time: 上课时间
-        :param weeks_text: 课程周数文本
-        :param weeks_arr: 上课周数数组
-        :return:
-        """
-        weeks_arr = []
-        step = 2 if '单' in weeks_text or '双' in weeks_text else 1
-        for split_text in weeks_text.split(','):
-            weeks = re.findall(r'(\d{1,2})-(\d{1,2})', split_text)
-
-            if weeks:
-                weeks_arr += range(int(weeks[0][0]), int(weeks[0][1]) + 1, step)
-            else:
-                weeks_arr += [int(split_text)]
-
-        return weeks_arr
 
     def get_schedule_dict(self):
         ''' 返回课表数据 字典格式 '''
@@ -148,11 +95,69 @@ class BaseScheduleParse(object):
         }
         return schedule_data
 
+    def _get_weeks_text(self, class_time):
+        ''' 课程周数文本 '''
+        if not self.schedule_type:
+            weeks_text = re.findall(r"{(.*)}", class_time)[0]
+        else:
+            # 2节/周
+            # 2节/单周(7-7)
+            # 1-10,13-18(1,2)
+            if '2节/' in class_time:
+                weeks_text = class_time if '(' in class_time else class_time + '(1-18)'
+            else:
+                weeks_text = class_time.split('(')[0]
+        return weeks_text
+
+    @staticmethod
+    def _get_weeks_arr(weeks_text):
+        """
+        将上课时间 转成 数组形式
+        :param class_time: 上课时间
+        :param weeks_text: 课程周数文本
+        :param weeks_arr: 上课周数数组
+        :return:
+        """
+        weeks_arr = []
+        step = 2 if '单' in weeks_text or '双' in weeks_text else 1
+        for split_text in weeks_text.split(','):
+            weeks = re.findall(r'(\d{1,2})-(\d{1,2})', split_text)
+
+            if weeks:
+                weeks_arr += range(int(weeks[0][0]), int(weeks[0][1]) + 1, step)
+            else:
+                weeks_arr += [int(split_text)]
+
+        return weeks_arr
+
+    @staticmethod
+    def _get_td_course_info(text):
+        ''' 获取td标签的课程信息 '''
+        text = re.sub(r'<[/]{0,1}font[^>]*?>', '', text)
+        text = re.sub(r'^<br/>', '', text)
+
+        if six.PY2:
+            # 以下兼容 python2 版本解析处理
+            text = re.sub(r'</br></br></br>$', '', text)
+            text = text.replace('<br>', '<br/>')
+
+        info_arr = []
+        for k in text.split('<br/>'):
+            if k not in ['选修', '公选', '必修']:
+                info_arr.append(k)
+
+        info_arr = info_arr[:4:]
+        if len(info_arr) == 3:
+            # 没有上课地点的情况
+            info_arr.append('')
+        return info_arr
+
 
 class ScheduleParse(BaseScheduleParse):
+    ''' 课表节数合并 '''
 
     def __init__(self, html, time_list, schedule_type=0):
-        super(ScheduleParse, self).__init__(html, time_list, schedule_type)
+        BaseScheduleParse.__init__(self, html, time_list, schedule_type)
         self.merger_same_schedule()
 
     def merger_same_schedule(self):
