@@ -51,11 +51,11 @@ class BaseScheduleParse():
             if i in [2, 6, 10]:
                 tds.pop(0)
             tds.pop(0)
-            # 默认获取7天内的课表(周一到周日)
-            for day in range(7):
+            # 默认获取7天内的课表(周一到周日) tds 长度为7
+            for day, day_c in enumerate(tds):
                 row_arr = []
-                if tds[day].text != u' ':
-                    td_str = tds[day].__unicode__()
+                if day_c.text != u' ':
+                    td_str = day_c.__unicode__()
                     rowspan = 2 if 'rowspan="2"' in td_str else 1
                     td_main = re.sub(r'<td align="Center".*?>', '', td_str)[:-5]
 

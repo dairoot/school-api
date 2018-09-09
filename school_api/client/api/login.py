@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-import re
 from six.moves.urllib import parse
 from requests import RequestException
 from school_api.client.api.base import BaseSchoolApi
+from school_api.client.api.utils import get_tip
 from school_api.check_code import CHECK_CODE
 from school_api.exceptions import IdentityException, CheckCodeException, LoginException
 from school_api.utils import to_binary
@@ -77,9 +77,10 @@ class Login(BaseSchoolApi):
 
     def _get_login_result_tip(self, html):
         """ 获取获取html的弹框提示信息 """
-        tips = re.findall(r"alert\(\'(.*?)\'", html)
-        if tips:
-            return tips[0]
+        tip = get_tip(html)
+        if tip:
+            return tip
+
         raise LoginException(self.code, '教务系统请求异常')
 
     def check_session(self):

@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 from requests import RequestException
 
 from school_api.client.api.base import BaseSchoolApi
+from school_api.client.api.utils import get_tip
 from school_api.client.api.utils.schedule_parse import ScheduleParse
 from school_api.client.utils import ScheduleType, UserType
 from school_api.utils import to_text
@@ -24,7 +25,7 @@ class Schedule(BaseSchoolApi):
         self.schedule_type = ScheduleType.CLASS if self.user_type \
             else schedule_type or ScheduleType.PERSON
         self.schedule_year = schedule_year
-        self.schedule_term = schedule_term
+        self.schedule_term = str(schedule_term)
         self.schedule_url = self.school_url["SCHEDULE_URL"][self.schedule_type]
 
         if self.user_type != UserType.DEPT:
@@ -48,17 +49,14 @@ class Schedule(BaseSchoolApi):
         except RequestException:
             raise ScheduleException(self.code, '获取课表请求参数失败')
 
-        schedule = ScheduleParse(
-            res.content.decode(coding),
-            self.time_list,
-            self.schedule_type
-        ).get_schedule_dict()
+        html = res.content.decode(coding)
+        tip = get_tip(html)
+        if tip:
+            raise ScheduleException(self.code, tip)
 
-        '''
-        第一次请求的时候，教务系统默认返回最新课表
-        如果设置了学年跟学期，匹配学年跟学期，不匹配则获取指定学年学期的课表
-        '''
-
+        schedule = ScheduleParse(html, self.time_list, self.schedule_type).get_schedule_dict()
+        # 第一次请求的时候，教务系统默认返回最新课表
+        # 如果设置了学年跟学期，匹配学年跟学期，不匹配则获取指定学年学期的课表
         if self.schedule_year and self.schedule_term:
             if self.schedule_year != schedule['schedule_year'] or \
                     self.schedule_term != schedule['schedule_term']:

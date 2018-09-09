@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from requests import RequestException
 
 from school_api.client.api.base import BaseSchoolApi
+from school_api.client.api.utils import get_tip
 from school_api.exceptions import ScoreException
 
 
@@ -36,7 +37,12 @@ class Score(BaseSchoolApi):
         except RequestException:
             raise ScoreException(self.code, '获取成绩信息失败')
 
-        return ScoreParse(self.code, res.content).get_score(score_year, score_term)
+        html = res.content.decode('GB18030')
+        tip = get_tip(html)
+        if tip:
+            raise ScoreException(self.code, tip)
+
+        return ScoreParse(self.code, html).get_score(score_year, score_term)
 
 
 class ScoreParse():
@@ -44,7 +50,7 @@ class ScoreParse():
 
     def __init__(self, code, html):
         self.code = code
-        self.soup = BeautifulSoup(html.decode('GB18030'), "html.parser")
+        self.soup = BeautifulSoup(html, "html.parser")
         self._html_parse_of_score()
 
     def _html_parse_of_score(self):
@@ -87,10 +93,14 @@ class ScoreParse():
 
     def get_score(self, year, term):
         ''' 返回成绩信息json格式 '''
-        if year:
-            if term:
-                return self.score_info[year][term]
-            return self.score_info[year]
+        try:
+            if year:
+                if term:
+                    return self.score_info[year][term]
+                return self.score_info[year]
+        except KeyError:
+            raise ScoreException(self.code, '暂无成绩信息')
+
         return self.score_info
 
     @staticmethod
