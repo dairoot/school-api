@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from requests import RequestException
 
 from school_api.client.api.base import BaseSchoolApi
-from school_api.client.api.utils import get_tip
+from school_api.client.api.utils import get_tip, get_view_state_from_html
 from school_api.client.api.utils.schedule_parse import ScheduleParse
 from school_api.client.utils import ScheduleType, UserType
 from school_api.utils import to_text
@@ -81,7 +81,7 @@ class Schedule(BaseSchoolApi):
 
     def _get_payload(self, html):
         ''' 获取课表post 的参数 '''
-        view_state = self._get_view_state_from_html(html)
+        view_state = get_view_state_from_html(html)
         payload = {
             '__VIEWSTATE': view_state,
             ['xnd', 'xn'][self.schedule_type]: self.schedule_year,
@@ -97,7 +97,7 @@ class Schedule(BaseSchoolApi):
             res = self._get(self.schedule_url, **kwargs)
             if res.status_code != 200:
                 raise RequestException
-            view_state = self._get_view_state_from_html(res.text)
+            view_state = get_view_state_from_html(res.text)
         except RequestException:
             raise ScheduleException(self.code, '获取课表请求参数失败')
 

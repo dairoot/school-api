@@ -17,9 +17,6 @@ class BaseSchoolApi(object):
     def _head(self, url, **kwargs):
         return self._client.head(url, **kwargs)
 
-    def _get_view_state_from_html(self, html):
-        return self._client.get_view_state_from_html(html)
-
     def _get_view_state(self, url, **kwargs):
         return self._client.get_view_state(url, **kwargs)
 

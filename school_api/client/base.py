@@ -3,11 +3,11 @@ from __future__ import absolute_import, unicode_literals
 
 import inspect
 import requests
-from bs4 import BeautifulSoup
 
 from school_api.client.utils import get_time_list
 from school_api.client.api.base import BaseSchoolApi
 from school_api.client.api.login import Login
+from school_api.client.api.utils import get_view_state_from_html
 from school_api.session.memorystorage import MemoryStorage
 from school_api.utils import to_text, ObjectDict
 from school_api.config import URL_ENDPOINT, CLASS_TIME, LOGIN_SESSION_SAVE_TIME
@@ -135,14 +135,7 @@ class BaseUserClient(object):
         res = self.get(url_suffix, allow_redirects=False, **kwargs)
         if res.status_code != 200:
             raise requests.RequestException
-        return self.get_view_state_from_html(res.text)
-
-    @staticmethod
-    def get_view_state_from_html(html):
-        pre_soup = BeautifulSoup(html, "html.parser")
-        view_state = pre_soup.find(
-            attrs={"name": "__VIEWSTATE"})['value']
-        return view_state
+        return get_view_state_from_html(res.text)
 
     def get_login_session_key(self):
         ''' 获取缓存登录会话的key '''
