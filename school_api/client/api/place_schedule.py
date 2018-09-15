@@ -16,7 +16,7 @@ class PlaceSchedule(BaseSchoolApi):
     schedule_url = None
     payload = None
 
-    def get_schedule(self, campus_list=None, **kwargs):
+    def get_schedule(self, campus_list=None, classroom_type_list=None, classroom_name_list=None, **kwargs):
         ''' 课表信息 获取入口
         返回一个生成器，生成器一旦报错则将退出：https://codeday.me/bug/20180125/124136.html
         除了解析异常其他报错均不抛出
@@ -35,10 +35,14 @@ class PlaceSchedule(BaseSchoolApi):
                     continue
                 # 遍历教室类别
                 for classroom_type in self.payload['classroom_type_list']:
+                    if classroom_type_list and classroom_type["name"] not in classroom_type_list:
+                        continue
                     if not self._update_payload(campus, classroom_type=classroom_type, **kwargs):
                         continue
                     # 遍历教室名称
                     for classroom_name in self.payload['classroom_name_list']:
+                        if classroom_name_list and classroom_name["name"] not in classroom_name_list:
+                            continue
                         try:
                             res = self._get_api(
                                 campus, classroom_type=classroom_type,
