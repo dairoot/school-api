@@ -46,10 +46,21 @@ class CheckCode(object):
         将图片转成numpy数组数据 与 训练好的模型 进行匹配
         '''
         obj = BytesIO(img_stream)
-        self.img = Image.open(obj)
+        img = Image.open(obj).convert("L")
+        self.img = self.denoise_img(img)
         data = np.matrix(self.photo_to_text())
         data = np.hstack((np.ones((data.shape[0], 1)), data))
         all_predict = 1.0 / (1.0 + np.exp(-(np.dot(data, self.real_all_theta))))
         pred = np.argmax(all_predict, axis=1)
         answers = map(chr, map(lambda x: x + 48 if x <= 9 else x + 87, pred))
         return ''.join(answers)
+
+    def denoise_img(self, img):
+        '''图片降噪处理'''
+        img2 = Image.new("L", img.size, 255)
+        for x in range(img.size[1]):
+            for y in range(img.size[0]):
+                pix = img.getpixel((y, x))
+                if pix == 17:  # these are the numbers to get
+                    img2.putpixel((y, x), 0)
+        return img2
