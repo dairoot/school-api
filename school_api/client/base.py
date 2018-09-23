@@ -20,7 +20,7 @@ def _is_api_endpoint(obj):
 class BaseSchoolClient(object):
 
     def __init__(self, url, **kwargs):
-
+        url = url.split('/default')[0] if url[-4:] == 'aspx' else url
         class_time_list = kwargs.get('class_time_list') or CLASS_TIME
         time_list = get_time_list(class_time_list)
 
