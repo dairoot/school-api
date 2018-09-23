@@ -12,22 +12,26 @@ from school_api.exceptions import ScoreException
 class Score(BaseSchoolApi):
     ''' 学生成绩获取 '''
 
-    def get_score(self, score_year=None, score_term=None, **kwargs):
+    def get_score(self, score_year=None, score_term=None, use_api2=False, **kwargs):
         ''' 成绩信息 获取入口 '''
-        score_url = self.school_url['SCORE_URL'] + self.account
+        score_url = self.school_url['SCORE_URL'][int(use_api2)] + self.account
 
         try:
             view_state = self._get_view_state(score_url, **kwargs)
         except RequestException:
-            raise ScoreException(self.code, '获取成绩请求参数失败')
+            msg = '获取成绩请求参数失败'
+            if not use_api2:
+                msg += ', 或许是接口地址不对，请尝试将use_api2赋值为True，也可更改url_endpoint参数'
+
+            raise ScoreException(self.code, msg)
 
         payload = {
             '__VIEWSTATE': view_state,
-            'Button2': u'在校学习成绩查询',
+            'Button2': '在校学习成绩查询',
+            'btn_zcj': '历年成绩',
             'ddlXN': '',
             'ddlXQ': ''
         }
-
         try:
             res = self._post(score_url, data=payload, **kwargs)
             if res.status_code == 302:
