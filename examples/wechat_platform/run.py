@@ -63,7 +63,10 @@ def wechat_handler():
 
 @app.route('/get_schedule')
 def get_schedule_page():
-    schedule_data = school.schedule
+    schedule_year = '2015-2016'
+    schedule_term = '2'
+    schedule_data = school.schedule(schedule_year, schedule_term)
+    print(schedule_data)
     return render_template(
         "schedule.html",
         schedule_type=0, weeks=1,

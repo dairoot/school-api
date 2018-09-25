@@ -41,7 +41,6 @@ class Login(BaseSchoolApi):
             if res.content[:7] != to_binary('GIF89aH'):
                 raise CheckCodeException(self.code, "验证码获取失败")
             code = CHECK_CODE.verify(res.content)
-            print('code', code)
 
         account = self.account.encode('gb2312')
         payload = {
