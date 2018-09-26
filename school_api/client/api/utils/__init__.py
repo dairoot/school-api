@@ -3,7 +3,7 @@ import re
 from bs4 import BeautifulSoup
 
 
-def get_tip(html):
+def get_alert_tip(html):
     ''' 获取页面提示信息 '''
     tips = re.findall(r">alert\(\'(.*?)\'", html)
     if tips:

@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from requests import RequestException
 
 from school_api.client.api.base import BaseSchoolApi
-from school_api.client.api.utils import get_tip, get_view_state_from_html
+from school_api.client.api.utils import get_alert_tip, get_view_state_from_html
 from school_api.client.api.utils.schedule_parse import ScheduleParse
 from school_api.client.utils import ScheduleType, UserType
 from school_api.utils import to_text
@@ -50,7 +50,7 @@ class Schedule(BaseSchoolApi):
             raise ScheduleException(self.code, '获取课表请求参数失败')
 
         html = res.content.decode(coding)
-        tip = get_tip(html)
+        tip = get_alert_tip(html)
         if tip:
             raise ScheduleException(self.code, tip)
 

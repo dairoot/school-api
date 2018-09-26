@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from requests import RequestException
 
 from school_api.client.api.base import BaseSchoolApi
-from school_api.client.api.utils import get_tip
+from school_api.client.api.utils import get_alert_tip
 from school_api.exceptions import ScoreException
 
 
@@ -42,7 +42,7 @@ class Score(BaseSchoolApi):
             raise ScoreException(self.code, '获取成绩信息失败')
 
         html = res.content.decode('GB18030')
-        tip = get_tip(html)
+        tip = get_alert_tip(html)
         if tip:
             raise ScoreException(self.code, tip)
 
