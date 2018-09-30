@@ -18,12 +18,16 @@ print(schedule_data)
 ```
 使用示例参见 [examples](examples/)
 
-## Function
+## Api Function
 
-- [x] 成绩查询
-- [x] 课表查询
-- [x] 用户信息查询
-- [x] 教学场地课表查询（可用于空教室查询）
+| Api               |  Description  | Argument        |
+| :--------         | :-----        | :----           |
+| user_login        | 登陆函数      | account, password, user_type=1, use_session=True   |
+| get_score         | 成绩查询      | score_year=None, score_term=None, use_api2=False   |
+| get_schedule      | 课表查询      | schedule_year=None, schedule_term=None, schedule_type=None   |
+| get_info          | 用户信息查询  |          |
+| get_place_schedule| 教学场地课表查询（可用于空教室查询） |campus_list=None, building_list=None, classroom_type_list=None, classroom_name_list=None, filter_campus_list=None, filter_building_list=None, filter_classroom_type_list=None   |
+
 
 ## School-Api Options
 
@@ -37,7 +41,7 @@ print(schedule_data)
 | exist_verify  | True      | 是否存在验证码      |
 | use_ex_handle | True      | 是否使用异常处理    |
 | priority_porxy| False     | 是否优先使用代理    |
-| proxies       | None      | 代理               |
+| proxies       | None      | 代理地址           |
 | url_endpoint  | `略`      | 学校接口地址列表    |
 | class_time_list| `略`     | 上课时间列表        |
 | timeout       | 10        | 全局请求延时        |
