@@ -23,7 +23,7 @@ print(schedule_data)
 | Api               |  Description  | Argument        |
 | :--------         | :-----        | :----           |
 | user_login        | 登陆函数      | account, password, user_type=1, use_session=True   |
-| get_score         | 成绩查询      | score_year=None, score_term=None, use_api2=False   |
+| get_score         | 成绩查询      | score_year=None, score_term=None, use_api=0   |
 | get_schedule      | 课表查询      | schedule_year=None, schedule_term=None, schedule_type=None   |
 | get_info          | 用户信息查询  |          |
 | get_place_schedule| 教学场地课表查询（可用于空教室查询） |campus_list=None, building_list=None, classroom_type_list=None, classroom_name_list=None, filter_campus_list=None, filter_building_list=None, filter_classroom_type_list=None   |

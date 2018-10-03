@@ -36,7 +36,7 @@ def assemble_schedule(schedule_data):
     articles.append({
         'title': '点击这里：查看完整课表',
         'description': '',
-        'url': 'https://open.dairoot.cn/get_schedule'
+        'url': 'https://open.dairoot.cn/get_schedule?'
     })
     return articles
 

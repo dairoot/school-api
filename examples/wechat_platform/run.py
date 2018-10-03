@@ -52,7 +52,8 @@ def wechat_handler():
                 reply = create_reply(data, message=msg)
 
         elif msg.content == '绑定':
-            content = "<a>点击绑定</a>"
+            content = '<a >点击绑定</a>'
+            content = '<a href="https://weixin.gxgk.cc/">点击绑定</a>'
             reply = TextReply(content=content, message=msg)
 
         else:

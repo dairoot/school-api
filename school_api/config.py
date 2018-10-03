@@ -7,7 +7,7 @@ URL_ENDPOINT = [
     {
         # 学生
         "HOME_URL": "/xs_main.aspx?xh=",
-        "SCORE_URL": ["/xscj_gc.aspx?xh=", "/Xscjcx.aspx?xh="],
+        "SCORE_URL": ["/xscj_gc.aspx?xh=", "/Xscjcx.aspx?xh=", "/xscjcx.aspx?xh="],
         "INFO_URL": "/xsgrxx.aspx?gnmkdm=N121501&xh=",
         "SCHEDULE_URL": [
             "/xskbcx.aspx?gnmkdm=N121603&xh=",
