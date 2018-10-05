@@ -14,6 +14,12 @@ class SchoolClient(BaseSchoolClient):
     def user_login(self, account, password, **kwargs):
         ''' 用户注册入口
         进行首次绑定操作时，请将use_session 设置为False，避免其他用户进行会话登录
+        :param account:  用户账号
+        :param password: 用户密码
+        :param user_type: 0.学生 1.教师 2.部门
+        :param use_session: 是否使用会话
+        :param requests模块参数
+        return
         '''
         use_session = kwargs.pop('use_session', True)
         user_type = kwargs.pop('user_type', UserType.STUDENT)

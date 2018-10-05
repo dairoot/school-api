@@ -54,7 +54,6 @@ class Login(BaseSchoolApi):
             'Button1': ' 登 录 '.encode('gb2312')
         }
 
-        self._update_headers({'Referer': self.base_url + login_url})
         res = self._post(login_url, data=payload,
                          allow_redirects=False, **kwargs)
         return res

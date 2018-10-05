@@ -21,7 +21,13 @@ class Schedule(BaseSchoolApi):
     schedule_url = None
 
     def get_schedule(self, schedule_year=None, schedule_term=None, schedule_type=None, **kwargs):
-        ''' 课表信息 获取入口 '''
+        ''' 课表信息 获取入口
+        :param schedule_year: 课表学年
+        :param schedule_term: 课表学期
+        :param schedule_type: 0.个人课表 1.班级课表
+        :param kwargs: requests模块参数
+        :return:
+        '''
         self.schedule_type = ScheduleType.CLASS if self.user_type \
             else schedule_type or ScheduleType.PERSON
         self.schedule_year = schedule_year

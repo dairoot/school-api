@@ -13,7 +13,13 @@ class Score(BaseSchoolApi):
     ''' 学生成绩获取 '''
 
     def get_score(self, score_year=None, score_term=None, use_api=0, **kwargs):
-        ''' 成绩信息 获取入口 '''
+        ''' 成绩信息 获取入口
+        :param score_year: 成绩学年
+        :param score_term: 成绩学期
+        :param use_api:    0.接口1, 1.接口2, 2.接口3
+        :param kwargs: requests模块参数
+        return
+        '''
         score_url = self.school_url['SCORE_URL'][use_api] + self.account
 
         try:

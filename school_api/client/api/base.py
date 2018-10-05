@@ -20,9 +20,6 @@ class BaseSchoolApi(object):
     def _get_view_state(self, url, **kwargs):
         return self._client.get_view_state(url, **kwargs)
 
-    def _update_headers(self, headers_dict):
-        return self._client.update_headers(headers_dict)
-
     def _get_login_view_state(self, **kwargs):
         return self._client.get_login_view_state(**kwargs)
 

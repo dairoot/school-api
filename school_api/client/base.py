@@ -6,11 +6,12 @@ import requests
 
 from school_api.client.utils import get_time_list
 from school_api.client.api.base import BaseSchoolApi
-from school_api.client.api.login import Login
+
 from school_api.client.api.utils import get_view_state_from_html
+from school_api.client.login_management import LoginManagement
 from school_api.session.memorystorage import MemoryStorage
 from school_api.utils import to_text, ObjectDict
-from school_api.config import URL_ENDPOINT, CLASS_TIME, LOGIN_SESSION_SAVE_TIME
+from school_api.config import URL_ENDPOINT, CLASS_TIME
 
 
 def _is_api_endpoint(obj):
@@ -50,11 +51,10 @@ class BaseSchoolClient(object):
             self.session.set('login_view:' + url_key, view_state)
 
 
-class BaseUserClient(object):
+class BaseUserClient(LoginManagement):
     """docstring for BaseUserClient"""
 
     _proxy = None
-    login = Login()
 
     def __new__(cls, *args):
         self = super(BaseUserClient, cls).__new__(cls)
@@ -67,19 +67,22 @@ class BaseUserClient(object):
 
     def __init__(self, school, account, password, user_type):
         self._http = requests.Session()
-        self._http.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) '
-                          'AppleWebKit/537.36 (KHTML, like Gecko) '
-                          'Chrome/62.0.3202.89 Safari/537.36',
-            'Content-Type': 'application/x-www-form-urlencoded',
-        })
+
         self.account = to_text(account)
         self.password = password
         self.user_type = user_type
         self.school = school.school
         self.base_url = self.school.url
         self.session = school.session
-
+        super(BaseUserClient, self).__init__(self.base_url + self.school.login_url,
+                                             self.account, self.session, self._http)
+        self._http.headers.update({
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) '
+                          'AppleWebKit/537.36 (KHTML, like Gecko) '
+                          'Chrome/62.0.3202.89 Safari/537.36',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Referer': self.base_url + self.school.login_url
+        })
         if self.school.priority_porxy:
             self.set_proxy()
 
@@ -128,76 +131,17 @@ class BaseUserClient(object):
         self.base_url = self.school.lan_url or self.base_url
         self._proxy = self.school.proxies
 
-    def update_headers(self, headers_dict):
-        self._http.headers.update(headers_dict)
-
     def get_view_state(self, url_suffix, **kwargs):
+        """ 获取页面 view_state 值"""
         res = self.get(url_suffix, allow_redirects=False, **kwargs)
         if res.status_code != 200:
             raise requests.RequestException
         return get_view_state_from_html(res.text)
 
-    def get_login_session_key(self):
-        ''' 获取缓存登录会话的key '''
-        url = self.base_url + self.school.login_url
-        key = '{}:{}:{}'.format('login_session', url, self.account)
-        return key
-
     def get_login_view_state(self, **kwargs):
-        ''' 获取登录的view_state '''
+        ''' 获取登录的 view_state 值'''
         base_key = 'login_view:' + self.base_url + self.school.login_url
         if not self.session.get(base_key):
             view_state = self.get_view_state(self.school.login_url, **kwargs)
             self.session.set(base_key, view_state)
         return self.session.get(base_key)
-
-    def session_management(self):
-        ''' 登录会话管理 '''
-        login_session = None
-        if self._get_login_session():
-            session_expires_time = LOGIN_SESSION_SAVE_TIME \
-                - self._get_login_session_expires_time()
-
-            if session_expires_time < 60 * 5:
-                # 五分钟内，不检测登录会话是否过期
-                login_session = self
-            elif self.login.check_session():
-                # 登录会话检测
-                if 60 * 5 < session_expires_time < 60 * 10:
-                    # 登录比较频繁的，更新会话时间 (例如：部门账号操作)
-                    self.save_login_session()
-                login_session = self
-            else:
-                # 会话过期, 删除会话
-                self._del_login_session()
-
-        return login_session
-
-    def save_login_session(self):
-        ''' 保存登录会话 '''
-        key = self.get_login_session_key()
-        cookie = self._http.cookies.get_dict()
-        self.session.set(key, cookie, LOGIN_SESSION_SAVE_TIME)
-
-    def _del_login_session(self):
-        ''' 删除登录会话 '''
-        key = self.get_login_session_key()
-        self.session.delete(key)
-        self._http.cookies.clear()
-
-    def _get_login_session(self):
-        ''' 获取登录会话 '''
-        key = self.get_login_session_key()
-        cookie = self.session.get(key)
-        if not cookie:
-            return None
-        url = self.base_url + self.school.login_url
-        self.update_headers({'Referer': url})
-        self._http.cookies.update(cookie)
-        return True
-
-    def _get_login_session_expires_time(self):
-        """ 获取登录会话过期时间 """
-        url = self.base_url + self.school.login_url
-        key = '{}:{}:{}'.format('login_session', url, self.account)
-        return self.session.expires_time(key)
