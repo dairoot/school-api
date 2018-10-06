@@ -105,6 +105,8 @@ class ScoreParse():
                 if term:
                     return self.score_info[year][term]
                 return self.score_info[year]
+            if not self.score_info:
+                raise KeyError
         except KeyError:
             raise ScoreException(self.code, '暂无成绩信息')
 
