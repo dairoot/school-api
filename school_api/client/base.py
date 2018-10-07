@@ -137,8 +137,10 @@ class BaseUserClient(LoginManagement):
     def get_view_state(self, url_suffix, **kwargs):
         """ 获取页面 view_state 值"""
         res = self.get(url_suffix, allow_redirects=False, **kwargs)
-        if res.status_code != 200:
-            raise requests.RequestException
+        res.raise_for_status()
+        if res.status_code == 302:
+            raise requests.TooManyRedirects
+
         return get_view_state_from_html(res.text)
 
     def get_login_view_state(self, **kwargs):

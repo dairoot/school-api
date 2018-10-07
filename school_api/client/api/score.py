@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 
 from bs4 import BeautifulSoup
-from requests import RequestException
+from requests import RequestException, TooManyRedirects
 
 from school_api.client.api.base import BaseSchoolApi
 from school_api.client.api.utils import get_alert_tip
@@ -24,8 +24,11 @@ class Score(BaseSchoolApi):
 
         try:
             view_state = self._get_view_state(score_url, **kwargs)
+        except TooManyRedirects:
+            msg = '可能是成绩接口地址不对，请尝试更改use_api值为 0、1或2'
+            raise ScoreException(self.code, msg)
         except RequestException:
-            msg = '获取成绩请求参数失败, 或许是接口地址不对，请尝试更改use_api值为 0、1或2'
+            msg = '获取成绩请求参数失败'
             raise ScoreException(self.code, msg)
 
         payload = {
@@ -101,12 +104,12 @@ class ScoreParse():
     def get_score(self, year, term):
         ''' 返回成绩信息json格式 '''
         try:
+            if not self.score_info:
+                raise KeyError
             if year:
                 if term:
                     return self.score_info[year][term]
                 return self.score_info[year]
-            if not self.score_info:
-                raise KeyError
         except KeyError:
             raise ScoreException(self.code, '暂无成绩信息')
 
