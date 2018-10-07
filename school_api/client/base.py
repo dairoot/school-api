@@ -130,6 +130,9 @@ class BaseUserClient(LoginManagement):
         self.school.priority_porxy = True
         self.base_url = self.school.lan_url or self.base_url
         self._proxy = self.school.proxies
+        self._http.headers.update({
+            'Referer': self.base_url + self.school.login_url
+        })
 
     def get_view_state(self, url_suffix, **kwargs):
         """ 获取页面 view_state 值"""
