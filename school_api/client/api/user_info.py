@@ -46,7 +46,10 @@ class UserlInfoParse():
         class_name = table.find(id="lbl_xzb").text
         faculty = table.find(id="lbl_xy").text
         specialty = table.find(id="lbl_zymc").text
-        hometown = table.find(id="lbl_lydq").text
+
+        lbl_lydq = table.find(id="lbl_lydq")
+        hometown = lbl_lydq.text if lbl_lydq else table.find(id="lydq").text
+
         enrol_time = table.find(id="lbl_rxrq").text
         id_card = table.find(id="lbl_sfzh").text
         self.data = {
