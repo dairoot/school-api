@@ -11,7 +11,7 @@ with open('README.md', 'rb') as f:
 setup(
     name="School-Api",
     author="dairoot",
-    version="1.2.1",
+    version="1.2.2",
     license='MIT',
     author_email="623815825@qq.com",
     description="School SDK for Python",
@@ -24,6 +24,7 @@ setup(
     zip_safe=False,
 
     install_requires=[
+        'six',
         'requests',
         'redis',
         'bs4',
@@ -41,6 +42,7 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ]
