@@ -12,3 +12,5 @@ CheckCode.gif
 *.egg-info
 build
 dist
+
+doc/node_modules/
