@@ -1,0 +1,608 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>模块参数 · School-api</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../api/" />
+    
+    
+    <link rel="prev" href="简易示例.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    快速开始
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1.1" data-path="简易示例.html">
+            
+                <a href="简易示例.html">
+            
+                    
+                    简易示例
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.1.2" data-path="模块参数.html">
+            
+                <a href="模块参数.html">
+            
+                    
+                    模块参数
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../api/">
+            
+                <a href="../api/">
+            
+                    
+                    接口方法
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../api/登陆接口.html">
+            
+                <a href="../api/登陆接口.html">
+            
+                    
+                    登陆方法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../api/课表接口.html">
+            
+                <a href="../api/课表接口.html">
+            
+                    
+                    课表接口
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../api/成绩接口.html">
+            
+                <a href="../api/成绩接口.html">
+            
+                    
+                    成绩接口
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../api/用户信息.html">
+            
+                <a href="../api/用户信息.html">
+            
+                    
+                    用户信息接口
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="../api/教学场地.html">
+            
+                <a href="../api/教学场地.html">
+            
+                    
+                    教学场地课表
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    进阶用法
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../usage/异常处理.html">
+            
+                <a href="../usage/异常处理.html">
+            
+                    
+                    异常处理
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    参考例子
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../example/网页api.html">
+            
+                <a href="../example/网页api.html">
+            
+                    
+                    网页api
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../example/公众号.html">
+            
+                <a href="../example/公众号.html">
+            
+                    
+                    公众号
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            本书使用 GitBook 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >模块参数</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h2 id="&#x6A21;&#x5757;&#x53C2;&#x6570;">&#x6A21;&#x5757;&#x53C2;&#x6570;</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">&#x5B57;&#x6BB5;</th>
+<th style="text-align:left">&#x9ED8;&#x8BA4;&#x503C;</th>
+<th style="text-align:left">&#x7C7B;&#x578B;</th>
+<th style="text-align:left">&#x63CF;&#x8FF0;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">url</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">String</td>
+<td style="text-align:left">&#x6559;&#x52A1;&#x7CFB;&#x7EDF;&#x5730;&#x5740;(<code>&#x5FC5;&#x586B;</code>)</td>
+</tr>
+<tr>
+<td style="text-align:left">name</td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left">String</td>
+<td style="text-align:left">&#x5B66;&#x6821;&#x540D;&#x79F0;</td>
+</tr>
+<tr>
+<td style="text-align:left">code</td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left">String</td>
+<td style="text-align:left">&#x5B66;&#x6821;&#x82F1;&#x6587;&#x7F29;&#x5199;</td>
+</tr>
+<tr>
+<td style="text-align:left">login_url_path</td>
+<td style="text-align:left">/default2.aspx</td>
+<td style="text-align:left">String</td>
+<td style="text-align:left">&#x767B;&#x5F55;&#x5730;&#x5740;&#x8DEF;&#x5F84;</td>
+</tr>
+<tr>
+<td style="text-align:left">lan_url</td>
+<td style="text-align:left">None</td>
+<td style="text-align:left">String</td>
+<td style="text-align:left">&#x5185;&#x7F51;&#x5730;&#x5740;</td>
+</tr>
+<tr>
+<td style="text-align:left">exist_verify</td>
+<td style="text-align:left">True</td>
+<td style="text-align:left">Bool</td>
+<td style="text-align:left">&#x662F;&#x5426;&#x5B58;&#x5728;&#x9A8C;&#x8BC1;&#x7801;</td>
+</tr>
+<tr>
+<td style="text-align:left">use_ex_handle</td>
+<td style="text-align:left">True</td>
+<td style="text-align:left">Bool</td>
+<td style="text-align:left">&#x662F;&#x5426;&#x4F7F;&#x7528;&#x5F02;&#x5E38;&#x5904;&#x7406;</td>
+</tr>
+<tr>
+<td style="text-align:left">priority_porxy</td>
+<td style="text-align:left">False</td>
+<td style="text-align:left">Bool</td>
+<td style="text-align:left">&#x662F;&#x5426;&#x4F18;&#x5148;&#x4F7F;&#x7528;&#x4EE3;&#x7406;</td>
+</tr>
+<tr>
+<td style="text-align:left">proxies</td>
+<td style="text-align:left">None</td>
+<td style="text-align:left">Json</td>
+<td style="text-align:left">&#x4EE3;&#x7406;&#x5730;&#x5740;</td>
+</tr>
+<tr>
+<td style="text-align:left">url_endpoint</td>
+<td style="text-align:left"><code>&#x7565;</code></td>
+<td style="text-align:left">Json</td>
+<td style="text-align:left">&#x5B66;&#x6821;&#x63A5;&#x53E3;&#x5730;&#x5740;&#x5217;&#x8868;</td>
+</tr>
+<tr>
+<td style="text-align:left">class_time_list</td>
+<td style="text-align:left"><code>&#x7565;</code></td>
+<td style="text-align:left">Json</td>
+<td style="text-align:left">&#x4E0A;&#x8BFE;&#x65F6;&#x95F4;&#x5217;&#x8868;</td>
+</tr>
+<tr>
+<td style="text-align:left">timeout</td>
+<td style="text-align:left">10</td>
+<td style="text-align:left">Int</td>
+<td style="text-align:left">&#x5168;&#x5C40;&#x8BF7;&#x6C42;&#x5EF6;&#x65F6;</td>
+</tr>
+<tr>
+<td style="text-align:left">login_view_state</td>
+<td style="text-align:left">{}</td>
+<td style="text-align:left">Json</td>
+<td style="text-align:left">&#x5B66;&#x6821;&#x767B;&#x5F55;&#x9875;&#x9762;&#x7684;view_state(<code>&#x552F;&#x4E00;</code>)</td>
+</tr>
+<tr>
+<td style="text-align:left">session</td>
+<td style="text-align:left">MemoryStorage</td>
+<td style="text-align:left">Object</td>
+<td style="text-align:left">&#x7F13;&#x5B58;&#x5DE5;&#x5177;(&#x63A8;&#x8350;&#x4F7F;&#x7528;redis)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>url_endpoint</code> &#x5B57;&#x6BB5; &#x5B66;&#x6821;&#x63A5;&#x53E3;&#x5730;&#x5740;&#x5217;&#x8868;</li>
+</ul>
+<pre><code class="lang-python">[
+    {
+        <span class="hljs-comment"># &#x5B66;&#x751F;&#x63A5;&#x53E3;&#x5730;&#x5740;</span>
+        <span class="hljs-string">&quot;HOME_URL&quot;</span>: <span class="hljs-string">&quot;/xs_main.aspx?xh=&quot;</span>,  <span class="hljs-comment"># &#x9996;&#x9875;&#x63A5;&#x53E3;&#x5730;&#x5740;</span>
+        <span class="hljs-string">&quot;SCORE_URL&quot;</span>: [<span class="hljs-string">&quot;/xscj_gc.aspx?xh=&quot;</span>, <span class="hljs-string">&quot;/Xscjcx.aspx?xh=&quot;</span>, <span class="hljs-string">&quot;/xscjcx.aspx?xh=&quot;</span>],  <span class="hljs-comment"># &#x6210;&#x7EE9;&#x63A5;&#x53E3;&#xFF0C;&#x53EF;&#x8C03;&#x6574;&#x5176;&#x63A5;&#x53E3;&#x987A;&#x5E8F;</span>
+        <span class="hljs-string">&quot;INFO_URL&quot;</span>: <span class="hljs-string">&quot;/xsgrxx.aspx?gnmkdm=N121501&amp;xh=&quot;</span>,  <span class="hljs-comment"># &#x7528;&#x6237;&#x4FE1;&#x606F;&#x63A5;&#x53E3;</span>
+        <span class="hljs-string">&quot;SCHEDULE_URL&quot;</span>: [  <span class="hljs-comment"># &#x8BFE;&#x8868;&#x63A5;&#x53E3;&#x5730;&#x5740;</span>
+            <span class="hljs-string">&quot;/xskbcx.aspx?gnmkdm=N121603&amp;xh=&quot;</span>,  <span class="hljs-comment"># &#x4E2A;&#x4EBA;&#x8BFE;&#x8868;&#x63A5;&#x53E3;</span>
+            <span class="hljs-string">&quot;/tjkbcx.aspx?gnmkdm=N121601&amp;xh=&quot;</span>,  <span class="hljs-comment"># &#x73ED;&#x7EA7;&#x8BFE;&#x8868;&#x63A5;&#x53E3;</span>
+        ],
+    },
+    {
+        <span class="hljs-comment"># &#x6559;&#x5E08;&#x63A5;&#x53E3;&#x5730;&#x5740;</span>
+        <span class="hljs-string">&quot;HOME_URL&quot;</span>: <span class="hljs-string">&quot;/js_main.aspx?xh=08020&quot;</span>,
+        <span class="hljs-string">&quot;INFO_URL&quot;</span>: <span class="hljs-string">&quot;/lw_jsxx.aspx?gnmkdm=N122502&amp;zgh=&quot;</span>,
+        <span class="hljs-string">&quot;SCHEDULE_URL&quot;</span>: [<span class="hljs-string">&quot;&quot;</span>, <span class="hljs-string">&quot;/jstjkbcx.aspx?gnmkdm=N122303&amp;zgh=&quot;</span>],
+    },
+    {
+        <span class="hljs-comment"># &#x90E8;&#x95E8;&#x6559;&#x5E08;&#x63A5;&#x53E3;&#x5730;&#x5740;</span>
+        <span class="hljs-string">&quot;HOME_URL&quot;</span>: <span class="hljs-string">&quot;/bm_main.aspx?xh=&quot;</span>,
+        <span class="hljs-string">&quot;SCHEDULE_URL&quot;</span>: [<span class="hljs-string">&quot;&quot;</span>, <span class="hljs-string">&quot;/tjkbcx.aspx?gnmkdm=N120313&amp;xh=&quot;</span>],
+        <span class="hljs-string">&quot;PLACE_SCHEDULE_URL&quot;</span>: <span class="hljs-string">&quot;/kbcx_jxcd.aspx?gnmkdm=N120314&amp;xh=&quot;</span>,
+    },
+]
+</code></pre>
+<ul>
+<li><code>class_time_list</code> &#x5B57;&#x6BB5; &#x4E0A;&#x8BFE;&#x65F6;&#x95F4;&#x5217;&#x8868;</li>
+</ul>
+<pre><code class="lang-python">[
+    [<span class="hljs-string">&quot;8:30&quot;</span>, <span class="hljs-string">&quot;9:15&quot;</span>],  <span class="hljs-comment"># &#x7B2C;&#x4E00;&#x8282;&#x8BFE;&#x4E0A;&#x8BFE;&#x65F6;&#x95F4;&#x6BB5;</span>
+    [<span class="hljs-string">&quot;9&#xFF1A;20&quot;</span>, <span class="hljs-string">&quot;10:05&quot;</span>],
+    [<span class="hljs-string">&quot;10:25&quot;</span>, <span class="hljs-string">&quot;11:10&quot;</span>],
+    [<span class="hljs-string">&quot;11:15&quot;</span>, <span class="hljs-string">&quot;12:00&quot;</span>],
+    [<span class="hljs-string">&quot;14:40&quot;</span>, <span class="hljs-string">&quot;15:25&quot;</span>],
+    [<span class="hljs-string">&quot;15:30&quot;</span>, <span class="hljs-string">&quot;16:15&quot;</span>],
+    [<span class="hljs-string">&quot;16:30&quot;</span>, <span class="hljs-string">&quot;17:15&quot;</span>],
+    [<span class="hljs-string">&quot;17:20&quot;</span>, <span class="hljs-string">&quot;18:05&quot;</span>],
+    [<span class="hljs-string">&quot;19:30&quot;</span>, <span class="hljs-string">&quot;20:15&quot;</span>],
+    [<span class="hljs-string">&quot;20:20&quot;</span>, <span class="hljs-string">&quot;21:05&quot;</span>]
+]
+</code></pre>
+<ul>
+<li><strong>&#x57FA;&#x672C;&#x7684;&#x53C2;&#x6570;&#x914D;&#x7F6E;</strong></li>
+</ul>
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> school_api <span class="hljs-keyword">import</span> SchoolClient
+conf = {
+    <span class="hljs-string">&quot;url&quot;</span>: <span class="hljs-string">&apos;http://210.38.137.126:8016&apos;</span>,
+    <span class="hljs-string">&apos;name&apos;</span>: <span class="hljs-string">&apos;&#x5E7F;&#x4E1C;&#x79D1;&#x6280;&#x5B66;&#x9662;&apos;</span>,
+    <span class="hljs-string">&apos;code&apos;</span>: <span class="hljs-string">&apos;gdst&apos;</span>,
+    <span class="hljs-string">&apos;login_url_path&apos;</span>: <span class="hljs-string">&apos;/default2.aspx&apos;</span>,
+    <span class="hljs-string">&apos;exist_verify&apos;</span>: <span class="hljs-keyword">True</span>
+}
+<span class="hljs-comment"># &#x6CE8;&#x518C;&#x4E00;&#x4E2A;&#x5B66;&#x6821;</span>
+school = SchoolClient(**conf)
+</code></pre>
+<ul>
+<li><strong>&#x4EE3;&#x7406;&#x8BBF;&#x95EE;</strong></li>
+</ul>
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> school_api <span class="hljs-keyword">import</span> SchoolClient
+conf = {
+    <span class="hljs-string">&quot;url&quot;</span>: <span class="hljs-string">&apos;http://210.38.137.126:8016&apos;</span>,
+    <span class="hljs-string">&quot;lan_url&quot;</span>: <span class="hljs-string">&quot;172.16.1.1&quot;</span>,  <span class="hljs-comment"># &#x5916;&#x7F51;&#x8BF7;&#x6C42;&#x5931;&#x8D25;&#x65F6;&#xFF0C;&#x4F1A;&#x5207;&#x6362;&#x5230;&#x4EE3;&#x7406;&#x8BBF;&#x95EE;&#x5185;&#x7F51;</span>
+    <span class="hljs-string">&quot;proxies&quot;</span>: {<span class="hljs-string">&quot;http&quot;</span>: <span class="hljs-string">&quot;http://xxxx:xxxx@xxxx.xxxx.xxxx:xxxx/&quot;</span>},
+    <span class="hljs-string">&quot;priority_porxy&quot;</span>: <span class="hljs-keyword">False</span>  <span class="hljs-comment"># &#x503C;&#x4E3A;True&#x65F6;&#xFF0C;&#x5219;&#x76F4;&#x63A5;&#x4F7F;&#x7528;&#x4EE3;&#x7406;&#x8BBF;&#x95EE;lan_url&#x5730;&#x5740;</span>
+}
+school = SchoolClient(**conf)
+</code></pre>
+<ul>
+<li><strong>redis&#x7F13;&#x5B58;&#x4F7F;&#x7528;</strong></li>
+</ul>
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> redis <span class="hljs-keyword">import</span> Redis
+<span class="hljs-keyword">from</span> school_api <span class="hljs-keyword">import</span> SchoolClient
+<span class="hljs-keyword">from</span> school_api.session.redisstorage <span class="hljs-keyword">import</span> RedisStorage
+<span class="hljs-comment"># redis &#x7F13;&#x5B58;&#x6570;&#x636E;&#xFF1A;&#x7528;&#x6237;&#x767B;&#x5F55;&#x4F1A;&#x8BDD;(&#x6709;&#x6548;&#x65F6;&#x957F;: 7200)&#xFF0C;&#x548C;&#x767B;&#x5F55;&#x9875;&#x9762;&#x7684;viewstate&#x503C;(&#x6709;&#x6548;&#x65F6;&#x957F;: &#x6C38;&#x4E45;)</span>
+redis = Redis()
+session = RedisStorage(redis)
+conf = {
+    <span class="hljs-string">&quot;url&quot;</span>: <span class="hljs-string">&apos;http://210.38.137.126:8016&apos;</span>,
+    <span class="hljs-string">&quot;session&quot;</span>: session
+}
+school = SchoolClient(**conf)
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="简易示例.html" class="navigation navigation-prev " aria-label="Previous page: 简易示例">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../api/" class="navigation navigation-next " aria-label="Next page: 接口方法">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"模块参数","level":"1.1.2","depth":2,"next":{"title":"接口方法","level":"1.2","depth":1,"path":"api/index.md","ref":"api/index.md","articles":[{"title":"登陆方法","level":"1.2.1","depth":2,"path":"api/登陆接口.md","ref":"api/登陆接口.md","articles":[]},{"title":"课表接口","level":"1.2.2","depth":2,"path":"api/课表接口.md","ref":"api/课表接口.md","articles":[]},{"title":"成绩接口","level":"1.2.3","depth":2,"path":"api/成绩接口.md","ref":"api/成绩接口.md","articles":[]},{"title":"用户信息接口","level":"1.2.4","depth":2,"path":"api/用户信息.md","ref":"api/用户信息.md","articles":[]},{"title":"教学场地课表","level":"1.2.5","depth":2,"path":"api/教学场地.md","ref":"api/教学场地.md","articles":[]}]},"previous":{"title":"简易示例","level":"1.1.1","depth":2,"path":"home/简易示例.md","ref":"home/简易示例.md","articles":[]},"dir":"ltr"},"config":{"plugins":["github"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/dairoot/school-api"},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"School-api","language":"zh-hans","links":{"gitbook":false},"gitbook":"*"},"file":{"path":"home/模块参数.md","mtime":"2018-10-14T12:25:36.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-10-14T12:34:26.487Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

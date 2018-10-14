@@ -1,0 +1,502 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>成绩接口 · School-api</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="用户信息.html" />
+    
+    
+    <link rel="prev" href="课表接口.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    快速开始
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1.1" data-path="../home/简易示例.html">
+            
+                <a href="../home/简易示例.html">
+            
+                    
+                    简易示例
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.1.2" data-path="../home/模块参数.html">
+            
+                <a href="../home/模块参数.html">
+            
+                    
+                    模块参数
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    接口方法
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="登陆接口.html">
+            
+                <a href="登陆接口.html">
+            
+                    
+                    登陆方法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="课表接口.html">
+            
+                <a href="课表接口.html">
+            
+                    
+                    课表接口
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.3" data-path="成绩接口.html">
+            
+                <a href="成绩接口.html">
+            
+                    
+                    成绩接口
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="用户信息.html">
+            
+                <a href="用户信息.html">
+            
+                    
+                    用户信息接口
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="教学场地.html">
+            
+                <a href="教学场地.html">
+            
+                    
+                    教学场地课表
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    进阶用法
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../usage/异常处理.html">
+            
+                <a href="../usage/异常处理.html">
+            
+                    
+                    异常处理
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    参考例子
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../example/网页api.html">
+            
+                <a href="../example/网页api.html">
+            
+                    
+                    网页api
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../example/公众号.html">
+            
+                <a href="../example/公众号.html">
+            
+                    
+                    公众号
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            本书使用 GitBook 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >成绩接口</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h2 id="&#x6210;&#x7EE9;&#x63A5;&#x53E3;-getscore">&#x6210;&#x7EE9;&#x63A5;&#x53E3;: <code>get_score</code></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">&#x5B57;&#x6BB5;</th>
+<th style="text-align:left">&#x9ED8;&#x8BA4;&#x503C;</th>
+<th style="text-align:left">&#x7C7B;&#x578B;</th>
+<th style="text-align:left">&#x63CF;&#x8FF0;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">score_year</td>
+<td style="text-align:left">None</td>
+<td style="text-align:left">String</td>
+<td style="text-align:left">&#x5B66;&#x5E74;</td>
+</tr>
+<tr>
+<td style="text-align:left">score_term</td>
+<td style="text-align:left">None</td>
+<td style="text-align:left">String</td>
+<td style="text-align:left">&#x5B66;&#x671F;</td>
+</tr>
+<tr>
+<td style="text-align:left">use_api</td>
+<td style="text-align:left">0</td>
+<td style="text-align:left">Int</td>
+<td style="text-align:left">&#x4F7F;&#x7528;&#x7684;&#x63A5;&#x53E3; [0,1,2]</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>&#x8BF7;&#x6C42;&#x793A;&#x4F8B;</strong></li>
+</ul>
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> school_api <span class="hljs-keyword">import</span> SchoolClient
+school = SchoolClient(<span class="hljs-string">&apos;http://210.38.137.126:8016&apos;</span>)
+student = school.user_login(<span class="hljs-string">&apos;xxxxxxxx&apos;</span>, <span class="hljs-string">&apos;xxxx&apos;</span>)
+<span class="hljs-comment"># &#x83B7;&#x53D6;&#x5927;&#x5B66;&#x671F;&#x95F4;&#x6240;&#x6709;&#x6210;&#x7EE9;</span>
+student.get_score()
+<span class="hljs-comment"># &#x83B7;&#x53D6; 2017-2018&#x5B66;&#x5E74; &#x6210;&#x7EE9;</span>
+student.get_score(score_year=<span class="hljs-string">&apos;2017-2018&apos;</span>)
+<span class="hljs-comment"># &#x83B7;&#x53D6; 2017-2018&#x5B66;&#x5E74; &#x7B2C;&#x4E00;&#x5B66;&#x671F; &#x6210;&#x7EE9;</span>
+student.get_score(score_year=<span class="hljs-string">&apos;2017-2018&apos;</span>, score_term=<span class="hljs-string">&apos;1&apos;</span>)
+</code></pre>
+<ul>
+<li><strong>&#x8FD4;&#x56DE;&#x6570;&#x636E;</strong></li>
+</ul>
+<pre><code class="lang-json">{
+<span class="hljs-string">&quot;2016-2017&quot;</span>: {
+    <span class="hljs-string">&quot;1&quot;</span>: [{<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">3.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">68.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x7BA1;&#x7406;&#x5B66;&#x539F;&#x7406;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">1.8</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">3.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">84.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x79BB;&#x6563;&#x6570;&#x5B66;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.4</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">4.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">64.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x6570;&#x636E;&#x7ED3;&#x6784;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">1.4</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">4.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">68.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x6570;&#x636E;&#x5E93;&#x539F;&#x7406;&#x53CA;&#x5E94;&#x7528;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">1.8</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">3.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">78.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x5927;&#x5B66;&#x82F1;&#x8BED;3&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">2.8</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">1.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">79.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x745C;&#x4F3D;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">2.9</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">2.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">68.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x9A6C;&#x514B;&#x601D;&#x4E3B;&#x4E49;&#x57FA;&#x672C;&#x539F;&#x7406;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">1.8</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">0.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">80.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x5F62;&#x52BF;&#x4E0E;&#x653F;&#x7B56;&#x6559;&#x80B2;2&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.0</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">0.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">84.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x521B;&#x65B0;&#x521B;&#x4E1A;&#x6559;&#x80B2;1&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.4</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">1.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-string">&quot;&#x4E2D;&#x7B49;&quot;</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x6570;&#x636E;&#x7ED3;&#x6784;&#x8BFE;&#x7A0B;&#x8BBE;&#x8BA1;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">2.5</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">1.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-string">&quot;&#x4F18;&#x79C0;&quot;</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x6570;&#x636E;&#x5E93;&#x539F;&#x7406;&#x53CA;&#x5E94;&#x7528;&#x8BFE;&#x7A0B;&#x8BBE;&#x8BA1;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">4.5</span>}],
+    <span class="hljs-string">&quot;2&quot;</span>: [{<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">3.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">92.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x4F1A;&#x8BA1;&#x5B66;&#x539F;&#x7406;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">4.2</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">3.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">78.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;Java&#x7A0B;&#x5E8F;&#x8BBE;&#x8BA1;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">2.8</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">3.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">69.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x8FD0;&#x7B79;&#x5B66;&#x2161;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">1.9</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">3.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">86.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x6982;&#x7387;&#x8BBA;&#x4E0E;&#x6570;&#x7406;&#x7EDF;&#x8BA1;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.6</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">3.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">78.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x5927;&#x5B66;&#x82F1;&#x8BED;4&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">2.8</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">1.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">86.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x6B66;&#x672F;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.6</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">4.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">88.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x6BDB;&#x6CFD;&#x4E1C;&#x601D;&#x60F3;&#x548C;&#x4E2D;&#x56FD;&#x7279;&#x8272;&#x793E;&#x4F1A;&#x4E3B;&#x4E49;&#x7406;&#x8BBA;&#x4F53;&#x7CFB;&#x6982;&#x8BBA;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.8</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">1.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">85.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;Java&#x7A0B;&#x5E8F;&#x8BBE;&#x8BA1;&#x8BFE;&#x7A0B;&#x8BBE;&#x8BA1;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.5</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">1.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-string">&quot;&#x826F;&#x597D;&quot;</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x751F;&#x4EA7;&#x8BA4;&#x8BC6;&#x5B9E;&#x4E60;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.5</span>}]
+},
+<span class="hljs-string">&quot;2017-2018&quot;</span>: {
+    <span class="hljs-string">&quot;1&quot;</span>: [{<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">3.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">84.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x7ECF;&#x6D4E;&#x5B66;&#x539F;&#x7406;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.4</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">3.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">81.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.1</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">3.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">96.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x4FE1;&#x606F;&#x7CFB;&#x7EDF;&#x5206;&#x6790;&#x4E0E;&#x8BBE;&#x8BA1;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">4.6</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">4.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">76.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x8BA1;&#x7B97;&#x673A;&#x7F51;&#x7EDC;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">2.6</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">2.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">81.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x7269;&#x8054;&#x7F51;&#x6982;&#x8BBA;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.1</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">0.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">88.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x5F62;&#x52BF;&#x4E0E;&#x653F;&#x7B56;&#x6559;&#x80B2;3&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.8</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">1.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">95.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x4F01;&#x4E1A;&#x7ECF;&#x8425;&#x6A21;&#x62DF;&#x5B9E;&#x8DF5;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">4.5</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">1.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-string">&quot;&#x826F;&#x597D;&quot;</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x8BA1;&#x7B97;&#x673A;&#x7F51;&#x7EDC;&#x5E94;&#x7528;&#x8BBE;&#x8BA1;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.5</span>}], 
+    <span class="hljs-string">&quot;2&quot;</span>: [{<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">3.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">84.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;Web&#x5F00;&#x53D1;&#x6280;&#x672F;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.4</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">3.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">88.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x7BA1;&#x7406;&#x4FE1;&#x606F;&#x7CFB;&#x7EDF;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.8</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">2.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">92.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x4FE1;&#x606F;&#x8D44;&#x6E90;&#x7EC4;&#x7EC7;&#x4E0E;&#x7BA1;&#x7406;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">4.2</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">0.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">85.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x5F62;&#x52BF;&#x4E0E;&#x653F;&#x7B56;&#x6559;&#x80B2;4&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.5</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">0.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">90.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x521B;&#x65B0;&#x521B;&#x4E1A;&#x6559;&#x80B2;2&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">4.0</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">1.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-string">&quot;&#x826F;&#x597D;&quot;</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;Web&#x5F00;&#x53D1;&#x6280;&#x672F;&#x8BFE;&#x7A0B;&#x5B9E;&#x4E60;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.5</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">2.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">77.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x601D;&#x653F;&#x8BFE;&#x5B9E;&#x8DF5;&#x73AF;&#x8282;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">2.7</span>}]
+}, 
+<span class="hljs-string">&quot;2015-2016&quot;</span>: {
+    <span class="hljs-string">&quot;1&quot;</span>: [{<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">3.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">65.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x7A0B;&#x5E8F;&#x8BBE;&#x8BA1;&#x57FA;&#x7840;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">1.5</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">1.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-string">&quot;&#x826F;&#x597D;&quot;</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x8BA1;&#x7B97;&#x673A;&#x57FA;&#x7840;&#x5B9E;&#x8DF5;(&#x5B9E;&#x9A8C;)&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.5</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">1.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-string">&quot;&#x826F;&#x597D;&quot;</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x4FE1;&#x606F;&#x7BA1;&#x7406;&#x4E0E;&#x4FE1;&#x606F;&#x7CFB;&#x7EDF;&#x4E13;&#x4E1A;&#x5BFC;&#x8BBA;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.5</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">4.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">66.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x9AD8;&#x7B49;&#x6570;&#x5B66;&#x2160;x1&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">1.6</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">3.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">76.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x5927;&#x5B66;&#x82F1;&#x8BED;1&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">2.6</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">1.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">83.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x666E;&#x62C9;&#x63D0;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.3</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">3.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">75.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x601D;&#x60F3;&#x9053;&#x5FB7;&#x4FEE;&#x517B;&#x4E0E;&#x6CD5;&#x5F8B;&#x57FA;&#x7840;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">2.5</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">0.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">89.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x5F62;&#x52BF;&#x4E0E;&#x653F;&#x7B56;&#x6559;&#x80B2;1&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.9</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">0.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">90.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x9752;&#x5E74;&#x5B66;&#x751F;&#x5065;&#x5EB7;&#x6559;&#x80B2;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">4.0</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">1.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-string">&quot;&#x826F;&#x597D;&quot;</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x7A0B;&#x5E8F;&#x8BBE;&#x8BA1;&#x57FA;&#x7840;&#x8BFE;&#x7A0B;&#x8BBE;&#x8BA1;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.5</span>}], 
+    <span class="hljs-string">&quot;2&quot;</span>: [{<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">2.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">60.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x9762;&#x5411;&#x5BF9;&#x8C61;&#x7A0B;&#x5E8F;&#x8BBE;&#x8BA1;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">1.0</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">5.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">60.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x7535;&#x8DEF;&#x4E0E;&#x7535;&#x5B50;&#x6280;&#x672F;&#x57FA;&#x7840;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">1.0</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">5.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">74.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x9AD8;&#x7B49;&#x6570;&#x5B66;&#x2160;x2&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">2.4</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">1.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">63.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x7EBF;&#x6027;&#x4EE3;&#x6570;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">1.3</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">3.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">80.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x5927;&#x5B66;&#x82F1;&#x8BED;2&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.0</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">1.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">80.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x5065;&#x7F8E;&#x64CD;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.0</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">2.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">91.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x4E2D;&#x56FD;&#x8FD1;&#x73B0;&#x4EE3;&#x53F2;&#x7EB2;&#x8981;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">4.1</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">2.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">89.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x519B;&#x4E8B;&#x7406;&#x8BBA;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.9</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">0.5</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">83.0</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x5927;&#x5B66;&#x751F;&#x5FC3;&#x7406;&#x5065;&#x5EB7;&#x6559;&#x80B2;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.3</span>}, {<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-number">1.0</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-string">&quot;&#x826F;&#x597D;&quot;</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x9762;&#x5411;&#x5BF9;&#x8C61;&#x7A0B;&#x5E8F;&#x8BBE;&#x8BA1;&#x5B9E;&#x8DF5;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-number">3.5</span>}]
+}
+}
+</code></pre>
+<ul>
+<li><strong>&#x6570;&#x636E;&#x683C;&#x5F0F;&#x5206;&#x6790;</strong></li>
+</ul>
+<pre><code class="lang-python">{
+    <span class="hljs-string">&quot;&#x5B66;&#x5E74;1&quot;</span>:{<span class="hljs-string">&quot;&#x5B66;&#x671F;1&quot;</span>: <span class="hljs-string">&quot;&#x6210;&#x7EE9;&#x6570;&#x636E;&quot;</span>, <span class="hljs-string">&quot;&#x5B66;&#x671F;2&quot;</span>: <span class="hljs-string">&quot;&#x6210;&#x7EE9;&#x6570;&#x636E;&quot;</span>},
+    <span class="hljs-string">&quot;&#x5B66;&#x5E74;2&quot;</span>:{<span class="hljs-string">&quot;&#x5B66;&#x671F;1&quot;</span>: <span class="hljs-string">&quot;&#x6210;&#x7EE9;&#x6570;&#x636E;&quot;</span>, <span class="hljs-string">&quot;&#x5B66;&#x671F;2&quot;</span>: <span class="hljs-string">&quot;&#x6210;&#x7EE9;&#x6570;&#x636E;&quot;</span>},
+    <span class="hljs-string">&quot;&#x5B66;&#x5E74;3&quot;</span>:{<span class="hljs-string">&quot;&#x5B66;&#x671F;1&quot;</span>: <span class="hljs-string">&quot;&#x6210;&#x7EE9;&#x6570;&#x636E;&quot;</span>, <span class="hljs-string">&quot;&#x5B66;&#x671F;2&quot;</span>: <span class="hljs-string">&quot;&#x6210;&#x7EE9;&#x6570;&#x636E;&quot;</span>},
+    ...
+}
+<span class="hljs-comment"># &#x6210;&#x7EE9;&#x6570;&#x636E;</span>
+[<span class="hljs-string">&quot;&#x8BFE;&#x7A0B;1&#x6570;&#x636E;&quot;</span>, <span class="hljs-string">&quot;&#x8BFE;&#x7A0B;2&#x6570;&#x636E;&quot;</span>, <span class="hljs-string">&quot;&#x8BFE;&#x7A0B;3&#x6570;&#x636E;&quot;</span>, ...]
+<span class="hljs-comment"># &#x8BFE;&#x7A0B;&#x6570;&#x636E;</span>
+{<span class="hljs-string">&quot;credit&quot;</span>: <span class="hljs-string">&quot;&#x5B66;&#x5206;&quot;</span>, <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-string">&quot;&#x6210;&#x7EE9;&quot;</span>, <span class="hljs-string">&quot;lesson_name&quot;</span>: <span class="hljs-string">&quot;&#x8BFE;&#x7A0B;&#x540D;&#x79F0;&quot;</span>, <span class="hljs-string">&quot;point&quot;</span>: <span class="hljs-string">&quot;&#x7EE9;&#x70B9;&quot;</span>, <span class="hljs-string">&quot;bkcj&quot;</span>: <span class="hljs-string">&quot;&#x8865;&#x8003;&#x6210;&#x7EE9;&quot;</span>, <span class="hljs-string">&quot;cxcj&quot;</span>:<span class="hljs-string">&quot;&#x91CD;&#x4FEE;&#x6210;&#x7EE9;&quot;</span>}
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="课表接口.html" class="navigation navigation-prev " aria-label="Previous page: 课表接口">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="用户信息.html" class="navigation navigation-next " aria-label="Next page: 用户信息接口">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"成绩接口","level":"1.2.3","depth":2,"next":{"title":"用户信息接口","level":"1.2.4","depth":2,"path":"api/用户信息.md","ref":"api/用户信息.md","articles":[]},"previous":{"title":"课表接口","level":"1.2.2","depth":2,"path":"api/课表接口.md","ref":"api/课表接口.md","articles":[]},"dir":"ltr"},"config":{"plugins":["github"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/dairoot/school-api"},"sharing":{"facebook":false,"twitter":false,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"School-api","language":"zh-hans","links":{"gitbook":false},"gitbook":"*"},"file":{"path":"api/成绩接口.md","mtime":"2018-10-14T12:25:58.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-10-14T12:34:26.487Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
