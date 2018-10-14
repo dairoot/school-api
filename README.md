@@ -16,7 +16,7 @@ student = GdouApi.user_login('2014xxxx', 'xxxx', timeout=5)
 schedule_data = student.get_schedule()
 print(schedule_data)
 ```
-使用示例参见 [examples](examples/)
+[【阅读文档】](https://dairoot.github.io/school-api/) 使用示例参见 [examples](examples/)
 
 ## Api Function
 
