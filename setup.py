@@ -28,7 +28,7 @@ setup(
         'requests',
         'redis',
         'bs4',
-        'Image',
+        'pillow',
         'numpy'
     ],
     classifiers=[
