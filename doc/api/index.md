@@ -2,7 +2,7 @@
 
 | Api               |  描述         | 参数             |
 | :--------         | :-----        | :----           |
-| [user_login](api/登陆接口.md)        | 登陆函数      | account, password, user_type=1, use_session=True   |
+| [user_login](api/登陆接口.md)        | 登陆函数      | account, password, user_type=1, use_cookie=True   |
 | [get_schedule](api/课表接口.md)      | 课表查询      | schedule_year=None, schedule_term=None, schedule_type=None   |
 | [get_score](api/成绩接口.md)         | 成绩查询      | score_year=None, score_term=None, use_api=0   |
 | [get_info](api/用户信息.md)          | 用户信息查询  |          |

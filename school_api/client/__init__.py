@@ -17,14 +17,16 @@ class SchoolClient(BaseSchoolClient):
         :param account:  用户账号
         :param password: 用户密码
         :param user_type: 0.学生 1.教师 2.部门
-        :param use_session: 是否使用会话
+        :param use_cookie: 是否使用会话登陆
         :param requests模块参数
         return
         '''
-        use_session = kwargs.pop('use_session', True)
+        use_cookie = True
+        if not kwargs.pop('use_session', True) or not kwargs.pop('use_cookie', True):
+            use_cookie = False
         user_type = kwargs.pop('user_type', UserType.STUDENT)
         user = UserClient(self, account, password, user_type)
-        user = user.user_login(use_session, **kwargs)
+        user = user.user_login(use_cookie, **kwargs)
         return user
 
 
@@ -35,10 +37,10 @@ class UserClient(BaseUserClient):
     place_schedule = PlaceSchedule()
 
     @error_handle
-    def user_login(self, use_session, **kwargs):
+    def user_login(self, use_cookie, **kwargs):
         ''' 登录：通过SchoolClient类调用 '''
         login_session = None
-        if use_session:
+        if use_cookie:
             login_session = self.session_management()
 
         if login_session is None:
