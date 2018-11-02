@@ -4,7 +4,7 @@ from __future__ import absolute_import, unicode_literals
 from six.moves.urllib import parse
 from requests import RequestException
 from school_api.client.api.base import BaseSchoolApi
-from school_api.client.api.utils import get_alert_tip
+from school_api.client.api.utils import get_alert_tip, get_view_state_from_html
 from school_api.check_code import CHECK_CODE
 from school_api.exceptions import IdentityException, CheckCodeException, LoginException
 from school_api.utils import to_binary
@@ -31,11 +31,24 @@ class Login(BaseSchoolApi):
 
         self._handle_login_result(res, *args, **kwargs)
 
+    def _get_login_payload(self, login_url, **kwargs):
+        ''' 获取登录页面的 请求参数'''
+        try:
+            kwargs['timeout'] = 3
+            res = self._get(login_url, **kwargs)
+        except RequestException:
+
+            # 首次请求可能出现 Connection aborted
+            res = self._get(login_url, **kwargs)
+        view_state = get_view_state_from_html(res.text)
+
+        return {'__VIEWSTATE': view_state}
+
     def _get_api(self, login_url, exist_verify, **kwargs):
         # 登录请求
         code = ''
         login_types = ['学生', '教师', '部门']
-        view_state = self._get_login_view_state(**kwargs)
+        login_payload = self._get_login_payload(login_url, **kwargs)
         if exist_verify:
             res = self._get('/CheckCode.aspx')
             if res.content[:7] != to_binary('GIF89aH'):
@@ -44,7 +57,6 @@ class Login(BaseSchoolApi):
 
         account = self.account.encode('gb2312')
         payload = {
-            '__VIEWSTATE': view_state,
             'txtUserName': account,
             'TextBox1': account,
             'TextBox2': self.password,
@@ -53,6 +65,7 @@ class Login(BaseSchoolApi):
             'RadioButtonList1': login_types[self.user_type].encode('gb2312'),
             'Button1': ' 登 录 '.encode('gb2312')
         }
+        payload.update(login_payload)
 
         res = self._post(login_url, data=payload,
                          allow_redirects=False, **kwargs)

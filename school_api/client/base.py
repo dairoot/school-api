@@ -42,13 +42,7 @@ class BaseSchoolClient(object):
         }
         storage = kwargs.get('session', MemoryStorage)
         self.session = storage(self.school['code'])
-        self.init_login_view_state(kwargs.get('login_view_state', {}))
         self.school = ObjectDict(self.school)
-
-    def init_login_view_state(self, login_view_state):
-        """ 初始化  login_view_state"""
-        for url_key, view_state in login_view_state.items():
-            self.session.set('login_view:' + url_key, view_state)
 
 
 class BaseUserClient(LoginManagement):
@@ -142,11 +136,3 @@ class BaseUserClient(LoginManagement):
             raise requests.TooManyRedirects
 
         return get_view_state_from_html(res.text)
-
-    def get_login_view_state(self, **kwargs):
-        ''' 获取登录的 view_state 值'''
-        base_key = 'login_view:' + self.base_url + self.school.login_url
-        if not self.session.get(base_key):
-            view_state = self.get_view_state(self.school.login_url, **kwargs)
-            self.session.set(base_key, view_state)
-        return self.session.get(base_key)
