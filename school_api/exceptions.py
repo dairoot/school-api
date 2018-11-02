@@ -14,7 +14,7 @@ class SchoolException(Exception):
         self.school_code = school_code
 
     def __repr__(self):
-        _repr = 'school_code:{school_code}, Error msage: {name}，{msg}'.format(
+        _repr = 'school_code:{school_code}, Error message: {name}，{msg}'.format(
             school_code=self.school_code,
             name=self.name,
             msg=self.errmsg
