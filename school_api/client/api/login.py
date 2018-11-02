@@ -71,6 +71,8 @@ class Login(BaseSchoolApi):
                     tip = self._get_login_result_tip(res.text)
                     if tip == '验证码不正确！！':
                         raise CheckCodeException(self.code, tip)
+                else:
+                    return True
             raise IdentityException(self.code, tip)
 
     def _get_login_result_tip(self, html):
