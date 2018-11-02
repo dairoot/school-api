@@ -16,10 +16,6 @@ class TestStudent(unittest.TestCase):
 
     conf = {
         'name': '广东科技学院',
-        'login_view_state': {           # 登录的view_state(可空)
-            'http://61.142.33.204/default2.aspx': 'dDw3OTkxMjIwNTU7Oz5vJ/yYUi9dD4fEnRUKesDFl8hEKA==',
-            'http://61.142.33.204/default4.aspx': 'dDwxMTE4MjQwNDc1Ozs+h4dTkZuJcYarQdE7xNFUBMsLO/w='
-        },
         'lan_url': 'http://172.16.1.8',  # 内网地址
         'login_url_path': '/default2.aspx',  # 登录地址
         'exist_verify': True,           # 是否存在验证码

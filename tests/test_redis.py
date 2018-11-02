@@ -24,10 +24,6 @@ class TestStudent(unittest.TestCase):
         'login_url_path': '/default2.aspx', # 登录地址
         # 'exist_verify': False,            # 是否存在验证码
         'session': session,
-        'login_view_state': {           # 登录的view_state(可空)
-            'http://61.142.33.204/default2.aspx': 'dDw3OTkxMjIwNTU7Oz5vJ/yYUi9dD4fEnRUKesDFl8hEKA==',
-            'http://61.142.33.204/default4.aspx': 'dDwxMTE4MjQwNDc1Ozs+MzFt0h81g6NGHTq1L9P2NfWUGLA='
-        },
     }
 
     STUDENT_ACCOUNT = os.getenv('GDST_STUDENT_ACCOUNT', '')

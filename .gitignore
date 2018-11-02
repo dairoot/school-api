@@ -1,4 +1,4 @@
-test.py
+test*.py
 *.sh
 *.pyc
 .idea

@@ -45,7 +45,6 @@ print(schedule_data)
 | url_endpoint  | `略`      | 学校接口地址列表    |
 | class_time_list| `略`     | 上课时间列表        |
 | timeout       | 10        | 全局请求延时        |
-| login_view_state  | {}    | 学校登录页面的view_state(`唯一`)  |
 | session       | MemoryStorage | 缓存工具(推荐使用redis) |
 
 ## User permissions
