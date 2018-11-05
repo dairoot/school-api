@@ -217,6 +217,8 @@ class ScheduleParse(BaseScheduleParse):
                                 section_schedule[i][3] == section_schedule[j][3]:
                             section_schedule[j][5] += section_schedule[i][5]
                             section_schedule[j][1] += ',' + section_schedule[i][1]
+                            section_schedule[i] = []
 
-                        # 课程名一样时 将上一个赋为空
-                        section_schedule[i] = []
+                        # 课程名和上课时间一样时 将上一个赋为空
+                        if section_schedule[i] and section_schedule[i][1] == section_schedule[j][1]:
+                            section_schedule[i] = []
