@@ -17,6 +17,9 @@ class ObjectDict(dict):
     def __setattr__(self, key, value):
         self[key] = value
 
+    def __getstate__(self):
+        return None
+
 
 def to_text(value, encoding='utf-8'):
     """:copyright: (c) 2014 by messense.
