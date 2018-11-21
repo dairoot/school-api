@@ -14,7 +14,6 @@ from bs4 import BeautifulSoup
 
 class BaseScheduleParse():
     ''' 课表页面解析模块 '''
-    COlOR = ['green', 'blue', 'purple', 'red', 'yellow']
 
     def __init__(self, html, time_list, schedule_type):
         self.schedule_year = ''
@@ -22,7 +21,6 @@ class BaseScheduleParse():
         self.time_list = time_list
         self.schedule_type = schedule_type
         self.schedule_list = [[], [], [], [], [], [], []]
-        self.schedule_dict = [[], [], [], [], [], [], []]
 
         soup = BeautifulSoup(html, "html.parser")
         option_args = soup.find_all("option", {"selected": "selected"})
@@ -69,6 +67,8 @@ class BaseScheduleParse():
 
     def get_schedule_dict(self):
         ''' 返回课表数据 字典格式 '''
+        all_schedule = [[], [], [], [], [], [], []]
+        color = ['green', 'blue', 'purple', 'red', 'yellow']
 
         for day, day_schedule in enumerate(self.schedule_list):
             for section, section_schedule in enumerate(day_schedule):
@@ -77,7 +77,7 @@ class BaseScheduleParse():
                 for schedule in section_schedule:
                     if schedule:
                         section_schedule_dict.append({
-                            "color": self.COlOR[color_index],
+                            "color": color[color_index],
                             "name": schedule[0],
                             "weeks_text": schedule[1],
                             "teacher": schedule[2],
@@ -86,12 +86,12 @@ class BaseScheduleParse():
                             "weeks_arr": schedule[5],
                             "time": self.time_list[schedule[4]][section]
                         })
-                self.schedule_dict[day].append(section_schedule_dict)
+                all_schedule[day].append(section_schedule_dict)
 
         schedule_data = {
             'schedule_term': self.schedule_term,
             'schedule_year': self.schedule_year,
-            'schedule': self.schedule_dict
+            'schedule': all_schedule
         }
         return schedule_data
 
