@@ -8,3 +8,4 @@ filter:
         - tests*
         - examples/*
         - doc/*
+        - school_api/client/api/utils/schedule_parse.py
