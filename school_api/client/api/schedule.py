@@ -31,7 +31,7 @@ class Schedule(BaseSchoolApi):
         self.schedule_type = ScheduleType.CLASS if self.user_type \
             else schedule_type or ScheduleType.PERSON
         self.schedule_year = schedule_year
-        self.schedule_term = str(schedule_term)
+        self.schedule_term = str(schedule_term) if schedule_term else schedule_term
         self.schedule_url = self.school_url["SCHEDULE_URL"][self.schedule_type]
 
         if self.user_type != UserType.DEPT:
@@ -40,7 +40,8 @@ class Schedule(BaseSchoolApi):
         else:
             self.schedule_url += parse.quote(self.account.encode('gb2312'))
             data = self._get_api_by_bm(**kwargs)
-
+        if self.schedule_term and self.schedule_year and (self.schedule_term!=data["schedule_term"] or self.schedule_year!=data["schedule_year"]):
+            raise ScheduleException(self.code, '暂无课表信息')
         return data
 
     def _get_api(self, **kwargs):
