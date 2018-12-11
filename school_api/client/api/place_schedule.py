@@ -130,7 +130,11 @@ class PlaceSchedule(BaseSchoolApi):
             res = self._get_api(*args, **kwargs)
         except ScheduleException:
             return None
-        self.payload = self._get_payload(res.text)
+
+        try:
+            self.payload = self._get_payload(res.text)
+        except AttributeError:
+            return None
         return True
 
     @staticmethod
