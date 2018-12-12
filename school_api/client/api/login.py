@@ -6,8 +6,8 @@ from requests import RequestException
 from school_api.client.api.base import BaseSchoolApi
 from school_api.client.api.utils import get_alert_tip, get_view_state_from_html
 from school_api.check_code import CHECK_CODE
-from school_api.exceptions import IdentityException, CheckCodeException, LoginException
-from school_api.utils import to_binary
+from school_api.exceptions import IdentityException, CheckCodeException, LoginException, OtherException
+from school_api.utils import to_binary, to_text
 
 
 class Login(BaseSchoolApi):
@@ -18,6 +18,9 @@ class Login(BaseSchoolApi):
         args = (school.login_url, school.exist_verify)
         try:
             res = self._get_api(*args, **kwargs)
+        except OtherException as reqe:
+            raise LoginException(self.code, to_text(str(reqe)))
+
         except RequestException:
             if school.proxies and not school.use_proxy:
                 # 使用内网代理

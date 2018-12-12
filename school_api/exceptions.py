@@ -66,3 +66,9 @@ class PermissionException(SchoolException):
 
     def __init__(self, school_code, errmsg):
         super(PermissionException, self).__init__('接口权限', school_code, errmsg)
+
+
+class OtherException(SchoolException):
+
+    def __init__(self, school_code, errmsg):
+        super(OtherException, self).__init__('Other', school_code, errmsg)

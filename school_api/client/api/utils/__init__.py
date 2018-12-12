@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import, unicode_literals
+
 import re
 from bs4 import BeautifulSoup
-from school_api.exceptions import SchoolException
+from school_api.exceptions import OtherException
 
 
 def get_alert_tip(html):
@@ -18,6 +20,6 @@ def get_view_state_from_html(html):
     try:
         view_state = view_state_soup['value']
     except TypeError:
-        raise SchoolException('view_state','', '获取view_state失败')
+        raise OtherException('', '获取view_state失败')
 
     return view_state
