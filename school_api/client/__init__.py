@@ -13,20 +13,18 @@ class SchoolClient(BaseSchoolClient):
 
     def user_login(self, account, password, **kwargs):
         ''' 用户注册入口
-        进行首次绑定操作时，请将use_session 设置为False，避免其他用户进行会话登录
+        进行首次绑定操作时，请将 use_login_cookie 设置为False，避免其他用户进行会话登录
         :param account:  用户账号
         :param password: 用户密码
         :param user_type: 0.学生 1.教师 2.部门
-        :param use_cookie: 是否使用会话登陆
+        :param use_login_cookie: 是否使用会话登陆
         :param requests模块参数
         return
         '''
-        use_cookie = True
-        if not kwargs.pop('use_session', True) or not kwargs.pop('use_cookie', True):
-            use_cookie = False
+        use_login_cookie = not(not kwargs.pop('use_session', True) or not kwargs.pop('use_login_cookie', True))
         user_type = kwargs.pop('user_type', UserType.STUDENT)
         user = UserClient(self, account, password, user_type)
-        user = user.user_login(use_cookie, **kwargs)
+        user = user.user_login(use_login_cookie, **kwargs)
         return user
 
 
@@ -37,10 +35,10 @@ class UserClient(BaseUserClient):
     place_schedule = PlaceSchedule()
 
     @error_handle
-    def user_login(self, use_cookie, **kwargs):
+    def user_login(self, use_login_cookie, **kwargs):
         ''' 登录：通过SchoolClient类调用 '''
         login_session = None
-        if use_cookie:
+        if use_login_cookie:
             login_session = self.session_management()
 
         if login_session is None:
