@@ -18,15 +18,14 @@ class LoginManagement(object):
         ''' 登录会话管理 '''
         login_session = None
         if self._get_login_session():
-            session_expires_time = LOGIN_SESSION_SAVE_TIME \
-                - self._get_login_session_expires_time()
+            session_expires_time = LOGIN_SESSION_SAVE_TIME - self._get_login_session_expires_time()
 
             if session_expires_time < 60 * 5:
                 # 五分钟内，不检测登录会话是否过期
                 login_session = self
             elif self.login.check_session():
-                # 登录会话检测
-                if 60 * 5 < session_expires_time < 60 * 10:
+                # 登录会话检测有效
+                if session_expires_time < 60 * 10:
                     # 登录比较频繁的，更新会话时间 (例如：部门账号操作)
                     self.save_login_session()
                 login_session = self

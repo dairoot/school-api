@@ -16,7 +16,7 @@ URL_ENDPOINT = [
     },
     {
         # 教师
-        "HOME_URL": "/js_main.aspx?xh=08020",
+        "HOME_URL": "/js_main.aspx?xh=",
         "INFO_URL": "/lw_jsxx.aspx?gnmkdm=N122502&zgh=",
         "SCHEDULE_URL": ["", "/jstjkbcx.aspx?gnmkdm=N122303&zgh="],
     },
