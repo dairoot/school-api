@@ -50,7 +50,7 @@ class UserClient(BaseUserClient):
 
     @error_handle
     def get_schedule(self, *args, **kwargs):
-        return self.schedule.get_schedule(**kwargs)
+        return self.schedule.get_schedule(*args, **kwargs)
 
     @error_handle
     @ApiPermissions([UserType.STUDENT, UserType.TEACHER])
