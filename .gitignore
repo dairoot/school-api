@@ -1,4 +1,5 @@
 test*.py
+!tests/*
 *.sh
 *.pyc
 .idea

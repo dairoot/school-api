@@ -30,9 +30,9 @@ class TestStudent(unittest.TestCase):
             schedule_year='2017-2018', schedule_term='1', timeout=5)
         print(schedule_data)
 
-    # def test_score(self):
-    #     score_data = self.student.get_score(score_year='2017-2018', score_term='1', timeout=5)
-    #     print(score_data)
+    def test_score(self):
+        score_data = self.student.get_score(score_year='2017-2018', score_term='1', timeout=5)
+        print(score_data)
 
     def test_info(self):
         info_data = self.student.get_info(timeout=5)

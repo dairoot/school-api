@@ -29,7 +29,7 @@ class TestBmTeacher(unittest.TestCase):
         print(schedule_data)
 
     def test_place_schedule(self):
-        for schedule_data in self.bm_teacher.get_place_schedule(campus_list=[u"本部"], timeout=0.5):
+        for schedule_data in self.bm_teacher.get_place_schedule(campus_list=[u"本部"], timeout=5):
             print(schedule_data)
             break
 
