@@ -11,11 +11,13 @@ $ pip install School-Api
 from school_api import SchoolClient
 
 # 先实例化一个学校，再实例化用户
-GdouApi = SchoolClient(url='http://210.38.137.126:8016')
-student = GdouApi.user_login('2014xxxx', 'xxxx', timeout=5)
-schedule_data = student.get_schedule()
+school = SchoolClient(url='http://210.38.137.126:8016')
+user = school.user_login('2014xxxx', 'xxxx')
+schedule_data = user.get_schedule()
 print(schedule_data)
 ```
+[ 线上测试接口](http://server.dairoot.cn)
+
 [【阅读文档】](https://dairoot.github.io/school-api/) 使用示例参见 [examples](examples/)
 
 ## Api Function
