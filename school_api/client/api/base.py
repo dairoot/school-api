@@ -20,8 +20,8 @@ class BaseSchoolApi(object):
     def _get_view_state(self, url, **kwargs):
         return self._client.get_view_state(url, **kwargs)
 
-    def _set_proxy(self):
-        return self._client.set_proxy()
+    def _switch_proxy(self):
+        return self._client.switch_proxy()
 
     @property
     def code(self):

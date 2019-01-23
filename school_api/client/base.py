@@ -34,7 +34,7 @@ class BaseSchoolClient(object):
             'exist_verify': kwargs.get('exist_verify', True),
             'lan_url': kwargs.get('lan_url'),
             'proxies': kwargs.get('proxies'),
-            'priority_porxy': kwargs.get('priority_porxy'),
+            'priority_proxy': kwargs.get('priority_proxy'),
             'timeout': kwargs.get('timeout', 10),
             'login_url': kwargs.get('login_url_path', '/default2.aspx'),
             'url_endpoint': kwargs.get('url_endpoint') or URL_ENDPOINT,
@@ -68,8 +68,7 @@ class BaseUserClient(LoginManagement):
         self.school = school.school
         self.base_url = self.school.url
         self.session = school.session
-        super(BaseUserClient, self).__init__(self.base_url + self.school.login_url,
-                                             self.account, self.session, self._http)
+
         self._http.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) '
                           'AppleWebKit/537.36 (KHTML, like Gecko) '
@@ -77,8 +76,8 @@ class BaseUserClient(LoginManagement):
             'Content-Type': 'application/x-www-form-urlencoded',
             'Referer': self.base_url + self.school.login_url
         })
-        if self.school.priority_porxy:
-            self.set_proxy()
+        if self.school.priority_proxy:
+            self.switch_proxy()
 
     def _request(self, method, url_or_endpoint, **kwargs):
         if not url_or_endpoint.startswith(('http://', 'https://')):
@@ -119,14 +118,19 @@ class BaseUserClient(LoginManagement):
             **kwargs
         )
 
-    def set_proxy(self):
+    def switch_proxy(self):
         """ 设置代理 """
-        self.school.priority_porxy = True
         self.base_url = self.school.lan_url or self.base_url
         self._proxy = self.school.proxies
         self._http.headers.update({
             'Referer': self.base_url + self.school.login_url
         })
+
+        if not self.school.priority_proxy:
+            # 检查是否有登录会话
+            return self.get_login_session()
+
+        self.school.priority_proxy = True
 
     def get_view_state(self, url_suffix, **kwargs):
         """ 获取页面 view_state 值"""
