@@ -42,7 +42,7 @@ print(schedule_data)
 | lan_url       | None      | 内网地址            |
 | exist_verify  | True      | 是否存在验证码      |
 | use_ex_handle | True      | 是否使用异常处理    |
-| priority_porxy| False     | 是否优先使用代理    |
+| priority_proxy| False     | 是否优先使用代理    |
 | proxies       | None      | 代理地址           |
 | url_endpoint  | `略`      | 学校接口地址列表    |
 | class_time_list| `略`     | 上课时间列表        |

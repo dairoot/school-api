@@ -7,7 +7,7 @@ conf = {
     'exist_verify': True,          # 是否存在验证码
     'login_url': '/default2.aspx',
     'lan_url': 'http://172.16.1.8',  # 内网地址
-    'use_proxy': False,             # 是否优先使用代理
+    'priority_proxy': False,             # 是否优先使用代理
     'url_endpoint': None,           # 教务系统链接
     # 'proxies': {"http": "http://XXXX:XXXX@XXXX:3120/", }  # 代理存在时，请求失败则会切换成代理
 }
