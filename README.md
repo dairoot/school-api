@@ -1,6 +1,8 @@
 正方系统 Python SDK。
 
 [![Build Status](https://travis-ci.org/dairoot/school-api.svg?branch=master)](https://travis-ci.org/dairoot/school-api)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/dairoot/school-api/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/dairoot/school-api/?branch=master)
+[![Downloads](https://pepy.tech/badge/school-api)](https://pepy.tech/project/school-api)
 
 ## Usage
 ```Shell
