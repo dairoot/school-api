@@ -55,7 +55,8 @@ class CheckCode(object):
         answers = map(chr, map(lambda x: x + 48 if x <= 9 else x + 87, pred))
         return ''.join(answers)
 
-    def denoise_img(self, img):
+    @staticmethod
+    def denoise_img(img):
         '''图片降噪处理'''
         img2 = Image.new("L", img.size, 255)
         for x in range(img.size[1]):

@@ -40,7 +40,8 @@ class Schedule(BaseSchoolApi):
         else:
             self.schedule_url += parse.quote(self.account.encode('gb2312'))
             data = self._get_api_by_bm(**kwargs)
-        if self.schedule_term and self.schedule_year and (self.schedule_term!=data["schedule_term"] or self.schedule_year!=data["schedule_year"]):
+        if self.schedule_term and self.schedule_year and (
+                self.schedule_term != data["schedule_term"] or self.schedule_year != data["schedule_year"]):
             raise ScheduleException(self.code, '暂无课表信息')
         return data
 
@@ -62,27 +63,26 @@ class Schedule(BaseSchoolApi):
             raise ScheduleException(self.code, tip)
 
         schedule = ScheduleParse(html, self.time_list, self.schedule_type).get_schedule_dict()
-        # 第一次请求的时候，教务系统默认返回最新课表
-        # 如果设置了学年跟学期，匹配学年跟学期，不匹配则获取指定学年学期的课表
-        if self.schedule_year and self.schedule_term:
-            if self.schedule_year != schedule['schedule_year'] or \
-                    self.schedule_term != schedule['schedule_term']:
+        # 第一次请求的时候，教务系统默认返回当前学年学期课表
+        # 如果设置了学年跟学期，则获取指定学年学期的课表
+        if self.schedule_year and self.schedule_term and (
+                self.schedule_year != schedule['schedule_year'] or self.schedule_term != schedule['schedule_term']):
 
-                payload = self._get_payload(res.text)
+            payload = self._get_payload(res.text)
 
-                try:
-                    res = self._post(self.schedule_url, data=payload, **kwargs)
-                    if res.status_code != 200:
-                        raise RequestException
-                except RequestException:
-                    raise ScheduleException(self.code, '获取课表信息失败')
+            try:
+                res = self._post(self.schedule_url, data=payload, **kwargs)
+                if res.status_code != 200:
+                    raise RequestException
+            except RequestException:
+                raise ScheduleException(self.code, '获取课表信息失败')
 
-                html = res.content.decode(coding)
-                schedule = ScheduleParse(
-                    html,
-                    self.time_list,
-                    self.schedule_type
-                ).get_schedule_dict()
+            html = res.content.decode(coding)
+            schedule = ScheduleParse(
+                html,
+                self.time_list,
+                self.schedule_type
+            ).get_schedule_dict()
 
         return schedule
 
