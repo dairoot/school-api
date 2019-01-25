@@ -4,18 +4,18 @@
 from setuptools import setup, find_packages
 
 
-with open('README.md', 'rb') as f:
-    long_description = f.read().decode('utf-8')
-
+with open('README.md') as f:
+    long_description = f.read().split("## User permissions")[0]
 
 setup(
     name="School-Api",
     author="dairoot",
-    version="1.3.2",
+    version="1.3.4",
     license='MIT',
     author_email="623815825@qq.com",
     description="School SDK for Python",
     long_description=long_description,
+    long_description_content_type='text/markdown',
     url='https://github.com/dairoot/school-api',
     packages=find_packages(),
     package_data={'school_api': ['check_code/theta.dat'], },
