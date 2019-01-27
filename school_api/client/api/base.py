@@ -47,6 +47,11 @@ class BaseSchoolApi(object):
     def base_url(self):
         return self._client.base_url
 
+    @base_url.setter
+    def base_url(self, base_url):
+        # 兼容含token的教务系统请求地址 http://xxx.xxx/(35yxiq45pv0ojz45wcopgz45)/Default2.aspx
+        self._client.base_url = base_url
+
     @property
     def school_url(self):
         return self._client.school.url_endpoint[self.user_type]

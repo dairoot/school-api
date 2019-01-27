@@ -42,16 +42,20 @@ class UserlInfoParse():
         real_name = table.find(id="xm").text
         sex = table.find(id="lbl_xb").text
         grade = table.find(id="lbl_dqszj").text
-        birth_date = table.find(id="lbl_csrq").text
         class_name = table.find(id="lbl_xzb").text
         faculty = table.find(id="lbl_xy").text
         specialty = table.find(id="lbl_zymc").text
-
-        lbl_lydq = table.find(id="lbl_lydq")
-        hometown = lbl_lydq.text if lbl_lydq else table.find(id="lydq").text
-
         enrol_time = table.find(id="lbl_rxrq").text
-        id_card = table.find(id="lbl_sfzh").text
+
+        sfzh = table.find(id="lbl_sfzh")
+        id_card = sfzh.text if sfzh else table.find(id="sfzh")['value']
+
+        csrq = table.find(id="lbl_csrq")
+        birth_date = csrq.text if csrq else table.find(id="csrq")['value']
+
+        lydq = table.find(id="lbl_lydq")
+        hometown = lydq.text if lydq else table.find(id="lydq")['value']
+
         self.data = {
             "real_name": real_name,
             "sex": sex,

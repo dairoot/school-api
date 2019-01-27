@@ -45,6 +45,7 @@ class Login(BaseSchoolApi):
 
             # 首次请求可能出现 Connection aborted
             res = self._get(login_url, **kwargs)
+        self.base_url = res.url.split(login_url)[0]
         view_state = get_view_state_from_html(res.text)
 
         return {'__VIEWSTATE': view_state}
