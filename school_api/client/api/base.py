@@ -23,6 +23,9 @@ class BaseSchoolApi(object):
     def _switch_proxy(self):
         return self._client.switch_proxy()
 
+    def _update_url_token(self, url_token):
+        return self._client.update_url_token(url_token)
+
     @property
     def code(self):
         return self._client.school.code
@@ -46,11 +49,6 @@ class BaseSchoolApi(object):
     @property
     def base_url(self):
         return self._client.base_url
-
-    @base_url.setter
-    def base_url(self, base_url):
-        # 兼容含token的教务系统请求地址 http://xxx.xxx/(35yxiq45pv0ojz45wcopgz45)/Default2.aspx
-        self._client.base_url = base_url
 
     @property
     def school_url(self):

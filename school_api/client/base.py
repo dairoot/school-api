@@ -49,6 +49,7 @@ class BaseUserClient(LoginManagement):
     """docstring for BaseUserClient"""
 
     _proxy = None
+    url_token = ''
 
     def __new__(cls, *args):
         self = super(BaseUserClient, cls).__new__(cls)
@@ -80,13 +81,12 @@ class BaseUserClient(LoginManagement):
             self.switch_proxy()
 
     def _request(self, method, url_or_endpoint, **kwargs):
-        if not url_or_endpoint.startswith(('http://', 'https://')):
-            url = '{base}{endpoint}'.format(
-                base=self.base_url,
-                endpoint=url_or_endpoint
-            )
-        else:
-            url = url_or_endpoint
+
+        url = '{base}{url_token}{endpoint}'.format(
+            base=self.base_url,
+            endpoint=url_or_endpoint,
+            url_token=self.url_token
+        )
 
         kwargs['timeout'] = kwargs.get('timeout', self.school.timeout)
         res = self._http.request(
@@ -140,3 +140,7 @@ class BaseUserClient(LoginManagement):
             raise requests.TooManyRedirects
 
         return get_view_state_from_html(res.text)
+
+    def update_url_token(self, url_token):
+        # 兼容含token的教务系统请求地址 http://xxx.xxx/(35yxiq45pv0ojz45wcopgz45)/Default2.aspx
+        self.url_token = url_token

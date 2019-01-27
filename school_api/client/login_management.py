@@ -10,6 +10,7 @@ class LoginManagement(object):
     account = None
     session = None
     base_url = None
+    url_token = ''
 
     login = Login()
 
@@ -39,15 +40,21 @@ class LoginManagement(object):
         ''' 保存登录会话 '''
         key = self._get_login_session_key()
         cookie = self._http.cookies.get_dict()
-        self.session.set(key, cookie, LOGIN_SESSION_SAVE_TIME)
+        session = {
+            "cookie": cookie,
+            "url_token": self.url_token
+        }
+        self.session.set(key, session, LOGIN_SESSION_SAVE_TIME)
 
     def get_login_session(self):
         ''' 获取登录会话 '''
         key = self._get_login_session_key()
-        cookie = self.session.get(key)
-        if not cookie:
+        session = self.session.get(key)
+        if not session:
             return False
-        self._http.cookies.update(cookie)
+
+        self.url_token = session['url_token']
+        self._http.cookies.update(session['cookie'])
         return True
     
     def _del_login_session(self):
