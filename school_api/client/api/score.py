@@ -25,7 +25,7 @@ class Score(BaseSchoolApi):
         try:
             view_state = self._get_view_state(score_url, **kwargs)
         except TooManyRedirects:
-            msg = '可能是成绩接口地址不对，请尝试更改use_api值为 0、1或2'
+            msg = '可能是成绩接口地址不对，请尝试更改use_api值'
             raise ScoreException(self.code, msg)
         except RequestException:
             msg = '获取成绩请求参数失败'
@@ -35,6 +35,7 @@ class Score(BaseSchoolApi):
             '__VIEWSTATE': view_state,
             'Button2': '在校学习成绩查询',
             'btn_zcj': '历年成绩',
+            'btnCx':' 查  询 ',
             'ddlXN': '',
             'ddlXQ': ''
         }
@@ -52,19 +53,21 @@ class Score(BaseSchoolApi):
         if tip:
             raise ScoreException(self.code, tip)
 
-        return ScoreParse(self.code, html).get_score(score_year, score_term)
+        return ScoreParse(self.code, html, use_api).get_score(score_year, score_term)
 
 
 class ScoreParse():
     ''' 成绩页面解析模块 '''
 
-    def __init__(self, code, html):
+    def __init__(self, code, html, use_api):
         self.code = code
+        self.use_api = use_api
         self.soup = BeautifulSoup(html, "html.parser")
         self._html_parse_of_score()
 
     def _html_parse_of_score(self):
-        table = self.soup.find("table", {"id": "Datagrid1"})
+        tag = "Datagrid1" if self.use_api != 3 else "DataGrid1"
+        table = self.soup.find("table", {"id": tag})
         if not table:
             raise ScoreException(self.code, '获取成绩信息失败')
 

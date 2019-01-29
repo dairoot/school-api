@@ -143,7 +143,7 @@ class BaseScheduleParse():
 
         info_arr = []
         for k in text.split('<br/>'):
-            if k not in ['选修', '公选', '必修']:
+            if k not in ['选修', '公选', '必修', '限选']:
                 info_arr.append(k)
 
         info_arr = info_arr[:4:]

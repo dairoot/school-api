@@ -40,7 +40,6 @@ class UserlInfoParse():
             raise UserInfoException(self.code, '获取学生用户信息失败')
 
         real_name = table.find(id="xm").text
-        sex = table.find(id="lbl_xb").text
         grade = table.find(id="lbl_dqszj").text
         class_name = table.find(id="lbl_xzb").text
         faculty = table.find(id="lbl_xy").text
@@ -55,6 +54,9 @@ class UserlInfoParse():
 
         lydq = table.find(id="lbl_lydq")
         hometown = lydq.text if lydq else table.find(id="lydq")['value']
+
+        xb = table.find(id='XB')
+        sex = xb.find('option', attrs={'selected': 'selected'}).text if xb else table.find(id="lbl_xb").text
 
         self.data = {
             "real_name": real_name,

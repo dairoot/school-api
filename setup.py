@@ -10,7 +10,7 @@ with open('README.md') as f:
 setup(
     name="School-Api",
     author="dairoot",
-    version="1.3.4.2",
+    version="1.3.4.3",
     license='MIT',
     author_email="623815825@qq.com",
     description="School SDK for Python",
