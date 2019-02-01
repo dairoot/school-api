@@ -1,27 +1,51 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-from school_api.client.base import BaseUserClient, BaseSchoolClient
+from school_api.utils import to_text, ObjectDict
+from school_api.config import URL_ENDPOINT, CLASS_TIME
+from school_api.client.base import BaseUserClient
 from school_api.client.api.score import Score
 from school_api.client.api.schedule import Schedule
 from school_api.client.api.place_schedule import PlaceSchedule
 from school_api.client.api.user_info import UserlInfo
-from school_api.client.utils import UserType, error_handle, ApiPermissions
+from school_api.client.utils import UserType, error_handle, ApiPermissions, get_time_list
+from school_api.session.memorystorage import MemoryStorage
 
 
-class SchoolClient(BaseSchoolClient):
+class SchoolClient(object):
+    ''' 学校实例 '''
+
+    def __init__(self, url, name=None, code=None, use_ex_handle=True, exist_verify=True, lan_url=None, proxies=None,
+                 priority_proxy=False, timeout=10, login_url_path='/default2.aspx', url_endpoint=URL_ENDPOINT,
+                 class_time_list=CLASS_TIME, session=MemoryStorage):
+        school = {
+            'code': code,
+            'lan_url': lan_url,
+            'proxies': proxies,
+            'timeout': timeout,
+            'name': to_text(name),
+            'login_url': login_url_path,
+            'url_endpoint': url_endpoint,
+            'exist_verify': exist_verify,
+            'use_ex_handle': use_ex_handle,
+            'priority_proxy': priority_proxy,
+            'time_list': get_time_list(class_time_list)
+        }
+        self.base_url = url.split('/default')[0] if url[-4:] == 'aspx' else url
+        self.session = session(school['code'])
+        self.school = ObjectDict(school)
 
     def user_login(self, account, password, **kwargs):
-        ''' 用户注册入口
+        ''' 用户登录入口
         进行首次绑定操作时，请将 use_login_cookie 设置为False，避免其他用户进行会话登录
         :param account:  用户账号
         :param password: 用户密码
         :param user_type: 0.学生 1.教师 2.部门
         :param use_login_cookie: 是否使用会话登陆
         :param requests模块参数
-        return
+        return 用户实例
         '''
-        use_login_cookie = not(not kwargs.pop('use_session', True) or not kwargs.pop('use_login_cookie', True))
+        use_login_cookie = not (not kwargs.pop('use_session', True) or not kwargs.pop('use_login_cookie', True))
         user_type = kwargs.pop('user_type', UserType.STUDENT)
         user = UserClient(self, account, password, user_type)
         user = user.user_login(use_login_cookie, **kwargs)
@@ -29,6 +53,8 @@ class SchoolClient(BaseSchoolClient):
 
 
 class UserClient(BaseUserClient):
+    ''' 用户实例 '''
+
     score = Score()
     info = UserlInfo()
     schedule = Schedule()

@@ -4,45 +4,14 @@ from __future__ import absolute_import, unicode_literals
 import inspect
 import requests
 
-from school_api.client.utils import get_time_list
+from school_api.utils import to_text
 from school_api.client.api.base import BaseSchoolApi
-
 from school_api.client.api.utils import get_view_state_from_html
 from school_api.client.login_management import LoginManagement
-from school_api.session.memorystorage import MemoryStorage
-from school_api.utils import to_text, ObjectDict
-from school_api.config import URL_ENDPOINT, CLASS_TIME
 
 
 def _is_api_endpoint(obj):
     return isinstance(obj, BaseSchoolApi)
-
-
-class BaseSchoolClient(object):
-
-    def __init__(self, url, **kwargs):
-        url = url.split('/default')[0] if url[-4:] == 'aspx' else url
-        class_time_list = kwargs.get('class_time_list') or CLASS_TIME
-        time_list = get_time_list(class_time_list)
-
-        self.school = {
-            'url': url,
-            'debug': kwargs.get('debug'),
-            'name': to_text(kwargs.get('name')),
-            'code': kwargs.get('code'),
-            'use_ex_handle': kwargs.get('use_ex_handle', True),
-            'exist_verify': kwargs.get('exist_verify', True),
-            'lan_url': kwargs.get('lan_url'),
-            'proxies': kwargs.get('proxies'),
-            'priority_proxy': kwargs.get('priority_proxy'),
-            'timeout': kwargs.get('timeout', 10),
-            'login_url': kwargs.get('login_url_path', '/default2.aspx'),
-            'url_endpoint': kwargs.get('url_endpoint') or URL_ENDPOINT,
-            'time_list': time_list
-        }
-        storage = kwargs.get('session', MemoryStorage)
-        self.session = storage(self.school['code'])
-        self.school = ObjectDict(self.school)
 
 
 class BaseUserClient(LoginManagement):
@@ -67,7 +36,7 @@ class BaseUserClient(LoginManagement):
         self.password = password
         self.user_type = user_type
         self.school = school.school
-        self.base_url = self.school.url
+        self.base_url = school.base_url
         self.session = school.session
 
         self._http.headers.update({
@@ -80,17 +49,16 @@ class BaseUserClient(LoginManagement):
         if self.school.priority_proxy:
             self.switch_proxy()
 
-    def _request(self, method, url_or_endpoint, **kwargs):
+    def _request(self, url_suffix, **kwargs):
 
-        url = '{base}{url_token}{endpoint}'.format(
+        url = '{base}{url_token}{url_suffix}'.format(
             base=self.base_url,
-            endpoint=url_or_endpoint,
+            url_suffix=url_suffix,
             url_token=self.url_token
         )
 
         kwargs['timeout'] = kwargs.get('timeout', self.school.timeout)
         res = self._http.request(
-            method=method,
             url=url,
             proxies=self._proxy,
             **kwargs
@@ -98,25 +66,13 @@ class BaseUserClient(LoginManagement):
         return res
 
     def get(self, url, **kwargs):
-        return self._request(
-            method='GET',
-            url_or_endpoint=url,
-            **kwargs
-        )
+        return self._request(url, method='GET', **kwargs)
 
     def post(self, url, **kwargs):
-        return self._request(
-            method='POST',
-            url_or_endpoint=url,
-            **kwargs
-        )
+        return self._request(url, method='POST', **kwargs)
 
     def head(self, url, **kwargs):
-        return self._request(
-            method='HEAD',
-            url_or_endpoint=url,
-            **kwargs
-        )
+        return self._request(url, method='HEAD', **kwargs)
 
     def switch_proxy(self):
         """ 设置代理 """
