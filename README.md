@@ -47,7 +47,7 @@ print(schedule_data)
 | use_ex_handle | True      | 是否使用异常处理    |
 | priority_proxy| False     | 是否优先使用代理    |
 | proxies       | None      | 代理地址           |
-| url_endpoint  | `略`      | 学校接口地址列表    |
+| url_path_list  | `略`      | 学校接口地址列表    |
 | class_time_list| `略`     | 上课时间列表        |
 | timeout       | 10        | 全局请求延时        |
 | session       | MemoryStorage | 缓存工具(推荐使用redis) |
