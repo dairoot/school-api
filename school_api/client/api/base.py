@@ -52,7 +52,7 @@ class BaseSchoolApi(object):
 
     @property
     def school_url(self):
-        return self._client.school.url_endpoint[self.user_type]
+        return self._client.school.url_path_list[self.user_type]
 
     @property
     def time_list(self):

@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 
 LOGIN_SESSION_SAVE_TIME = 3600 * 2
 
-URL_ENDPOINT = [
+URL_PATH_LIST =[
     {
         # 学生
         "HOME_URL": "/xs_main.aspx?xh=",
@@ -25,7 +25,7 @@ URL_ENDPOINT = [
         "HOME_URL": "/bm_main.aspx?xh=",
         "SCHEDULE_URL": ["", "/tjkbcx.aspx?gnmkdm=N120313&xh="],
         "PLACE_SCHEDULE_URL": "/kbcx_jxcd.aspx?gnmkdm=N120314&xh=",
-    },
+    }
 ]
 
 

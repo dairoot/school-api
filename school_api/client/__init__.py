@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 
 from school_api.utils import to_text, ObjectDict
-from school_api.config import URL_ENDPOINT, CLASS_TIME
+from school_api.config import URL_PATH_LIST, CLASS_TIME
 from school_api.client.base import BaseUserClient
 from school_api.client.api.score import Score
 from school_api.client.api.schedule import Schedule
@@ -16,7 +16,7 @@ class SchoolClient(object):
     ''' 学校实例 '''
 
     def __init__(self, url, name=None, code=None, use_ex_handle=True, exist_verify=True, lan_url=None, proxies=None,
-                 priority_proxy=False, timeout=10, login_url_path='/default2.aspx', url_endpoint=URL_ENDPOINT,
+                 priority_proxy=False, timeout=10, login_url_path='/default2.aspx', url_path_list=URL_PATH_LIST,
                  class_time_list=CLASS_TIME, session=MemoryStorage):
         school = {
             'code': code,
@@ -25,7 +25,7 @@ class SchoolClient(object):
             'timeout': timeout,
             'name': to_text(name),
             'login_url': login_url_path,
-            'url_endpoint': url_endpoint,
+            'url_path_list': url_path_list,
             'exist_verify': exist_verify,
             'use_ex_handle': use_ex_handle,
             'priority_proxy': priority_proxy,
@@ -35,7 +35,7 @@ class SchoolClient(object):
         self.session = session(school['code'])
         self.school = ObjectDict(school)
 
-    def user_login(self, account, password, **kwargs):
+    def user_login(self, account, password, use_login_cookie=True ,**kwargs):
         ''' 用户登录入口
         进行首次绑定操作时，请将 use_login_cookie 设置为False，避免其他用户进行会话登录
         :param account:  用户账号
@@ -45,7 +45,6 @@ class SchoolClient(object):
         :param requests模块参数
         return 用户实例
         '''
-        use_login_cookie = not (not kwargs.pop('use_session', True) or not kwargs.pop('use_login_cookie', True))
         user_type = kwargs.pop('user_type', UserType.STUDENT)
         user = UserClient(self, account, password, user_type)
         user = user.user_login(use_login_cookie, **kwargs)
