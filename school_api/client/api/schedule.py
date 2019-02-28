@@ -86,6 +86,40 @@ class Schedule(BaseSchoolApi):
 
         return schedule
 
+    def _get_api_by_bm(self, class_name, **kwargs):
+        ''' 部门教师 查询学生班级课表 共3个请求'''
+
+        # steps 1: 获取课表页面 参数信息
+        try:
+            res = self._get(self.schedule_url, **kwargs)
+            if res.status_code != 200:
+                raise RequestException
+        except RequestException:
+            raise ScheduleException(self.code, '获取课表请求参数失败')
+
+        # steps 2: 选择课表 学年学期
+        if self.schedule_year and self.schedule_term:
+            payload = self._get_payload(res.text)
+            try:
+                res = self._post(self.schedule_url, data=payload, **kwargs)
+                if res.status_code != 200:
+                    raise RequestException
+            except RequestException:
+                raise ScheduleException(self.code, '获取课表请求参数失败')
+
+        # steps 3: 获取课表数据
+        payload = self._get_payload_by_bm(res.content.decode('gbk'), class_name)
+        try:
+            res = self._post(self.schedule_url, data=payload, **kwargs)
+            if res.status_code != 200:
+                raise RequestException
+        except RequestException:
+            raise ScheduleException(self.code, '获取课表信息失败')
+
+        html = res.content.decode('gbk')
+        schedule = ScheduleParse(html, self.time_list, self.schedule_type).get_schedule_dict()
+        return schedule
+
     def _get_payload(self, html):
         ''' 获取课表post 的参数 '''
         view_state = get_view_state_from_html(html)
@@ -95,53 +129,6 @@ class Schedule(BaseSchoolApi):
             ['xqd', 'xq'][self.schedule_type]: self.schedule_term
         }
         return payload
-
-    def _get_api_by_bm(self, class_name, **kwargs):
-        ''' 部门教师 查询学生班级课表 共3个请求'''
-
-        # steps 1: 获取课表 view_state
-        try:
-            res = self._get(self.schedule_url, **kwargs)
-            if res.status_code != 200:
-                raise RequestException
-            view_state = get_view_state_from_html(res.text)
-        except RequestException:
-            raise ScheduleException(self.code, '获取课表请求参数失败')
-
-        # steps 2: 选择课表 学年学期
-        if self.schedule_year and self.schedule_term:
-            payload = {
-                '__VIEWSTATE': view_state,
-                'xn': self.schedule_year,
-                'xq': self.schedule_term
-            }
-            try:
-                res = self._post(self.schedule_url, data=payload, **kwargs)
-                if res.status_code != 200:
-                    raise RequestException
-            except RequestException:
-                raise ScheduleException(self.code, '获取课表请求参数失败')
-
-        # steps 3: 获取课表数据
-        payload = self._get_payload_by_bm(
-            res.content.decode('gbk'),
-            class_name
-        )
-        try:
-            res = self._post(self.schedule_url, data=payload, **kwargs)
-            if res.status_code != 200:
-                raise RequestException
-        except RequestException:
-            raise ScheduleException(self.code, '获取课表信息失败')
-
-        html = res.content.decode('gbk')
-        schedule = ScheduleParse(
-            html,
-            self.time_list,
-            self.schedule_type
-        ).get_schedule_dict()
-
-        return schedule
 
     @staticmethod
     def _get_payload_by_bm(html, class_name):

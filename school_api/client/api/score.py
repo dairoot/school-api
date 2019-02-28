@@ -16,7 +16,7 @@ class Score(BaseSchoolApi):
         ''' 成绩信息 获取入口
         :param score_year: 成绩学年
         :param score_term: 成绩学期
-        :param use_api:    0.接口1, 1.接口2, 2.接口3
+        :param use_api:    0.接口1, 1.接口2, 2.接口3 ...
         :param kwargs: requests模块参数
         return
         '''
