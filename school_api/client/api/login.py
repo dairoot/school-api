@@ -22,7 +22,7 @@ class Login(BaseSchoolApi):
             raise LoginException(self.code, to_text(str(reqe)))
 
         except RequestException:
-            if school.proxies and not school.priority_proxy:
+            if school.proxies and not school.proxy_state:
                 # 使用内网代理
                 if self._switch_proxy():
                     # 存在内网代理会话

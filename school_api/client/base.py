@@ -47,7 +47,7 @@ class BaseUserClient(LoginManagement):
             'Referer': self.base_url + self.school.login_url
         })
         if self.school.priority_proxy:
-            self.switch_proxy()
+            self.switch_proxy(True)
 
     def _request(self, url_suffix, **kwargs):
 
@@ -74,19 +74,18 @@ class BaseUserClient(LoginManagement):
     def head(self, url, **kwargs):
         return self._request(url, method='HEAD', **kwargs)
 
-    def switch_proxy(self):
+    def switch_proxy(self, init=False):
         """ 设置代理 """
+        self.school.proxy_state = True
         self.base_url = self.school.lan_url or self.base_url
         self._proxy = self.school.proxies
         self._http.headers.update({
             'Referer': self.base_url + self.school.login_url
         })
-
-        if not self.school.priority_proxy:
-            # 检查是否有登录会话
+        if not init:
+            # 非初始化，检查是否有登录会话
             return self.get_login_session()
 
-        self.school.priority_proxy = True
 
     def get_view_state(self, url_suffix, **kwargs):
         """ 获取页面 view_state 值"""

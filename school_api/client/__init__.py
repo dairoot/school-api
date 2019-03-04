@@ -22,6 +22,7 @@ class SchoolClient(object):
             'code': code,
             'lan_url': lan_url,
             'proxies': proxies,
+            'proxy_state': False,
             'timeout': timeout,
             'name': to_text(name),
             'login_url': login_url_path,
