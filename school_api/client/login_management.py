@@ -18,7 +18,7 @@ class LoginManagement(object):
     def session_management(self):
         ''' 登录会话管理 '''
         login_session = None
-        if self.get_login_session():
+        if self._get_login_session():
             session_expires_time = LOGIN_SESSION_SAVE_TIME - self._get_login_session_expires_time()
 
             if session_expires_time < 60 * 5:
@@ -46,7 +46,7 @@ class LoginManagement(object):
         }
         self.session.set(key, session, LOGIN_SESSION_SAVE_TIME)
 
-    def get_login_session(self):
+    def _get_login_session(self):
         ''' 获取登录会话 '''
         key = self._get_login_session_key()
         session = self.session.get(key)

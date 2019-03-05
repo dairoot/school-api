@@ -56,7 +56,6 @@ class BaseUserClient(LoginManagement):
             url_suffix=url_suffix,
             url_token=self.url_token
         )
-
         kwargs['timeout'] = kwargs.get('timeout', self.school.timeout)
         res = self._http.request(
             url=url,
@@ -83,8 +82,8 @@ class BaseUserClient(LoginManagement):
             'Referer': self.base_url + self.school.login_url
         })
         if not init:
-            # 非初始化，检查是否有登录会话
-            return self.get_login_session()
+            # 非初始化，检查是否存在有效会话登录会话
+            return self.session_management()
 
 
     def get_view_state(self, url_suffix, **kwargs):
