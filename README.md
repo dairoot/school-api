@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/dairoot/school-api.svg?branch=master)](https://travis-ci.org/dairoot/school-api)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/dairoot/school-api/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/dairoot/school-api/?branch=master)
-[![Coverage Status](https://coveralls.io/repos/github/dairoot/school-api/badge.svg)](https://coveralls.io/github/dairoot/school-api)
+[![codecov](https://codecov.io/gh/dairoot/school-api/branch/master/graph/badge.svg)](https://codecov.io/gh/dairoot/school-api)
 [![Downloads](https://pepy.tech/badge/school-api)](https://pepy.tech/project/school-api)
 
 ## Usage

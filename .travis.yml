@@ -16,6 +16,6 @@ install:
 script:
   - nosetests --with-coverage --cover-package=school_api
 
-#after_success:
-#  - pip install coveralls
-#  - coveralls
+after_success:
+  - pip install codecov
+  - codecov
