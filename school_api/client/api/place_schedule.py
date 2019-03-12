@@ -43,7 +43,7 @@ class PlaceSchedule(BaseSchoolApi):
         '''
 
         self.schedule_url = self.school_url['PLACE_SCHEDULE_URL'] + \
-            urlparse.quote(self.account.encode('gb2312'))
+            urlparse.quote(self.user.account.encode('gb2312'))
 
         if not self._update_payload(**kwargs):
             yield {'error': "获取教学场地课表失败"}

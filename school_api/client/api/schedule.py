@@ -28,17 +28,17 @@ class Schedule(BaseSchoolApi):
         :param kwargs: requests模块参数
         :return:
         '''
-        self.schedule_type = ScheduleType.CLASS if self.user_type \
+        self.schedule_type = ScheduleType.CLASS if self.user.user_type \
             else schedule_type or ScheduleType.PERSON
         self.schedule_year = schedule_year
         self.schedule_term = str(schedule_term) if schedule_term else schedule_term
         self.schedule_url = self.school_url["SCHEDULE_URL"][self.schedule_type]
 
-        if self.user_type != UserType.DEPT:
-            self.schedule_url += self.account
+        if self.user.user_type != UserType.DEPT:
+            self.schedule_url += self.user.account
             data = self._get_api(**kwargs)
         else:
-            self.schedule_url += parse.quote(self.account.encode('gb2312'))
+            self.schedule_url += parse.quote(self.user.account.encode('gb2312'))
             data = self._get_api_by_bm(**kwargs)
         if self.schedule_term and self.schedule_year and (
                 self.schedule_term != data["schedule_term"] or self.schedule_year != data["schedule_year"]):
@@ -46,7 +46,7 @@ class Schedule(BaseSchoolApi):
         return data
 
     def _get_api(self, **kwargs):
-        coding = 'gbk' if self.user_type else 'GB18030'
+        coding = 'gbk' if self.user.user_type else 'GB18030'
         try:
             res = self._get(self.schedule_url, **kwargs)
 

@@ -70,5 +70,5 @@ class LoginManagement(object):
 
     def _get_login_session_key(self):
         ''' 获取缓存登录会话的key '''
-        key = '{}:{}:{}'.format('login_session', self.base_url, self.account)
+        key = '{}:{}:{}'.format('login_session', self.base_url, self.user.account)
         return key

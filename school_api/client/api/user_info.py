@@ -12,7 +12,7 @@ class UserlInfo(BaseSchoolApi):
 
     def get_info(self, **kwargs):
         ''' 用户信息 获取入口 '''
-        info_url = self.school_url['INFO_URL'] + self.account
+        info_url = self.school_url['INFO_URL'] + self.user.account
 
         try:
             res = self._get(info_url, **kwargs)
@@ -21,7 +21,7 @@ class UserlInfo(BaseSchoolApi):
         except RequestException:
             raise UserInfoException(self.code, '获取用户信息失败')
 
-        return UserlInfoParse(self.code, self.user_type, res.content).user_info
+        return UserlInfoParse(self.code, self.user.user_type, res.content).user_info
 
 
 class UserlInfoParse():

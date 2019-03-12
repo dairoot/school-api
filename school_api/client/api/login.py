@@ -22,7 +22,7 @@ class Login(BaseSchoolApi):
             raise LoginException(self.code, to_text(str(reqe)))
 
         except RequestException:
-            if school.proxies and not school.proxy_state:
+            if school.proxies and not self.user.proxy_state:
                 # 使用内网代理
                 if self._switch_proxy():
                     # 存在内网代理会话
@@ -33,7 +33,7 @@ class Login(BaseSchoolApi):
                     raise LoginException(self.code, '教务系统异常，使用代理登录失败1')
             else:
 
-                if school.proxy_state:
+                if self.user.proxy_state:
                     raise LoginException(self.code, '教务系统异常，使用代理登录失败2')
                 else:
                     raise LoginException(self.code, '教务系统外网异常')
@@ -69,14 +69,14 @@ class Login(BaseSchoolApi):
                 raise CheckCodeException(self.code, "验证码获取失败")
             code = CHECK_CODE.verify(res.content)
 
-        account = self.account.encode('gb2312')
+        account = self.user.account.encode('gb2312')
         payload = {
             'txtUserName': account,
             'TextBox1': account,
-            'TextBox2': self.password,
+            'TextBox2': self.user.password,
             'TextBox3': code,
             'txtSecretCode': code,
-            'RadioButtonList1': login_types[self.user_type].encode('gb2312'),
+            'RadioButtonList1': login_types[self.user.user_type].encode('gb2312'),
             'Button1': ' 登 录 '.encode('gb2312')
         }
         payload.update(login_payload)
@@ -112,7 +112,7 @@ class Login(BaseSchoolApi):
 
     def check_session(self):
         """ 检查登陆会话是否有效 """
-        account = parse.quote(self.account.encode('gb2312'))
+        account = parse.quote(self.user.account.encode('gb2312'))
         try:
             res = self._head(self.school_url['HOME_URL'] + account)
             if res.status_code != 200:

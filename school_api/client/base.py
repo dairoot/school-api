@@ -4,7 +4,7 @@ from __future__ import absolute_import, unicode_literals
 import inspect
 import requests
 
-from school_api.utils import to_text
+from school_api.utils import to_text, ObjectDict
 from school_api.client.api.base import BaseSchoolApi
 from school_api.client.api.utils import get_view_state_from_html
 from school_api.client.login_management import LoginManagement
@@ -31,15 +31,15 @@ class BaseUserClient(LoginManagement):
 
     def __init__(self, school, account, password, user_type):
         self._http = requests.Session()
-
-        self.account = to_text(account)
-        self.password = password
-        self.user_type = user_type
         self.school = school.school
-        self.school.proxy_state = False
         self.base_url = school.base_url
         self.session = school.session
-
+        self.user = ObjectDict({
+            'account': to_text(account),
+            'password': password,
+            'user_type': user_type,
+            'proxy_state': False
+        })
         self._http.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) '
                           'AppleWebKit/537.36 (KHTML, like Gecko) '
@@ -76,7 +76,7 @@ class BaseUserClient(LoginManagement):
 
     def switch_proxy(self, init=False):
         """ 设置代理 """
-        self.school.proxy_state = True
+        self.user.proxy_state = True
         self.base_url = self.school.lan_url or self.base_url
         self._proxy = self.school.proxies
         self._http.headers.update({
@@ -85,7 +85,6 @@ class BaseUserClient(LoginManagement):
         if not init:
             # 非初始化，检查是否存在有效会话登录会话
             return self.session_management()
-
 
     def get_view_state(self, url_suffix, **kwargs):
         """ 获取页面 view_state 值"""

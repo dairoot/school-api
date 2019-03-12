@@ -31,20 +31,12 @@ class BaseSchoolApi(object):
         return self._client.school.code
 
     @property
-    def account(self):
-        return self._client.account
-
-    @property
-    def password(self):
-        return self._client.password
+    def user(self):
+        return self._client.user
 
     @property
     def session(self):
         return self._client.session
-
-    @property
-    def user_type(self):
-        return self._client.user_type
 
     @property
     def base_url(self):
@@ -52,7 +44,7 @@ class BaseSchoolApi(object):
 
     @property
     def school_url(self):
-        return self._client.school.url_path_list[self.user_type]
+        return self._client.school.url_path_list[self.user.user_type]
 
     @property
     def time_list(self):

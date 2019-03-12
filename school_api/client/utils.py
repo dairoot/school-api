@@ -59,7 +59,7 @@ class ApiPermissions():
     def __call__(self, func):
         def wrapper(*args, **kwargs):
             func_object = args[0]
-            if func_object.user_type not in self.permission_list:
+            if func_object.user.user_type not in self.permission_list:
                 raise PermissionException(func_object.school.code, '暂无该接口权限')
             return func(*args, **kwargs)
         return wrapper
