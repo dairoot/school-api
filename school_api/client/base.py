@@ -36,6 +36,7 @@ class BaseUserClient(LoginManagement):
         self.password = password
         self.user_type = user_type
         self.school = school.school
+        self.school.proxy_state = False
         self.base_url = school.base_url
         self.session = school.session
 

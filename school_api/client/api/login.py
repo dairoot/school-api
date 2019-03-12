@@ -30,9 +30,13 @@ class Login(BaseSchoolApi):
                 try:
                     res = self._get_api(*args, **kwargs)
                 except RequestException:
-                    raise LoginException(self.code, '教务系统异常，使用代理登录失败')
+                    raise LoginException(self.code, '教务系统异常，使用代理登录失败1')
             else:
-                raise LoginException(self.code, '教务系统外网异常')
+
+                if school.proxy_state:
+                    raise LoginException(self.code, '教务系统异常，使用代理登录失败2')
+                else:
+                    raise LoginException(self.code, '教务系统外网异常')
 
         self._handle_login_result(res, *args, **kwargs)
 
@@ -46,10 +50,9 @@ class Login(BaseSchoolApi):
             # 首次请求可能出现 Connection aborted
             res = self._get(login_url, **kwargs)
 
-
         url_info = res.url.split(login_url)[0].split('/(')
         if len(url_info) == 2:
-            self._update_url_token('/('+url_info[1])
+            self._update_url_token('/(' + url_info[1])
 
         view_state = get_view_state_from_html(res.text)
 
