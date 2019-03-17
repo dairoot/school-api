@@ -5,4 +5,7 @@ source = school_api
 exclude_lines =
     pragma: no cover
     def __repr__
+    def _del_login_session
+    def delete
+    def check_session
     raise NotImplementedError

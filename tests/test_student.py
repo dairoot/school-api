@@ -29,6 +29,8 @@ class TestStudent(unittest.TestCase):
     GdstApi = SchoolClient('http://61.142.33.204', **conf)
     student = GdstApi.user_login(STUDENT_ACCOUNT, 'error_pwd', timeout=3)
     student = GdstApi.user_login(STUDENT_ACCOUNT, STUDENT_PASSWD, timeout=3)
+    # 第二次 触发会话登录
+    student = GdstApi.user_login(STUDENT_ACCOUNT, STUDENT_PASSWD, timeout=3)
 
     def setUp(self):
         print('正在执行\033[1;35m %s \033[0m函数。' % self._testMethodName)
