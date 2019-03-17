@@ -130,18 +130,18 @@ class Schedule(BaseSchoolApi):
         }
         return payload
 
-    @staticmethod
-    def _get_payload_by_bm(html, class_name):
+    def _get_payload_by_bm(self, html, class_name):
         ''' 提取页面参数用于请求课表 '''
         pre_soup = BeautifulSoup(html, "html.parser")
         view_state = pre_soup.find(attrs={"name": "__VIEWSTATE"})['value']
         schedule_id_list = pre_soup.find(id='kb').find_all('option')
         class_name = to_text(class_name)
-        schedule_id = ''
         for name in schedule_id_list:
             if name.text == class_name:
                 schedule_id = name['value']
                 break
+        else:
+            raise ScheduleException(self.code, '暂无该班级课表信息')
 
         # 获取班级课表
         payload = {

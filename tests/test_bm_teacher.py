@@ -25,7 +25,7 @@ class TestBmTeacher(unittest.TestCase):
         pass
 
     def test_schedule(self):
-        schedule_data = self.bm_teacher.get_schedule(class_name='15软件本科2班', timeout=5)
+        schedule_data = self.bm_teacher.get_schedule(class_name='18软件本科1班', timeout=5)
         print(schedule_data)
 
     def test_place_schedule(self):
