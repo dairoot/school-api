@@ -30,11 +30,11 @@ class Login(BaseSchoolApi):
                 try:
                     res = self._get_api(*args, **kwargs)
                 except RequestException:
-                    raise LoginException(self.code, '教务系统异常，使用代理登录失败1')
+                    raise LoginException(self.code, '教务系统异常，切用代理登录失败')
             else:
 
                 if self.user.proxy_state:
-                    raise LoginException(self.code, '教务系统异常，使用代理登录失败2')
+                    raise LoginException(self.code, '教务系统异常，使用代理登录失败')
                 else:
                     raise LoginException(self.code, '教务系统外网异常')
 
@@ -91,12 +91,13 @@ class Login(BaseSchoolApi):
             raise LoginException(self.code, '教务系统请求异常')
         elif res.status_code != 302:
             tip = self._get_login_result_tip(res.text)
-            if tip == '验证码不正确！！':
+            check_code_error_tip = '验证码不正确！！'
+            if tip == check_code_error_tip:
                 # 首次验证码错误，则再次登录
                 res = self._get_api(*args, **kwargs)
                 if res.status_code != 302:
                     tip = self._get_login_result_tip(res.text)
-                    if tip == '验证码不正确！！':
+                    if tip == check_code_error_tip:
                         raise CheckCodeException(self.code, tip)
                 else:
                     return True

@@ -43,7 +43,7 @@ class PlaceSchedule(BaseSchoolApi):
         '''
 
         self.schedule_url = self.school_url['PLACE_SCHEDULE_URL'] + \
-            urlparse.quote(self.user.account.encode('gb2312'))
+                            urlparse.quote(self.user.account.encode('gb2312'))
 
         if not self._update_payload(**kwargs):
             yield {'error': "获取教学场地课表失败"}
@@ -66,34 +66,40 @@ class PlaceSchedule(BaseSchoolApi):
                     # 遍历教室类别
                     for classroom_type in self.payload['classroom_type_list']:
                         kwargs['classroom_type'] = classroom_type
-                        if self._is_skip(classroom_type["name"], classroom_type_list, filter_name_list=filter_classroom_type_list):
+                        if self._is_skip(classroom_type["name"], classroom_type_list,
+                                         filter_name_list=filter_classroom_type_list):
                             continue
                         if not self._update_payload(campus, **kwargs):
                             continue
+
                         # 遍历教室名称
                         for classroom_name in self.payload['classroom_name_list']:
-                            kwargs['classroom_name'] = classroom_name
                             if self._is_skip(classroom_name["name"], classroom_name_list):
                                 continue
-                            try:
-                                res = self._get_api(campus, **kwargs)
-                            except ScheduleException:
-                                continue
 
-                            schedule = ScheduleParse(
-                                res.content.decode('GB18030'),
-                                self.time_list,
-                                ScheduleType.CLASS
-                            ).get_schedule_dict()
+                            kwargs['classroom_name'] = classroom_name
+                            # 请求接口获取课表数据
+                            data = self._get_result(campus, **kwargs)
+                            if data:
+                                yield data
 
-                            data = {
-                                "campus": campus["name"],
-                                "building": building["name"],
-                                "classroom_type": classroom_type["name"],
-                                "classroom_name": classroom_name["name"]
-                            }
-                            data.update(schedule)
-                            yield data
+    def _get_result(self, campus, **kwargs):
+        """ 处理请求结果，并返回 """
+        try:
+            res = self._get_api(campus, **kwargs)
+        except ScheduleException:
+            return
+
+        schedule = ScheduleParse(res.content.decode('GB18030'), self.time_list, ScheduleType.CLASS).get_schedule_dict()
+
+        data = {
+            "campus": campus["name"],
+            "building": kwargs['building']["name"],
+            "classroom_type": kwargs['classroom_type']["name"],
+            "classroom_name": kwargs['classroom_name']["name"]
+        }
+        data.update(schedule)
+        return data
 
     def _get_api(self, campus=None, **kwargs):
         """ 请求函数 """
