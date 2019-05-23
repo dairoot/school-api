@@ -29,11 +29,11 @@ class BaseUserClient(LoginManagement):
             setattr(self, name, api)
         return self
 
-    def __init__(self, school, account, password, user_type):
+    def __init__(self, school_obj, account, password, user_type):
         self._http = requests.Session()
-        self.school = school.school
-        self.base_url = school.base_url
-        self.session = school.session
+        self.school = school_obj.school
+        self.base_url = school_obj.base_url
+        self.session = school_obj.session
         self.user = ObjectDict({
             'account': to_text(account),
             'password': password,

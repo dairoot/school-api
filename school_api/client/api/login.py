@@ -102,6 +102,7 @@ class Login(BaseSchoolApi):
                 else:
                     return True
             raise IdentityException(self.code, tip)
+        return True
 
     def _get_login_result_tip(self, html):
         """ 获取获取html的弹框提示信息 """
