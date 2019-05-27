@@ -24,6 +24,7 @@ setup(
     zip_safe=False,
 
     install_requires=[
+        'Pylsy',
         'six',
         'requests',
         'redis',

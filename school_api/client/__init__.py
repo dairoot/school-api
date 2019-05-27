@@ -94,8 +94,12 @@ class UserClient(BaseUserClient):
     def get_place_schedule(self, *args, **kwargs):
         return self.place_schedule.get_schedule(*args, **kwargs)
 
+    @error_handle
+    @ApiPermissions([UserType.STUDENT])
     def get_elective_course(self, **kwargs):
         return self.elective_course.get_elective_course(**kwargs)
 
+    @error_handle
+    @ApiPermissions([UserType.STUDENT])
     def set_elective_course(self, *args, **kwargs):
         return self.elective_course.set_elective_course(*args, **kwargs)
