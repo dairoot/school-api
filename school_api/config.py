@@ -3,12 +3,13 @@ from __future__ import absolute_import, unicode_literals
 
 LOGIN_SESSION_SAVE_TIME = 3600 * 2
 
-URL_PATH_LIST =[
+URL_PATH_LIST = [
     {
         # 学生
         "HOME_URL": "/xs_main.aspx?xh=",
         "SCORE_URL": ["/xscj_gc.aspx?xh=", "/Xscjcx.aspx?xh=", "/xscjcx.aspx?xh=", "/xscjcx_dq.aspx?xh="],
         "INFO_URL": "/xsgrxx.aspx?gnmkdm=N121501&xh=",
+        "ELECTIVE_COURSE_URL": "/xf_xsqxxxk.aspx?xh=",
         "SCHEDULE_URL": [
             "/xskbcx.aspx?gnmkdm=N121603&xh=",
             "/tjkbcx.aspx?gnmkdm=N121601&xh=",
@@ -27,7 +28,6 @@ URL_PATH_LIST =[
         "PLACE_SCHEDULE_URL": "/kbcx_jxcd.aspx?gnmkdm=N120314&xh=",
     }
 ]
-
 
 CLASS_TIME = [
     ["8:30", "9:15"],

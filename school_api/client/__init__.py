@@ -8,6 +8,7 @@ from school_api.client.api.score import Score
 from school_api.client.api.schedule import Schedule
 from school_api.client.api.place_schedule import PlaceSchedule
 from school_api.client.api.user_info import UserlInfo
+from school_api.client.api.elective_course import ElectiveCourse
 from school_api.client.utils import UserType, error_handle, ApiPermissions, get_time_list
 from school_api.session.memorystorage import MemoryStorage
 
@@ -35,7 +36,7 @@ class SchoolClient(object):
         self.session = session(school['code'])
         self.school = ObjectDict(school)
 
-    def user_login(self, account, password, use_login_cookie=True ,**kwargs):
+    def user_login(self, account, password, use_login_cookie=True, **kwargs):
         ''' 用户登录入口
         进行首次绑定操作时，请将 use_login_cookie 设置为False，避免其他用户进行会话登录
         :param account:  用户账号
@@ -58,6 +59,7 @@ class UserClient(BaseUserClient):
     info = UserlInfo()
     schedule = Schedule()
     place_schedule = PlaceSchedule()
+    elective_course = ElectiveCourse()
 
     @error_handle
     def user_login(self, use_login_cookie, **kwargs):
@@ -91,3 +93,9 @@ class UserClient(BaseUserClient):
     @ApiPermissions([UserType.DEPT])
     def get_place_schedule(self, *args, **kwargs):
         return self.place_schedule.get_schedule(*args, **kwargs)
+
+    def get_elective_course(self, **kwargs):
+        return self.elective_course.get_elective_course(**kwargs)
+
+    def set_elective_course(self, *args, **kwargs):
+        return self.elective_course.set_elective_course(*args, **kwargs)

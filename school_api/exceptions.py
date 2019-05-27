@@ -62,6 +62,12 @@ class UserInfoException(SchoolException):
         super(UserInfoException, self).__init__('用户信息接口', school_code, errmsg)
 
 
+class ElectiveCourseException(SchoolException):
+
+    def __init__(self, school_code, errmsg):
+        super(ElectiveCourseException, self).__init__('选课接口', school_code, errmsg)
+
+
 class PermissionException(SchoolException):
 
     def __init__(self, school_code, errmsg):
