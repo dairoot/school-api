@@ -35,14 +35,6 @@ class BaseSchoolApi(object):
         return self._client.user
 
     @property
-    def session(self):
-        return self._client.session
-
-    @property
-    def base_url(self):
-        return self._client.base_url
-
-    @property
     def school_url(self):
         return self._client.school.url_path_list[self.user.user_type]
 
