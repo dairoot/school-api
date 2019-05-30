@@ -61,8 +61,14 @@ class BaseUserClient(LoginManagement):
         res = self._http.request(
             url=url,
             proxies=self._proxy,
+            allow_redirects=False,
             **kwargs
         )
+
+        res.raise_for_status()
+        if res.status_code == 302:
+            raise requests.TooManyRedirects
+
         return res
 
     def get(self, url, **kwargs):
@@ -88,11 +94,7 @@ class BaseUserClient(LoginManagement):
 
     def get_view_state(self, url_suffix, **kwargs):
         """ 获取页面 view_state 值"""
-        res = self.get(url_suffix, allow_redirects=False, **kwargs)
-        res.raise_for_status()
-        if res.status_code == 302:
-            raise requests.TooManyRedirects
-
+        res = self.get(url_suffix, **kwargs)
         return get_view_state_from_html(res.text)
 
     def update_url_token(self, url_token):

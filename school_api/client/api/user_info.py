@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 
 from bs4 import BeautifulSoup
-from requests import RequestException
+from requests import RequestException, TooManyRedirects
 from school_api.client.api.base import BaseSchoolApi
 from school_api.exceptions import UserInfoException
 
@@ -16,8 +16,8 @@ class UserlInfo(BaseSchoolApi):
 
         try:
             res = self._get(info_url, **kwargs)
-            if res.status_code != 200:
-                raise RequestException
+        except TooManyRedirects:
+            raise UserInfoException(self.code, '用户信息接口已关闭')
         except RequestException:
             raise UserInfoException(self.code, '获取用户信息失败')
 

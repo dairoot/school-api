@@ -2,12 +2,14 @@
 from __future__ import absolute_import, unicode_literals
 
 from six.moves.urllib import parse
-from requests import RequestException
+from requests import RequestException, TooManyRedirects
+
+from school_api.check_code import CHECK_CODE
+from school_api.utils import to_binary, to_text
 from school_api.client.api.base import BaseSchoolApi
 from school_api.client.api.utils import get_alert_tip, get_view_state_from_html
-from school_api.check_code import CHECK_CODE
-from school_api.exceptions import IdentityException, CheckCodeException, LoginException, OtherException
-from school_api.utils import to_binary, to_text
+from school_api.exceptions import IdentityException, CheckCodeException, LoginException, \
+    OtherException
 
 
 class Login(BaseSchoolApi):
@@ -38,7 +40,31 @@ class Login(BaseSchoolApi):
                 else:
                     raise LoginException(self.code, '教务系统外网异常')
 
-        self._handle_login_result(res, *args, **kwargs)
+        # 处理登录结果
+        try:
+            self._handle_login_result(res)
+        except CheckCodeException:
+            try:
+                # 验证码错误时，再次登录
+                res = self._get_api(*args, **kwargs)
+            except RequestException:
+                raise LoginException(self.code, '教务系统请求异常')
+            else:
+                self._handle_login_result(res)
+
+        return True
+
+    def _handle_login_result(self, res):
+        ''' 处理页面弹框信息 '''
+        if res is True:
+            # 登录成功
+            return
+        tip = get_alert_tip(res.text)
+        if tip:
+            if tip == '验证码不正确！！':
+                raise CheckCodeException(self.code, tip)
+            raise IdentityException(self.code, tip)
+        raise LoginException(self.code, '教务系统请求异常')
 
     def _get_login_payload(self, login_url, **kwargs):
         ''' 获取登录页面的 请求参数'''
@@ -55,7 +81,6 @@ class Login(BaseSchoolApi):
             self._update_url_token('/(' + url_info[1])
 
         view_state = get_view_state_from_html(res.text)
-
         return {'__VIEWSTATE': view_state}
 
     def _get_api(self, login_url, exist_verify, **kwargs):
@@ -80,45 +105,18 @@ class Login(BaseSchoolApi):
             'Button1': ' 登 录 '.encode('gb2312')
         }
         payload.update(login_payload)
-
-        res = self._post(login_url, data=payload,
-                         allow_redirects=False, **kwargs)
+        try:
+            res = self._post(login_url, data=payload, **kwargs)
+        except TooManyRedirects:
+            # 302跳转 代表登录成功
+            return True
         return res
-
-    def _handle_login_result(self, res, *args, **kwargs):
-        # 登录成功之后，教务系统会返回 302 跳转
-        if res.status_code == 500:
-            raise LoginException(self.code, '教务系统请求异常')
-        elif res.status_code != 302:
-            tip = self._get_login_result_tip(res.text)
-            check_code_error_tip = '验证码不正确！！'
-            if tip == check_code_error_tip:
-                # 首次验证码错误，则再次登录
-                res = self._get_api(*args, **kwargs)
-                if res.status_code != 302:
-                    tip = self._get_login_result_tip(res.text)
-                    if tip == check_code_error_tip:
-                        raise CheckCodeException(self.code, tip)
-                else:
-                    return True
-            raise IdentityException(self.code, tip)
-        return True
-
-    def _get_login_result_tip(self, html):
-        """ 获取获取html的弹框提示信息 """
-        tip = get_alert_tip(html)
-        if tip:
-            return tip
-
-        raise LoginException(self.code, '教务系统请求异常')
 
     def check_session(self):
         """ 检查登陆会话是否有效 """
         account = parse.quote(self.user.account.encode('gb2312'))
         try:
-            res = self._head(self.school_url['HOME_URL'] + account)
-            if res.status_code != 200:
-                raise RequestException
+            self._head(self.school_url['HOME_URL'] + account)
         except RequestException:
             return False
 

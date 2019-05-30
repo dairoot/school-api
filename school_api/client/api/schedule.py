@@ -4,7 +4,7 @@ from __future__ import absolute_import, unicode_literals
 from six.moves.urllib import parse
 
 from bs4 import BeautifulSoup
-from requests import RequestException
+from requests import RequestException, TooManyRedirects
 
 from school_api.client.api.base import BaseSchoolApi
 from school_api.client.api.utils import get_alert_tip, get_view_state_from_html
@@ -49,11 +49,8 @@ class Schedule(BaseSchoolApi):
         coding = 'gbk' if self.user.user_type else 'GB18030'
         try:
             res = self._get(self.schedule_url, **kwargs)
-
-            if res.status_code == 302:
-                raise ScheduleException(self.code, '课表接口已关闭')
-            elif res.status_code != 200:
-                raise RequestException
+        except TooManyRedirects:
+            raise ScheduleException(self.code, '课表接口已关闭')
         except RequestException:
             raise ScheduleException(self.code, '获取课表请求参数失败')
 
@@ -72,8 +69,6 @@ class Schedule(BaseSchoolApi):
 
             try:
                 res = self._post(self.schedule_url, data=payload, **kwargs)
-                if res.status_code != 200:
-                    raise RequestException
             except RequestException:
                 raise ScheduleException(self.code, '获取课表信息失败')
 
@@ -92,8 +87,6 @@ class Schedule(BaseSchoolApi):
         # steps 1: 获取课表页面 参数信息
         try:
             res = self._get(self.schedule_url, **kwargs)
-            if res.status_code != 200:
-                raise RequestException
         except RequestException:
             raise ScheduleException(self.code, '获取课表请求参数失败')
 
@@ -102,8 +95,6 @@ class Schedule(BaseSchoolApi):
             payload = self._get_payload(res.text)
             try:
                 res = self._post(self.schedule_url, data=payload, **kwargs)
-                if res.status_code != 200:
-                    raise RequestException
             except RequestException:
                 raise ScheduleException(self.code, '获取课表请求参数失败')
 
@@ -111,8 +102,6 @@ class Schedule(BaseSchoolApi):
         payload = self._get_payload_by_bm(res.content.decode('gbk'), class_name)
         try:
             res = self._post(self.schedule_url, data=payload, **kwargs)
-            if res.status_code != 200:
-                raise RequestException
         except RequestException:
             raise ScheduleException(self.code, '获取课表信息失败')
 

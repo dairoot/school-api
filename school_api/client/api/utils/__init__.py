@@ -11,6 +11,7 @@ def get_alert_tip(html):
     tips = re.findall(r">alert\(\'(.*?)\'", html)
     if tips:
         return tips[0]
+    return None
 
 
 def get_view_state_from_html(html):

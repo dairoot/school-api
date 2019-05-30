@@ -124,8 +124,6 @@ class PlaceSchedule(BaseSchoolApi):
 
         try:
             res = _request(self.schedule_url, data=data, **kwargs)
-            if res.status_code != 200:
-                raise RequestException
         except RequestException:
             raise ScheduleException(self.code, '获取教学场地课表失败')
         return res

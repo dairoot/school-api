@@ -3,14 +3,13 @@
 
 from setuptools import setup, find_packages
 
-
 with open('README.md', 'rb') as f:
     long_description = f.read().decode('utf-8').split("## User permissions")[0]
 
 setup(
     name="School-Api",
     author="dairoot",
-    version="1.4.1",
+    version="1.4.3",
     license='MIT',
     author_email="623815825@qq.com",
     description="School SDK for Python",

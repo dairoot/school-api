@@ -35,16 +35,14 @@ class Score(BaseSchoolApi):
             '__VIEWSTATE': view_state,
             'Button2': '在校学习成绩查询',
             'btn_zcj': '历年成绩',
-            'btnCx':' 查  询 ',
+            'btnCx': ' 查  询 ',
             'ddlXN': '',
             'ddlXQ': ''
         }
         try:
             res = self._post(score_url, data=payload, **kwargs)
-            if res.status_code == 302:
-                raise ScoreException(self.code, '成绩接口已关闭')
-            elif res.status_code != 200:
-                raise RequestException
+        except TooManyRedirects:
+            raise ScoreException(self.code, '成绩接口已关闭')
         except RequestException:
             raise ScoreException(self.code, '获取成绩信息失败')
 
