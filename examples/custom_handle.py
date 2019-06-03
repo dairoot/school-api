@@ -52,5 +52,5 @@ def get_score(user):
 if __name__ == '__main__':
     account = 'user'
     password = 'password'
-    data = bind_account(account, password, use_login_cookie=False)
+    data = bind_account(account, password, use_cookie_login=False)
     print(data)
