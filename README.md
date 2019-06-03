@@ -27,7 +27,7 @@ print(schedule_data)
 
 | Api               |  Description  | Argument        |
 | :--------         | :-----        | :----           |
-| user_login        | 登陆函数      | account, password, user_type=1, use_login_cookie=True   |
+| user_login        | 登陆函数      | account, password, user_type=1, use_cookie_login=True   |
 | get_schedule      | 课表查询      | schedule_year=None, schedule_term=None, schedule_type=None   |
 | get_score         | 成绩查询      | score_year=None, score_term=None, use_api=0   |
 | get_info          | 用户信息查询  |          |
