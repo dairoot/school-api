@@ -9,6 +9,7 @@ URL_PATH_LIST = [
         "HOME_URL": "/xs_main.aspx?xh=",
         "SCORE_URL": [
             "/xscj_gc.aspx?xh=",
+            "/xscj_gc2.aspx?xh=",
             "/Xscjcx.aspx?xh=",
             "/xscjcx.aspx?xh=",
             "/xscjcx_dq.aspx?xh="
@@ -16,20 +17,20 @@ URL_PATH_LIST = [
         "INFO_URL": "/xsgrxx.aspx?gnmkdm=N121501&xh=",
         "SCHEDULE_URL": [
             "/xskbcx.aspx?gnmkdm=N121603&xh=",
-            "/tjkbcx.aspx?gnmkdm=N121601&xh=",
-        ],
+            "/tjkbcx.aspx?gnmkdm=N121601&xh="
+        ]
     },
     {
         # 教师
         "HOME_URL": "/js_main.aspx?xh=",
         "INFO_URL": "/lw_jsxx.aspx?gnmkdm=N122502&zgh=",
-        "SCHEDULE_URL": ["", "/jstjkbcx.aspx?gnmkdm=N122303&zgh="],
+        "SCHEDULE_URL": ["", "/jstjkbcx.aspx?gnmkdm=N122303&zgh="]
     },
     {
         # 部门
         "HOME_URL": "/bm_main.aspx?xh=",
         "SCHEDULE_URL": ["", "/tjkbcx.aspx?gnmkdm=N120313&xh="],
-        "PLACE_SCHEDULE_URL": "/kbcx_jxcd.aspx?gnmkdm=N120314&xh=",
+        "PLACE_SCHEDULE_URL": "/kbcx_jxcd.aspx?gnmkdm=N120314&xh="
     }
 ]
 
