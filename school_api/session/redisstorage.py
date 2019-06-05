@@ -6,7 +6,6 @@ from school_api.utils import to_text
 
 
 class RedisStorage(SessionStorage):
-    prefix = ''
 
     def __init__(self, redis):
         for method_name in ('get', 'set', 'delete'):
@@ -14,7 +13,7 @@ class RedisStorage(SessionStorage):
         self.redis = redis
 
     def key_name(self, key):
-        return 'school:{0}:{1}'.format(self.prefix, key)
+        return 'school:{0}'.format(key)
 
     def get(self, key, default=None):
         key = self.key_name(key)
@@ -36,7 +35,3 @@ class RedisStorage(SessionStorage):
 
     def expires_time(self, key):
         return self.redis.ttl(self.key_name(key))
-
-    def __call__(self, prefix=''):
-        self.prefix = to_text(prefix)
-        return self

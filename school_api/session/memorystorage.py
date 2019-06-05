@@ -8,12 +8,11 @@ from school_api.utils import to_text
 class MemoryStorage(SessionStorage):
     ''' 非持久化缓存 不推荐使用'''
 
-    def __init__(self, prefix=''):
+    def __init__(self):
         self._data = {}
-        self.prefix = to_text(prefix)
 
     def key_name(self, key):
-        return '{0}:{1}'.format(self.prefix, key)
+        return 'school:{0}'.format(key)
 
     def get(self, key, default=None):
         key = self.key_name(key)

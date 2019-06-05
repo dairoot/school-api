@@ -14,7 +14,6 @@ class LoginManagement(object):
 
     login = Login()
 
-
     def session_management(self):
         ''' 登录会话管理 '''
         login_session = None
@@ -56,7 +55,7 @@ class LoginManagement(object):
         self.url_token = session['url_token']
         self._http.cookies.update(session['cookie'])
         return True
-    
+
     def _del_login_session(self):
         ''' 删除登录会话 '''
         key = self._get_login_session_key()
@@ -70,5 +69,5 @@ class LoginManagement(object):
 
     def _get_login_session_key(self):
         ''' 获取缓存登录会话的key '''
-        key = '{}:{}:{}'.format('login_session', self.base_url, self.user.account)
+        key = '{}:{}:{}:{}'.format(self.school.code, 'login_session', self.base_url, self.user.account)
         return key

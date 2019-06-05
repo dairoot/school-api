@@ -31,9 +31,8 @@ class SchoolClient(object):
             'url_path_list': url_path_list or URL_PATH_LIST,
             'time_list': get_time_list(class_time_list or CLASS_TIME)
         }
-        session = session or MemoryStorage
         self.base_url = url.split('/default')[0] if url[-4:] == 'aspx' else url
-        self.session = session(school['code'])
+        self.session = session or MemoryStorage()
         self.school = ObjectDict(school)
 
     def user_login(self, account, password, use_cookie_login=True, **kwargs):
