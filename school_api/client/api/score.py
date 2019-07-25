@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
+import re
 from bs4 import BeautifulSoup
 from requests import RequestException, TooManyRedirects
 
@@ -63,7 +64,7 @@ class ScoreParse():
         self._html_parse_of_score()
 
     def _html_parse_of_score(self):
-        table = self.soup.find("table", {"id": "Datagrid1"}) or self.soup.find("table", {"id": "DataGrid1"})
+        table = self.soup.find("table", {"id": re.compile("Datagrid1", re.IGNORECASE)})
         if not table:
             raise ScoreException(self.code, '获取成绩信息失败')
 
