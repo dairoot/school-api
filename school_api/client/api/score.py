@@ -46,12 +46,11 @@ class Score(BaseSchoolApi):
         except RequestException:
             raise ScoreException(self.code, '获取成绩信息失败')
 
-        html = res.content.decode('GB18030')
-        tip = get_alert_tip(html)
+        tip = get_alert_tip(res.text)
         if tip:
             raise ScoreException(self.code, tip)
 
-        return ScoreParse(self.code, html, use_api).get_score(score_year, score_term)
+        return ScoreParse(self.code, res.text, use_api).get_score(score_year, score_term)
 
 
 class ScoreParse():

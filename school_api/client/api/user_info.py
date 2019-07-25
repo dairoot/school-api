@@ -21,7 +21,7 @@ class UserlInfo(BaseSchoolApi):
         except RequestException:
             raise UserInfoException(self.code, '获取用户信息失败')
 
-        return UserlInfoParse(self.code, self.user.user_type, res.content).user_info
+        return UserlInfoParse(self.code, self.user.user_type, res.text).user_info
 
 
 class UserlInfoParse():
@@ -30,8 +30,7 @@ class UserlInfoParse():
     def __init__(self, code, user_type, html):
         self.data = {}
         self.code = code
-        coding = 'gbk' if user_type else 'GB18030'
-        self.soup = BeautifulSoup(html.decode(coding), "html.parser")
+        self.soup = BeautifulSoup(html, "html.parser")
         [self._html_parse_of_student, self._html_parse_of_teacher][user_type]()
 
     def _html_parse_of_student(self):

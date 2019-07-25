@@ -46,7 +46,7 @@ class Schedule(BaseSchoolApi):
         return data
 
     def _get_api(self, **kwargs):
-        coding = 'gbk' if self.user.user_type else 'GB18030'
+
         try:
             res = self._get(self.schedule_url, **kwargs)
         except TooManyRedirects:
@@ -54,12 +54,11 @@ class Schedule(BaseSchoolApi):
         except RequestException:
             raise ScheduleException(self.code, '获取课表请求参数失败')
 
-        html = res.content.decode(coding)
-        tip = get_alert_tip(html)
+        tip = get_alert_tip(res.text)
         if tip:
             raise ScheduleException(self.code, tip)
 
-        schedule = ScheduleParse(html, self.time_list, self.schedule_type).get_schedule_dict()
+        schedule = ScheduleParse(res.text, self.time_list, self.schedule_type).get_schedule_dict()
         # 第一次请求的时候，教务系统默认返回当前学年学期课表
         # 如果设置了学年跟学期，则获取指定学年学期的课表
         if self.schedule_year and self.schedule_term and (
@@ -72,9 +71,8 @@ class Schedule(BaseSchoolApi):
             except RequestException:
                 raise ScheduleException(self.code, '获取课表信息失败')
 
-            html = res.content.decode(coding)
             schedule = ScheduleParse(
-                html,
+                res.text,
                 self.time_list,
                 self.schedule_type
             ).get_schedule_dict()
@@ -99,14 +97,13 @@ class Schedule(BaseSchoolApi):
                 raise ScheduleException(self.code, '获取课表请求参数失败')
 
         # steps 3: 获取课表数据
-        payload = self._get_payload_by_bm(res.content.decode('gbk'), class_name)
+        payload = self._get_payload_by_bm(res.text, class_name)
         try:
             res = self._post(self.schedule_url, data=payload, **kwargs)
         except RequestException:
             raise ScheduleException(self.code, '获取课表信息失败')
 
-        html = res.content.decode('gbk')
-        schedule = ScheduleParse(html, self.time_list, self.schedule_type).get_schedule_dict()
+        schedule = ScheduleParse(res.text, self.time_list, self.schedule_type).get_schedule_dict()
         return schedule
 
     def _get_payload(self, html):

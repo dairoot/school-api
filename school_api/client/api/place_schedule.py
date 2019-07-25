@@ -90,7 +90,7 @@ class PlaceSchedule(BaseSchoolApi):
         except ScheduleException:
             return
 
-        schedule = ScheduleParse(res.content.decode('GB18030'), self.time_list, ScheduleType.CLASS).get_schedule_dict()
+        schedule = ScheduleParse(res.text, self.time_list, ScheduleType.CLASS).get_schedule_dict()
 
         data = {
             "campus": campus["name"],
