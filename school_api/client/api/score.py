@@ -63,8 +63,7 @@ class ScoreParse():
         self._html_parse_of_score()
 
     def _html_parse_of_score(self):
-        tag = "Datagrid1" if self.use_api != 3 else "DataGrid1"
-        table = self.soup.find("table", {"id": tag})
+        table = self.soup.find("table", {"id": "Datagrid1"}) or self.soup.find("table", {"id": "DataGrid1"})
         if not table:
             raise ScoreException(self.code, '获取成绩信息失败')
 
