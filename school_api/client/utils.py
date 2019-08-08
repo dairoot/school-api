@@ -41,10 +41,10 @@ def error_handle(func):
                 result = func(self, *args, **kwargs)
 
             except LoginException as reqe:
-                result = LoginFail(reqe)
+                result = LoginFail(str(reqe))
 
             except SchoolException as reqe:
-                result = {'error': reqe}
+                result = {'error': str(reqe)}
 
         return result
     return wrapper
