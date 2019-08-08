@@ -2,8 +2,6 @@ test*.py
 !tests/*
 *.sh
 *.pyc
-.idea
-conf.py
 .pytest_cache/
 CheckCode.gif
 .coverage
@@ -13,5 +11,3 @@ CheckCode.gif
 *.egg-info
 build
 dist
-
-doc/node_modules/
