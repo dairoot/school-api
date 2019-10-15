@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 
 import six.moves.urllib.parse as urlparse
-
+import time
 from bs4 import BeautifulSoup
 from requests import RequestException
 
@@ -138,6 +138,9 @@ class PlaceSchedule(BaseSchoolApi):
         try:
             self.payload = self._get_payload(res.text)
         except AttributeError:
+            return None
+        except Exception:
+            time.sleep(2)
             return None
         return True
 
