@@ -2,7 +2,9 @@
 from __future__ import absolute_import, unicode_literals
 
 import re
+
 from bs4 import BeautifulSoup
+
 from school_api.exceptions import OtherException
 
 
@@ -21,6 +23,8 @@ def get_view_state_from_html(html):
     try:
         view_state = view_state_soup['value']
     except TypeError:
+        if html.find("网站防火墙") > -1:
+            raise OtherException('', "请求被防火墙所拦截, 请降低请求频率")
         raise OtherException('', '获取view_state失败')
 
     return view_state
