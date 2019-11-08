@@ -9,6 +9,7 @@
 """
 import os
 from io import BytesIO
+
 import numpy as np
 from PIL import Image
 
@@ -51,7 +52,7 @@ class CheckCode(object):
         data = np.matrix(self.photo_to_text())
         data = np.hstack((np.ones((data.shape[0], 1)), data))
         all_predict = 1.0 / (1.0 + np.exp(-(np.dot(data, self.real_all_theta))))
-        pred = np.argmax(all_predict, axis=1)
+        pred = np.argmax(all_predict, axis=1).reshape(-1).tolist()[0]
         answers = map(chr, map(lambda x: x + 48 if x <= 9 else x + 87, pred))
         return ''.join(answers)
 
