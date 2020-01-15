@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-from six.moves.urllib import parse
 from requests import RequestException, TooManyRedirects
+from six.moves.urllib import parse
 
 from school_api.check_code import CHECK_CODE
-from school_api.utils import to_binary, to_text
 from school_api.client.api.base import BaseSchoolApi
 from school_api.client.api.utils import get_alert_tip, get_view_state_from_html
 from school_api.exceptions import IdentityException, CheckCodeException, LoginException, \
     OtherException
+from school_api.utils import to_binary, to_text
 
 
 class Login(BaseSchoolApi):
@@ -71,8 +71,10 @@ class Login(BaseSchoolApi):
         try:
             kwargs['timeout'] = 3
             res = self._get(login_url, **kwargs)
-        except RequestException:
+        except TooManyRedirects as reqe:
+            res = self._get(reqe.response.headers["Location"], **kwargs)
 
+        except RequestException:
             # 首次请求可能出现 Connection aborted
             res = self._get(login_url, **kwargs)
 

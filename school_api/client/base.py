@@ -2,12 +2,13 @@
 from __future__ import absolute_import, unicode_literals
 
 import inspect
+
 import requests
 
-from school_api.utils import to_text, ObjectDict
 from school_api.client.api.base import BaseSchoolApi
 from school_api.client.api.utils import get_view_state_from_html
 from school_api.client.login_management import LoginManagement
+from school_api.utils import to_text, ObjectDict
 
 
 def _is_api_endpoint(obj):
@@ -64,10 +65,10 @@ class BaseUserClient(LoginManagement):
             allow_redirects=False,
             **kwargs
         )
-
         res.raise_for_status()
+
         if res.status_code == 302:
-            raise requests.TooManyRedirects
+            raise requests.TooManyRedirects(response=res)
 
         return res
 
