@@ -26,7 +26,8 @@ class Login(BaseSchoolApi):
         except RequestException:
             if school.proxies and not self.user.proxy_state:
                 # 使用内网代理
-                if self._switch_proxy():
+                proxy_session = self._switch_proxy()
+                if proxy_session:
                     # 存在内网代理会话
                     return True
                 try:
