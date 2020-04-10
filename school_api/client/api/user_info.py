@@ -17,26 +17,26 @@ class UserlInfo(BaseSchoolApi):
         try:
             res = self._get(info_url, **kwargs)
         except TooManyRedirects:
-            raise UserInfoException(self.code, '用户信息接口已关闭')
+            raise UserInfoException(self.school_code, '用户信息接口已关闭')
         except RequestException:
-            raise UserInfoException(self.code, '获取用户信息失败')
+            raise UserInfoException(self.school_code, '获取用户信息失败')
 
-        return UserlInfoParse(self.code, self.user.user_type, res.text).user_info
+        return UserlInfoParse(self.school_code, self.user.user_type, res.text).user_info
 
 
 class UserlInfoParse():
     ''' 信息页面解析模块 '''
 
-    def __init__(self, code, user_type, html):
+    def __init__(self, school_code, user_type, html):
         self.data = {}
-        self.code = code
+        self.school_code = school_code
         self.soup = BeautifulSoup(html, "html.parser")
         [self._html_parse_of_student, self._html_parse_of_teacher][user_type]()
 
     def _html_parse_of_student(self):
         table = self.soup.find("table", {"class": "formlist"})
         if not table:
-            raise UserInfoException(self.code, '获取学生用户信息失败')
+            raise UserInfoException(self.school_code, '获取学生用户信息失败')
 
         real_name = table.find(id="xm").text
         grade = table.find(id="lbl_dqszj").text
@@ -77,7 +77,7 @@ class UserlInfoParse():
     def _html_parse_of_teacher(self):
         table = self.soup.find(id="Table3")
         if not table:
-            raise UserInfoException(self.code, '获取教师用户信息失败')
+            raise UserInfoException(self.school_code, '获取教师用户信息失败')
 
         real_name = table.find(id='xm').text
         sex = table.find(id='xb').text

@@ -21,7 +21,7 @@ class Login(BaseSchoolApi):
         try:
             res = self._get_api(*args, **kwargs)
         except OtherException as reqe:
-            raise LoginException(self.code, to_text(str(reqe)))
+            raise LoginException(self.school_code, to_text(str(reqe)))
 
         except RequestException:
             if school.proxies and not self.user.proxy_state:
@@ -33,13 +33,13 @@ class Login(BaseSchoolApi):
                 try:
                     res = self._get_api(*args, **kwargs)
                 except RequestException:
-                    raise LoginException(self.code, '教务系统异常，切用代理登录失败')
+                    raise LoginException(self.school_code, '教务系统异常，切用代理登录失败')
             else:
 
                 if self.user.proxy_state:
-                    raise LoginException(self.code, '教务系统异常，使用代理登录失败')
+                    raise LoginException(self.school_code, '教务系统异常，使用代理登录失败')
                 else:
-                    raise LoginException(self.code, '教务系统外网异常')
+                    raise LoginException(self.school_code, '教务系统外网异常')
 
         # 处理登录结果
         try:
@@ -49,7 +49,7 @@ class Login(BaseSchoolApi):
                 # 验证码错误时，再次登录
                 res = self._get_api(*args, **kwargs)
             except RequestException:
-                raise LoginException(self.code, '教务系统请求异常')
+                raise LoginException(self.school_code, '教务系统请求异常')
             else:
                 self._handle_login_result(res)
 
@@ -63,9 +63,9 @@ class Login(BaseSchoolApi):
         tip = get_alert_tip(res.text)
         if tip:
             if tip == '验证码不正确！！':
-                raise CheckCodeException(self.code, tip)
-            raise IdentityException(self.code, tip)
-        raise LoginException(self.code, '教务系统请求异常')
+                raise CheckCodeException(self.school_code, tip)
+            raise IdentityException(self.school_code, tip)
+        raise LoginException(self.school_code, '教务系统请求异常')
 
     def _get_login_payload(self, login_url, **kwargs):
         ''' 获取登录页面的 请求参数'''
@@ -94,7 +94,7 @@ class Login(BaseSchoolApi):
         if exist_verify:
             res = self._get('/CheckCode.aspx')
             if res.content[:7] != to_binary('GIF89aH'):
-                raise CheckCodeException(self.code, "验证码获取失败")
+                raise CheckCodeException(self.school_code, "验证码获取失败")
             code = CHECK_CODE.verify(res.content)
 
         account = self.user.account.encode('gb2312')

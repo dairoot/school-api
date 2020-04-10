@@ -125,7 +125,7 @@ class PlaceSchedule(BaseSchoolApi):
         try:
             res = _request(self.schedule_url, data=data, **kwargs)
         except RequestException:
-            raise ScheduleException(self.code, '获取教学场地课表失败')
+            raise ScheduleException(self.school_code, '获取教学场地课表失败')
         return res
 
     def _update_payload(self, *args, **kwargs):

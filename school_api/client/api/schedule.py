@@ -42,7 +42,7 @@ class Schedule(BaseSchoolApi):
             data = self._get_api_by_bm(**kwargs)
         if self.schedule_term and self.schedule_year and (
                 self.schedule_term != data["schedule_term"] or self.schedule_year != data["schedule_year"]):
-            raise ScheduleException(self.code, '暂无课表信息')
+            raise ScheduleException(self.school_code, '暂无课表信息')
         return data
 
     def _get_api(self, **kwargs):
@@ -50,13 +50,13 @@ class Schedule(BaseSchoolApi):
         try:
             res = self._get(self.schedule_url, **kwargs)
         except TooManyRedirects:
-            raise ScheduleException(self.code, '课表接口已关闭')
+            raise ScheduleException(self.school_code, '课表接口已关闭')
         except RequestException:
-            raise ScheduleException(self.code, '获取课表请求参数失败')
+            raise ScheduleException(self.school_code, '获取课表请求参数失败')
 
         tip = get_alert_tip(res.text)
         if tip:
-            raise ScheduleException(self.code, tip)
+            raise ScheduleException(self.school_code, tip)
 
         schedule = ScheduleParse(res.text, self.time_list, self.schedule_type).get_schedule_dict()
         # 第一次请求的时候，教务系统默认返回当前学年学期课表
@@ -69,7 +69,7 @@ class Schedule(BaseSchoolApi):
             try:
                 res = self._post(self.schedule_url, data=payload, **kwargs)
             except RequestException:
-                raise ScheduleException(self.code, '获取课表信息失败')
+                raise ScheduleException(self.school_code, '获取课表信息失败')
 
             schedule = ScheduleParse(
                 res.text,
@@ -86,7 +86,7 @@ class Schedule(BaseSchoolApi):
         try:
             res = self._get(self.schedule_url, **kwargs)
         except RequestException:
-            raise ScheduleException(self.code, '获取课表请求参数失败')
+            raise ScheduleException(self.school_code, '获取课表请求参数失败')
 
         # steps 2: 选择课表 学年学期
         if self.schedule_year and self.schedule_term:
@@ -94,14 +94,14 @@ class Schedule(BaseSchoolApi):
             try:
                 res = self._post(self.schedule_url, data=payload, **kwargs)
             except RequestException:
-                raise ScheduleException(self.code, '获取课表请求参数失败')
+                raise ScheduleException(self.school_code, '获取课表请求参数失败')
 
         # steps 3: 获取课表数据
         payload = self._get_payload_by_bm(res.text, class_name)
         try:
             res = self._post(self.schedule_url, data=payload, **kwargs)
         except RequestException:
-            raise ScheduleException(self.code, '获取课表信息失败')
+            raise ScheduleException(self.school_code, '获取课表信息失败')
 
         schedule = ScheduleParse(res.text, self.time_list, self.schedule_type).get_schedule_dict()
         return schedule
@@ -127,7 +127,7 @@ class Schedule(BaseSchoolApi):
                 schedule_id = name['value']
                 break
         else:
-            raise ScheduleException(self.code, '暂无该班级课表信息')
+            raise ScheduleException(self.school_code, '暂无该班级课表信息')
 
         # 获取班级课表
         payload = {

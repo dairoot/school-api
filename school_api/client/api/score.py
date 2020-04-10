@@ -27,10 +27,10 @@ class Score(BaseSchoolApi):
             view_state = self._get_view_state(score_url, **kwargs)
         except TooManyRedirects:
             msg = '可能是成绩接口地址不对，请尝试更改use_api值'
-            raise ScoreException(self.code, msg)
+            raise ScoreException(self.school_code, msg)
         except RequestException:
             msg = '获取成绩请求参数失败'
-            raise ScoreException(self.code, msg)
+            raise ScoreException(self.school_code, msg)
 
         payload = {
             '__VIEWSTATE': view_state,
@@ -43,22 +43,22 @@ class Score(BaseSchoolApi):
         try:
             res = self._post(score_url, data=payload, **kwargs)
         except TooManyRedirects:
-            raise ScoreException(self.code, '成绩接口已关闭')
+            raise ScoreException(self.school_code, '成绩接口已关闭')
         except RequestException:
-            raise ScoreException(self.code, '获取成绩信息失败')
+            raise ScoreException(self.school_code, '获取成绩信息失败')
 
         tip = get_alert_tip(res.text)
         if tip:
-            raise ScoreException(self.code, tip)
+            raise ScoreException(self.school_code, tip)
 
-        return ScoreParse(self.code, res.text, use_api).get_score(score_year, score_term)
+        return ScoreParse(self.school_code, res.text, use_api).get_score(score_year, score_term)
 
 
 class ScoreParse():
     ''' 成绩页面解析模块 '''
 
-    def __init__(self, code, html, use_api):
-        self.code = code
+    def __init__(self, school_code, html, use_api):
+        self.school_code = school_code
         self.use_api = use_api
         self.soup = BeautifulSoup(html, "html.parser")
         self._html_parse_of_score()
@@ -66,7 +66,7 @@ class ScoreParse():
     def _html_parse_of_score(self):
         table = self.soup.find("table", {"id": re.compile("Datagrid1", re.IGNORECASE)})
         if not table:
-            raise ScoreException(self.code, '获取成绩信息失败')
+            raise ScoreException(self.school_code, '获取成绩信息失败')
 
         rows = table.find_all('tr')
         rows.pop(0)
@@ -111,7 +111,7 @@ class ScoreParse():
                     return self.score_info[year][term]
                 return self.score_info[year]
         except KeyError:
-            raise ScoreException(self.code, '暂无成绩信息')
+            raise ScoreException(self.school_code, '暂无成绩信息')
 
         return self.score_info
 
